@@ -4,15 +4,17 @@ import React, { Component } from 'react';
 import Context from './HotkeyContext';
 
 class HotkeyProvider extends Component {
-
   constructor (props) {
     super(props);
     this.registerHandler = this.registerHandler.bind(this);
     this.removeHandler = this.removeHandler.bind(this);
     this.globalHandler = this.globalHandler.bind(this);
-    this.state = {
+    // To prevent new object for context
+    this.contextData = {
       registerHandler: this.registerHandler,
       removeHandler: this.removeHandler,
+    };
+    this.state = {
       handlers: {}
     };
     // To be able to register multiple handlers on mounts
@@ -44,31 +46,28 @@ class HotkeyProvider extends Component {
     // TODO: Priority/override functionality?
     if (hasHandler && hasHandler[0]) {
       hasHandler[0](e);
+      if (this.props.debug) console.log('Called handler:', e.keyCode);
     }
   }
 
   // Register handler
   registerHandler (keycode, handler) {
+    if (this.props.debug) console.log('Registered handler:', keycode);
     const q = this.handlers[keycode] || [];
     q.unshift(handler);
-    this.handlers = {
-      ...this.handlers,
-      [keycode]: q
-    };
+    this.handlers[keycode] = q;
     this.setState({
       handlers: this.handlers
-    })
+    });
   };
 
   // Remove handler
   removeHandler (keycode, handler) {
+    if (this.props.debug) console.log('Removed handler:', keycode);
     let q = this.handlers[keycode];
     if (q) {
       q = q.filter(h => h !== handler);
-      this.handlers = {
-        ...this.handlers,
-        [keycode]: q.length > 0 ? q : undefined
-      };
+      this.handlers[keycode] = q.length > 0 ? q : undefined;
       this.setState({
         handlers: this.handlers
       });
@@ -77,14 +76,8 @@ class HotkeyProvider extends Component {
 
   render () {
     return (
-      <Context.Provider value={this.state}>
+      <Context.Provider value={this.contextData}>
         {this.props.children}
-        {this.props.debug && (
-          <div className="center measure">
-            <h5>Active keycodes</h5>
-            <pre className="f7">{JSON.stringify(this.state.handlers, null, 2) }</pre>
-          </div>
-        )}
       </Context.Provider>
     )
   }

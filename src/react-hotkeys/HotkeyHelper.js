@@ -29,7 +29,7 @@ class HotkeyHandler extends Component {
 
 // HOC for simplicity
 function withHotkey(C) {
-  return function HotkeyHelper ({ keyCode, handler, ...restProps}) {
+  const HotkeyHelper = ({ keyCode, handler, ...restProps }) => {
     return (
       <Context.Consumer>
         {({ registerHandler, removeHandler }) => {
@@ -43,5 +43,6 @@ function withHotkey(C) {
       </Context.Consumer>
     );
   }
+  return HotkeyHelper;
 }
 export default withHotkey;

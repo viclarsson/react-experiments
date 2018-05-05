@@ -5,11 +5,10 @@ import HotkeyProvider from './react-hotkeys/HotkeyProvider';
 import withHotkey from './react-hotkeys/HotkeyHelper';
 
 // Components
-import TestComponent from './TestComponent';
+import TestComponent from './components/TestComponent';
 const HotkeyComponent = withHotkey(TestComponent);
 
 if (process.env.NODE_ENV !== 'production') {
-  // There are some updates that might be able to be fixed
   const {whyDidYouUpdate} = require('why-did-you-update');
   whyDidYouUpdate(React);
 }
@@ -36,34 +35,45 @@ class App extends PureComponent {
     this.contract = this.contract.bind(this);
   }
 
-  next (e) {
-    if (this.state.activeIndex === (this.state.components.length - 1)) return;
-    e.preventDefault();
-    this.setState({
-      activeIndex: this.state.activeIndex + 1
-    });
+  next () {
+    return (e) => {
+      if (this.state.activeIndex === (this.state.components.length - 1)) return;
+      e.preventDefault();
+      this.setState({
+        activeIndex: this.state.activeIndex + 1
+      });
+    }
   }
+
   previous (e) {
-    if (this.state.activeIndex === 0) return;
-    e.preventDefault();
-    this.setState({
-      activeIndex: this.state.activeIndex - 1
-    });
+    return (e) => {
+      if (this.state.activeIndex === 0) return;
+      e.preventDefault();
+      this.setState({
+        activeIndex: this.state.activeIndex - 1
+      });
+    }
   }
   toggleExpand () {
-    this.setState({
-      expandActive: !this.state.expandActive
-    });
+    return (e) => {
+      this.setState({
+        expandActive: !this.state.expandActive
+      });
+    }
   }
   expand () {
-    this.setState({
-      expandActive: true
-    });
+    return (e) => {
+      this.setState({
+        expandActive: true
+      });
+    }
   }
   contract () {
-    this.setState({
-      expandActive: false
-    });
+    return (e) => {
+      this.setState({
+        expandActive: false
+      });
+    }
   }
   addComponent () {
     this.setState({
@@ -71,11 +81,13 @@ class App extends PureComponent {
     });
   }
   removeActive () {
-    if (this.state.components.length === 0) return;
-    const newArray = this.state.components.filter((v, i) => i !== this.state.activeIndex);
-    this.setState({
-      components: newArray
-    });
+    return (e) => {
+      if (this.state.components.length === 0) return;
+      const newArray = this.state.components.filter((v, i) => i !== this.state.activeIndex);
+      this.setState({
+        components: newArray
+      });
+    }
   }
   removeComponent (value) {
     const newArray = this.state.components.filter(v => v !== value);
@@ -159,20 +171,17 @@ class App extends PureComponent {
 
               <div className="flex justify-around gray f7">
                 {/* Hotkeys for list */}
-                <HotkeyComponent keyCode={38} handler={(e) => this.previous(e)} />
-                <HotkeyComponent keyCode={40} handler={(e) => this.next(e)} />
-                <HotkeyComponent keyCode={8} handler={() => this.removeActive()} />
-                <HotkeyComponent keyCode={84} handler={() => this.toggleExpand()}>
+                <HotkeyComponent keyCode={38} handler={this.previous()} />
+                <HotkeyComponent keyCode={40} handler={this.next()} />
+                <HotkeyComponent keyCode={8} handler={this.removeActive()} />
+                <HotkeyComponent keyCode={84} handler={this.toggleExpand()}>
                   <div>Try T to toggle expand</div>
                 </HotkeyComponent>
-                <HotkeyComponent keyCode={13} handler={() => this.expand()}>
+                <HotkeyComponent keyCode={13} handler={this.expand()}>
                   <div>Try Enter to expand</div>
                 </HotkeyComponent>
-                <HotkeyComponent keyCode={27} handler={() => this.contract()}>
+                <HotkeyComponent keyCode={27} handler={this.contract()}>
                   <div>Try ESC to close again</div>
-                </HotkeyComponent>
-                <HotkeyComponent keyCode={32} handler={() => alert('Hi Space!')}>
-                  <div>Try Space!</div>
                 </HotkeyComponent>
               </div>
             </Fragment>

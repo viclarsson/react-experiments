@@ -28,15 +28,13 @@ function NotificationWrapper(C, mode) {
     }
 
     updateRenderQueue (notifications) {
-      const { dismiss, id } = this.props;
       let temp = mode === 'first' && notifications[0] ? [notifications[0]] || null : notifications;
       this.setState({ notifications: temp });
     }
 
     renderComponent (n) {
-      const { dismiss, id } = this.props;
+      const { id } = this.props;
       return (<C key={n.id} notification={n} dismiss={this.dismiss(id, n.id)} />);
-
     }
 
     render () {
