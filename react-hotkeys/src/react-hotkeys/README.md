@@ -15,3 +15,6 @@ Common scenarios that this approach tries to cover:
 * `ESC` to close in a certain order
 * Custom key binding dependent on router or state
 * Adding, removing and moving around in a list
+
+## Testing
+Based on `create-react-app`. Clone the repository and run `yarn install && yarn start`.
