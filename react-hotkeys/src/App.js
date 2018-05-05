@@ -144,6 +144,8 @@ class App extends PureComponent {
                           <div>
                             Expandable dummy which adds a handler for ENTER. As it was mounted later, it gets priority.
                             This makes it possible to use different states to trigger different actions on the same keycode. Such wow.
+                            Another example were to be to add a "remove" feature on focus. Just create a state for it and render the
+                            HotkeyComponent.
                           </div>
                         </div>
                       )}
