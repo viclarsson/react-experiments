@@ -4,9 +4,14 @@ import React, { Fragment, PureComponent } from 'react';
 import HotkeyProvider from './react-hotkeys/HotkeyProvider';
 import withHotkey from './react-hotkeys/HotkeyHelper';
 
+// Notification
+import { withNotifications, NotificationTrigger as Trigger } from './react-notify/NotificationHelper';
+
 // Components
 import TestComponent from './components/TestComponent';
+import NotificationComponent from './components/NotificationComponent';
 const HotkeyComponent = withHotkey(TestComponent);
+const Notifications = withNotifications(NotificationComponent);
 
 if (process.env.NODE_ENV !== 'production') {
   const {whyDidYouUpdate} = require('why-did-you-update');
@@ -16,7 +21,6 @@ if (process.env.NODE_ENV !== 'production') {
 class App extends PureComponent {
   constructor (props) {
     super(props);
-
     // Could be in Redux
     this.state = {
       components: [],
@@ -33,6 +37,9 @@ class App extends PureComponent {
     this.toggleExpand = this.toggleExpand.bind(this);
     this.expand = this.expand.bind(this);
     this.contract = this.contract.bind(this);
+
+    // Notifications
+    this.triggerNotification = this.triggerNotification.bind(this);
   }
 
   next () {
@@ -44,7 +51,6 @@ class App extends PureComponent {
       });
     }
   }
-
   previous (e) {
     return (e) => {
       if (this.state.activeIndex === 0) return;
@@ -76,30 +82,51 @@ class App extends PureComponent {
     }
   }
   addComponent () {
+    const value = Math.random().toString(36).substring(7);
     this.setState({
-      components: [...this.state.components, Math.random().toString(36).substring(7)]
+      components: [...this.state.components, value]
     });
+    this.props.registerNotification('top', { content: 'Added ' + value, timeout: 3000 });
   }
   removeActive () {
     return (e) => {
       if (this.state.components.length === 0) return;
       const newArray = this.state.components.filter((v, i) => i !== this.state.activeIndex);
+      const removed = this.state.components.filter((v, i) => i === this.state.activeIndex);
       this.setState({
         components: newArray
       });
+      this.props.registerNotification('top', { content: 'Removed ' + removed[0], timeout: 3000 });
     }
   }
+
   removeComponent (value) {
     const newArray = this.state.components.filter(v => v !== value);
     this.setState({
       components: newArray
     });
+    this.props.registerNotification('top', { content: 'Removed ' + value, timeout: 3000 });
+  }
+
+  triggerNotification (content) {
+    return (e) => {
+      this.props.registerNotification('header', { content });
+    };
   }
 
   render() {
     const { activeIndex } = this.state;
     return (
       <HotkeyProvider>
+          <Notifications containerId='header' render={({ notifications, removeNotification }) => {
+              const n = notifications[0] || null;
+              return n && (
+                <div className="fixed tc pa2 w-100 top-0 white bg-green">
+                  {n.content} / {n.id} /
+                  <a onClick={() => removeNotification('header', n)}>Dismiss</a>
+                </div>
+              );
+            }}/>
         <div className="center measure">
           { this.state.page === 'index' && (
             <Fragment>
@@ -135,6 +162,17 @@ class App extends PureComponent {
                 </a>
               </HotkeyComponent>
 
+              <div className="fixed right-0 top-0">
+                <Notifications containerId='top' render={({ notifications, removeNotification }) => (
+                    notifications.map((n, i) => (
+                      <div key={n.id} className="pa2 bg-near-white gray">
+                        {n.content}
+                        <a onClick={() => removeNotification('top', n)}>Dismiss</a>
+                      </div>
+                    ))
+                )}/>
+              </div>
+
               <p>
                 <HotkeyComponent keyCode={187} handler={() => this.addComponent()}>
                   <a className="dib white bg-blue pa2" onClick={() => this.addComponent()}>Add component (press +)</a>
@@ -169,7 +207,11 @@ class App extends PureComponent {
                 </Fragment>
               ))}
 
-              <div className="flex justify-around gray f7">
+              <Notifications containerId='bottom' render={({ notifications }) => (
+                  notifications.map((n, i) => (<div key={n.id}>{n.content}</div>))
+              )}/>
+
+              <div className="flex justify-around items-center gray f7">
                 {/* Hotkeys for list */}
                 <HotkeyComponent keyCode={38} handler={this.previous()} />
                 <HotkeyComponent keyCode={40} handler={this.next()} />
@@ -183,6 +225,9 @@ class App extends PureComponent {
                 <HotkeyComponent keyCode={27} handler={this.contract()}>
                   <div>Try ESC to close again</div>
                 </HotkeyComponent>
+                <a className="dib white bg-blue pa2" onClick={this.triggerNotification('Hej!')}>
+                  Trigger global notification
+                </a>
               </div>
             </Fragment>
           )}
@@ -192,4 +237,4 @@ class App extends PureComponent {
   }
 }
 
-export default App;
+export default Trigger(App);
