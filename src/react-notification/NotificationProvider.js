@@ -8,7 +8,7 @@ class NotificationProvider extends Component {
     super(props);
     this.registerNotification = this.registerNotification.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
-    this.removeNotification = this.removeNotification.bind(this);
+    this.createNotificationDestroyer = this.createNotificationDestroyer.bind(this);
     this.state = {
       registerNotification: this.registerNotification,
       removeNotification: this.removeNotification,
@@ -20,10 +20,11 @@ class NotificationProvider extends Component {
   }
 
   createNotificationDestroyer (notification, containerId, timeout) {
-    clearTimeout(this.timeouts[notification.id]);
-    this.timeouts[notification.id] = setTimeout(() => {
-      this.removeNotification(containerId, notification);
-    }, timeout);
+    if(!this.timeouts[notification.id]) {
+      this.timeouts[notification.id] = setTimeout(() => {
+        this.removeNotification(containerId, notification);
+      }, timeout);
+    }
   }
 
   componentWillUnmountMount () {
@@ -52,8 +53,13 @@ class NotificationProvider extends Component {
   };
 
   // Remove handler
-  removeNotification (containerId, notification) {
+  removeNotification (containerId, notification, timeout = null) {
     if (this.props.debug) console.log('Removed notification:', notification, 'in', containerId);
+    // For delayed removal
+    if (timeout) {
+      this.createNotificationDestroyer(notification, containerId, timeout);
+      return;
+    }
     let q = this.containers[containerId];
     q = q.filter(c => c !== notification);
     this.containers[containerId] = q.length > 0 ? q : undefined;

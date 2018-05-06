@@ -119,13 +119,20 @@ class App extends PureComponent {
     return (
       <HotkeyProvider>
           <Notifications containerId='header' render={({ notifications, removeNotification }) => {
-              const n = notifications[0] || null;
-              return n && (
-                <div className="fixed tc pa2 w-100 top-0 white bg-green">
-                  {n.content} / {n.id} /
-                  <a onClick={() => removeNotification('header', n)}>Dismiss</a>
-                </div>
-              );
+              // Example of a notification queue for global notifications
+              const n = notifications[notifications.length - 1] || null;
+              if (n) {
+                // This will trigger a timed removal when rendered
+                // Could this be invoking wierd behaviour?
+                removeNotification('header', n, 2000);
+                return (
+                  <div className="fixed tc pa2 w-100 top-0 white bg-green">
+                    {n.content} / {n.id} /
+                    <a onClick={() => removeNotification('header', n)}>Dismiss</a>
+                  </div>
+                );
+              }
+              return null;
             }}/>
         <div className="center measure">
           { this.state.page === 'index' && (
@@ -237,4 +244,8 @@ class App extends PureComponent {
   }
 }
 
+/*
+* Connecting notifications globally.
+* If using router, each route can connect a "local" notification system.
+*/
 export default Trigger(App);
