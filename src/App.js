@@ -149,7 +149,7 @@ class App extends PureComponent {
               }
               return null;
             }}/>
-        <div className="center measure">
+          <div className="center measure">
           { this.state.page === 'index' && (
             <Fragment>
               <h1>UI hotkeys</h1>
@@ -258,7 +258,10 @@ class App extends PureComponent {
                 </HotkeyComponent>
               </div>
 
-              <div className="mt2">
+              <div className="mv2">
+                {this.state.components.length === 0 && (
+                  <div className="pv2 tc f7 gray">No posts.</div>
+                )}
                 {this.state.components.map((c, i) => (
                   <Fragment key={c}>
                     <div className={`pa2 br2 mb2 flex justify-between ${activeIndex === i ? 'bg-gray white' : 'bg-near-white gray'}`}>
@@ -286,8 +289,6 @@ class App extends PureComponent {
                   </Fragment>
                 ))}
               </div>
-
-              <p className="mb2 gray f7 tc">(the active index has some bugs when removing/adding. No biggie, out of scope)</p>
 
               {/* Another notification container */}
               <Notifications containerId='bottom' render={({ notifications }) => (
