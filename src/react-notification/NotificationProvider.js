@@ -32,22 +32,10 @@ class NotificationProvider extends Component {
     });
   }
 
-  // As the register and remove containers does not update,
-  // but must be provided to consumer
-  shouldComponentUpdate (nextProps, nextState) {
-    if (
-      this.props.children !== nextProps.children ||
-      this.state.containers !== nextState.containers
-    ) {
-      return true;
-    }
-    return false;
-  }
-
   // Register handler
   registerNotification (containerId, data) {
     if (this.props.debug) console.log('Registered notification:', data, 'in', containerId);
-    const q = this.containers[containerId] || [];
+    const q = this.containers[containerId] ? [...this.containers[containerId]] : [];
     const notification = {
       ...data,
       id: '_' + Math.random().toString(36).substr(2, 9)
@@ -55,7 +43,7 @@ class NotificationProvider extends Component {
     q.unshift(notification);
     this.containers[containerId] = q;
     this.setState({
-      containers: {...this.containers}
+      containers: { ...this.containers }
     }, () => {
       if (notification.timeout) {
         this.createNotificationDestroyer(notification, containerId, notification.timeout);
@@ -67,13 +55,11 @@ class NotificationProvider extends Component {
   removeNotification (containerId, notification) {
     if (this.props.debug) console.log('Removed notification:', notification, 'in', containerId);
     let q = this.containers[containerId];
-    if (q) {
-      q = q.filter(c => c !== notification);
-      this.containers[containerId] = q.length > 0 ? q : undefined;
-      this.setState({
-        containers: {...this.containers}
-      });
-    }
+    q = q.filter(c => c !== notification);
+    this.containers[containerId] = q.length > 0 ? q : undefined;
+    this.setState({
+      containers: { ...this.containers }
+    });
   }
 
   render () {
