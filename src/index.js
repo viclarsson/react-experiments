@@ -7,9 +7,14 @@ import registerServiceWorker from './registerServiceWorker';
 // Notifications
 import NotificationProvider from './react-notification/NotificationProvider';
 
+// Tour
+import TourProvider from './react-tour/TourProvider';
+
 ReactDOM.render((
   <NotificationProvider>
-    <App />
+    <TourProvider debug>
+      <App />
+    </TourProvider>
   </NotificationProvider>
 ), document.getElementById('root'));
 registerServiceWorker();

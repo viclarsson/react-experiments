@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
 
 // Context
-import Context from './HotkeyContext';
+import Context from './TourContext';
 
 class TourProvider extends Component {
   constructor (props) {
     super(props);
-    this.start = this.start.bind();
-    this.next = this.next.bind();
-    this.previous = this.previous.bind();
-    this.skip = this.skip.bind();
+    this.registerStep = this.registerStep.bind(this);
+    this.start = this.start.bind(this);
+    this.next = this.next.bind(this);
+    this.previous = this.previous.bind(this);
+    this.skip = this.skip.bind(this);
     this.tours = {}; // Object of arrays with ids
     this.state = {
+      registerStep: this.registerStep,
       start: this.start,
       next: this.next,
       previous: this.previous,
       skip: this.skip,
       activeTourId: null,
-      activeIndex: null
+      activeTourIndex: null
     };
   }
 
@@ -31,30 +33,31 @@ class TourProvider extends Component {
 
   start (tourId) {
     if (this.tours[tourId]) {
+      console.log('Started tour', tourId);
       this.setState({
         activeTourId: tourId,
-        activeIndex: 0
+        activeTourIndex: 0
       });
     }
   }
   next () {
     if (this.state.activeTourId) {
       this.setState({
-        activeIndex: this.state.activeIndex + 1
+        activeTourIndex: this.state.activeTourIndex + 1
       });
     }
   }
   previous () {
     if (this.state.activeTourId) {
       this.setState({
-        activeIndex: this.state.activeIndex > 0 ? this.state.activeIndex - 1 : 0
+        activeTourIndex: this.state.activeTourIndex > 0 ? this.state.activeTourIndex - 1 : 0
       });
     }
   }
   skip () {
     if (this.state.activeTourId) {
       this.setState({
-        activeIndex: this.tours[this.state.activeTourId].length - 1
+        activeTourIndex: this.tours[this.state.activeTourId].length - 1
       });
     }
   }
@@ -62,13 +65,14 @@ class TourProvider extends Component {
     if (this.state.activeTourId) {
       this.setState({
         activeTourId: null,
-        activeIndex: null
+        activeTourIndex: null
       }, () => {
         cb();
       });
     }
   }
   render () {
+    console.log(this.state);
     return (
       <Context.Provider value={this.state}>
         {this.props.children}

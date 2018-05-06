@@ -6,12 +6,16 @@ import withHotkey from './react-hotkeys/HotkeyHelper';
 
 // Notification
 import { withNotifications, NotificationTrigger as Trigger } from './react-notification/NotificationHelper';
+import { tourStep, tourController as TC } from './react-tour/TourHelper';
 
 // Components
 import TestComponent from './components/TestComponent';
 import NotificationComponent from './components/NotificationComponent';
+import TourComponent from './components/TourComponent';
 const HotkeyComponent = withHotkey(TestComponent);
 const Notifications = withNotifications(NotificationComponent);
+const TourStep = tourStep(TourComponent);
+const TourController = TC(TourComponent);
 
 // Tachyons style
 const WHITE_LINK = 'white';
@@ -153,6 +157,21 @@ class App extends PureComponent {
                 Hotkeys makes an web application feel modern and responsive,
                 but the handling and implementation must be scalable.
               </p>
+              <TourController render={({ start }) => (
+                <a className={BLUE_BUTTON} onClick={() => start('intro')}>
+                  Start intro tour!
+                </a>
+              )} />
+
+              <TourStep tourId="intro" stepId="intro-1" tourIndex={0} render={
+                ({ isActive, next, previous }) => isActive ? (
+                  <div>
+                    This is the first step!
+                    <a className={BLUE_BUTTON} onClick={() => next()}>
+                      Next
+                    </a>
+                  </div>
+                ) : null}/>
               <p>
                 Common scenarios:
               </p>
@@ -166,6 +185,15 @@ class App extends PureComponent {
                   Try! (or click right arrow)
                 </a>
               </HotkeyComponent>
+              <TourStep tourId="intro" stepId="intro-2" tourIndex={1} render={
+                ({ isActive, next, previous }) => isActive ? (
+                  <div>
+                    Click above to start!
+                    <a className={BLUE_BUTTON} onClick={() => next()}>
+                      Next
+                    </a>
+                  </div>
+                ) : null}/>
             </Fragment>
           )}
           { this.state.page === 'demo' && (
