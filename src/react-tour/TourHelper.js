@@ -9,7 +9,6 @@ export function tourStep(C) {
     return (
       <Context.Consumer>
         {({ registerStep, activeTourId, activeStepId, start, next, previous, skip, done }) => {
-          console.log(tourId, activeTourId, stepId, activeStepId);
           return (
             <C
               isActive={activeTourId === tourId && activeStepId === stepId}
@@ -33,9 +32,9 @@ export function tourController(C) {
   const TourController = (props) => {
     return (
       <Context.Consumer>
-        {({ start, next, previous, skip, done }) => {
+        {({ activeTourId, activeStepId, start, next, previous, skip, done }) => {
           return (
-            <C start={start} next={next} previous={previous} skip={skip} done={done} {...props} />
+            <C activeTourId={activeTourId} activeStepId={activeStepId} start={start} next={next} previous={previous} skip={skip} done={done} {...props} />
           );
         }}
       </Context.Consumer>

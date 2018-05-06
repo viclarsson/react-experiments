@@ -11,7 +11,8 @@ import NotificationProvider from './react-notification/NotificationProvider';
 import TourProvider from './react-tour/TourProvider';
 
 const TOURS = {
-  'intro': ['intro-1', 'intro-2']
+  'intro': ['intro-1', 'intro-2', 'intro-3'],
+  'second': ['second-1', 'second-2', 'second-3']
 };
 
 ReactDOM.render((

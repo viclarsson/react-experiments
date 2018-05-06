@@ -21,6 +21,7 @@ const TourController = TC(TourComponent);
 const WHITE_LINK = 'white';
 const BUTTON = 'dib pa1 br2 link tc';
 const BLUE_BUTTON = BUTTON + ' white bg-blue';
+const TOUR_ELEMENT = 'bg-lightest-blue blue tc white pa2 br2';
 const HOTKEY = 'dib ba b--gray gray fw7 code f7 lh-title ph1 br2';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -158,14 +159,14 @@ class App extends PureComponent {
                 but the handling and implementation must be scalable.
               </p>
               <TourController render={({ start }) => (
-                <a className={BLUE_BUTTON} onClick={() => start('intro')}>
+                <a className={BLUE_BUTTON} onClick={() => start('intro', () => alert('Start callback for tracking for example!'))}>
                   Start intro tour!
                 </a>
               )} />
 
               <TourStep tourId="intro" stepId="intro-1" render={
                 ({ isActive, next, previous }) => isActive ? (
-                  <div>
+                  <div className={TOUR_ELEMENT}>
                     This is the first step!
                     <a className={BLUE_BUTTON} onClick={() => next()}>
                       Next
@@ -180,17 +181,27 @@ class App extends PureComponent {
                 <li>Enter to proceed</li>
                 <li>Custom key binding</li>
               </ul>
-              <HotkeyComponent keyCode={39} handler={() => this.setState({ page: 'demo' })}>
-                <a className={BLUE_BUTTON} onClick={() => this.setState({ page: 'demo' })}>
-                  Try! (or click right arrow)
-                </a>
-              </HotkeyComponent>
+
+              <TourController render={({ next, activeStepId }) => (
+                <HotkeyComponent keyCode={39} handler={() => {
+                    this.setState({ page: 'demo' });
+                    if (activeStepId === 'intro-2') next();
+                  }}>
+                  <a className={BLUE_BUTTON} onClick={() => {
+                      this.setState({ page: 'demo' });
+                      if (activeStepId === 'intro-2') next();
+                      console.log('Active?', activeStepId);
+                    }}>
+                    Try! (or click right arrow)
+                  </a>
+                </HotkeyComponent>
+              )} />
               <TourStep tourId="intro" stepId="intro-2" render={
                 ({ isActive, next, previous }) => isActive ? (
-                  <div>
+                  <div className={TOUR_ELEMENT}>
                     Click above to start!
                     <a className={BLUE_BUTTON} onClick={() => next()}>
-                      Next
+                      Ok!
                     </a>
                   </div>
                 ) : null}/>
@@ -211,6 +222,25 @@ class App extends PureComponent {
               </div>
 
               <h1>Demo</h1>
+                <TourStep tourId="intro" stepId="intro-3" render={
+                  ({ isActive, done }) => isActive ? (
+                    <div className={TOUR_ELEMENT}>
+                      Great! You are now in showing the demo! Click or test the hotkeys!
+                      <a className={BLUE_BUTTON} onClick={() => done(() => alert('Tour callback!'))}>
+                        Done!
+                      </a>
+                    </div>
+                  ) : null}/>
+
+                <TourStep tourId="second" stepId="second-1" render={
+                    ({ isActive, done }) => isActive ? (
+                      <div className={TOUR_ELEMENT}>
+                        You found the other tour! Nice! Neat with hotkeys!
+                        <a className={BLUE_BUTTON} onClick={() => done(() => alert('Second tour callback!'))}>
+                          Yay!
+                        </a>
+                      </div>
+                    ) : null}/>
 
               <div className="flex items-center justify-between">
                 {/* Navigation with hotkey */}
@@ -266,14 +296,22 @@ class App extends PureComponent {
                 <HotkeyComponent keyCode={40} handler={this.next()} />
                 <HotkeyComponent keyCode={8} handler={this.removeActive()} />
                 <HotkeyComponent keyCode={84} handler={this.toggleExpand()}>
-                  <div>Try <span className={HOTKEY}>T</span> to toggle expand</div>
+                  <div className="mr2">Try <span className={HOTKEY}>T</span> to toggle expand</div>
                 </HotkeyComponent>
                 <HotkeyComponent keyCode={13} handler={this.expand()}>
-                  <div>Try <span className={HOTKEY}>Enter</span> to expand</div>
+                  <div className="mr2">Try <span className={HOTKEY}>Enter</span> to expand</div>
                 </HotkeyComponent>
                 <HotkeyComponent keyCode={27} handler={this.contract()}>
-                  <div>Try <span className={HOTKEY}>ESC</span> to close again</div>
+                  <div className="mr2">Try <span className={HOTKEY}>ESC</span> to close again</div>
                 </HotkeyComponent>
+                <TourController render={({ start }) => (
+                  <HotkeyComponent keyCode={'ctrl+alt+84'} handler={() => start('second')}>
+                    <div className="ml2">Try <span className={HOTKEY}>alt + T</span> to start another tour!</div>
+                  </HotkeyComponent>
+                )} />
+              </div>
+
+              <div className="tc f7 mt2">
                 <HotkeyComponent keyCode={71} handler={this.triggerNotification('Global notification (from hotkey)!')}>
                   <a className={BLUE_BUTTON} onClick={this.triggerNotification('Global notification!')}>
                     Trigger global notification <span className={HOTKEY + ' white b--white'}>G</span>

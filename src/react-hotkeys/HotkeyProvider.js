@@ -42,11 +42,15 @@ class HotkeyProvider extends Component {
   }
 
   globalHandler (e) {
-    const hasHandler = this.state.handlers[e.keyCode];
+    let keyHash = e.keyCode;
+    // Order is important here when we register! Ex: 'ctrl+alt+84'
+    if (e.altKey) keyHash = 'alt+' + keyHash;
+    if (e.ctrlKey || e.metaKey) keyHash = 'ctrl+' + keyHash;
+    const hasHandler = this.state.handlers[keyHash];
     // TODO: Priority/override functionality?
     if (hasHandler && hasHandler[0]) {
       hasHandler[0](e);
-      if (this.props.debug) console.log('Called handler:', e.keyCode);
+      if (this.props.debug) console.log('Called handler:', keyHash);
     }
   }
 
