@@ -13,6 +13,12 @@ import NotificationComponent from './components/NotificationComponent';
 const HotkeyComponent = withHotkey(TestComponent);
 const Notifications = withNotifications(NotificationComponent);
 
+// Tachyons style
+const WHITE_LINK = 'white';
+const BUTTON = 'dib pa1 br2 link tc';
+const BLUE_BUTTON = BUTTON + ' white bg-blue';
+const HOTKEY = 'dib ba b--gray gray fw7 code f7 lh-title ph1 br2';
+
 if (process.env.NODE_ENV !== 'production') {
   const {whyDidYouUpdate} = require('why-did-you-update');
   whyDidYouUpdate(React);
@@ -86,7 +92,7 @@ class App extends PureComponent {
     this.setState({
       components: [...this.state.components, value]
     });
-    this.props.registerNotification('top', { content: 'Added ' + value, timeout: 3000 });
+    this.props.registerNotification('bottom-right', { content: 'Added ' + value, timeout: 3000 });
   }
   removeActive () {
     return (e) => {
@@ -96,7 +102,7 @@ class App extends PureComponent {
       this.setState({
         components: newArray
       });
-      this.props.registerNotification('top', { content: 'Removed ' + removed[0], timeout: 3000 });
+      this.props.registerNotification('bottom-right', { content: 'Removed ' + removed[0], timeout: 3000 });
     }
   }
 
@@ -105,7 +111,7 @@ class App extends PureComponent {
     this.setState({
       components: newArray
     });
-    this.props.registerNotification('top', { content: 'Removed ' + value, timeout: 3000 });
+    this.props.registerNotification('bottom-right', { content: 'Removed ' + value, timeout: 3000 });
   }
 
   triggerNotification (content) {
@@ -127,8 +133,12 @@ class App extends PureComponent {
                 removeNotification('header', n, 2000);
                 return (
                   <div className="fixed tc pa2 w-100 top-0 white bg-green">
-                    {n.content} / {n.id} /
-                    <a onClick={() => removeNotification('header', n)}>Dismiss</a>
+                    {n.content} &nbsp;
+                    {n.id}
+                    {/* When an global notification is triggered, ESC will close before closing the list expand */}
+                    <HotkeyComponent keyCode={27} handler={() => removeNotification('header', n)}>
+                      <a className={WHITE_LINK + ' f7 ml2'} onClick={() => removeNotification('header', n)}>Dismiss</a>
+                    </HotkeyComponent>
                   </div>
                 );
               }
@@ -152,7 +162,7 @@ class App extends PureComponent {
                 <li>Custom key binding</li>
               </ul>
               <HotkeyComponent keyCode={39} handler={() => this.setState({ page: 'demo' })}>
-                <a className="dib white bg-blue pa2" onClick={() => this.setState({ page: 'demo' })}>
+                <a className={BLUE_BUTTON} onClick={() => this.setState({ page: 'demo' })}>
                   Try! (or click right arrow)
                 </a>
               </HotkeyComponent>
@@ -160,60 +170,64 @@ class App extends PureComponent {
           )}
           { this.state.page === 'demo' && (
             <Fragment>
-              <h1>Demo</h1>
-
-              {/* Nagivation with hotkey */}
-              <HotkeyComponent keyCode={37} handler={() => this.setState({ page: 'index' })}>
-                <a className="blue" onClick={() => this.setState({ page: 'index' })}>
-                  Back (or click left arrow)
-                </a>
-              </HotkeyComponent>
-
-              <div className="fixed right-0 top-0">
-                <Notifications containerId='top' render={({ notifications, removeNotification }) => (
+              {/* Notifications placed in bottom right corner */}
+              <div className="fixed right-0 bottom-0 pa4">
+                <Notifications containerId='bottom-right' render={({ notifications, removeNotification }) => (
                     notifications.map((n, i) => (
-                      <div key={n.id} className="pa2 bg-near-white gray">
-                        {n.content}
-                        <a onClick={() => removeNotification('top', n)}>Dismiss</a>
+                      <div key={n.id} className="pa2 bg-near-white gray mt1 tr">
+                        {n.id}
+                        <a className={BLUE_BUTTON + ' ml1 f7'} onClick={() => removeNotification('bottom-right', n)}>Dismiss</a>
                       </div>
                     ))
                 )}/>
               </div>
 
-              <p>
-                <HotkeyComponent keyCode={187} handler={() => this.addComponent()}>
-                  <a className="dib white bg-blue pa2" onClick={() => this.addComponent()}>Add component (press +)</a>
+              <h1>Demo</h1>
+
+              <div className="flex items-center justify-between">
+                {/* Navigation with hotkey */}
+                <HotkeyComponent keyCode={37} handler={() => this.setState({ page: 'index' })}>
+                  <a className="blue" onClick={() => this.setState({ page: 'index' })}>
+                    Back (or click left arrow)
+                  </a>
                 </HotkeyComponent>
-              </p>
-              <p className="gray f7 tc">(the active index has some bugs when removing/adding. No biggie, out of scope)</p>
+                <HotkeyComponent keyCode={187} handler={() => this.addComponent()}>
+                  <a className={BLUE_BUTTON} onClick={() => this.addComponent()}>Add component (press +)</a>
+                </HotkeyComponent>
+              </div>
 
-              {this.state.components.map((c, i) => (
-                <Fragment key={c}>
-                  <div className={`pa2 br2 mb2 flex justify-between ${activeIndex === i ? 'bg-gray white' : 'bg-near-white gray'}`}>
-                    <div className="flex-auto w-100">
-                      Element: {c}
-                      {this.state.expandActive && this.state.activeIndex === i && (
-                        <div className="f7">
-                          {/* Another hotkey for ENTER (13) */}
-                          <HotkeyComponent keyCode={13} handler={() => alert(`Surprise! ${c}`)}>
-                            <div>Try Enter for surprise!</div>
-                          </HotkeyComponent>
-                          <div>
-                            Expandable dummy which adds a handler for ENTER. As it was mounted later, it gets priority.
-                            This makes it possible to use different states to trigger different actions on the same keycode. Such wow.
-                            Another example were to be to add a "remove" feature on focus. Just create a state for it and render the
-                            HotkeyComponent.
+              <div className="mt2">
+                {this.state.components.map((c, i) => (
+                  <Fragment key={c}>
+                    <div className={`pa2 br2 mb2 flex justify-between ${activeIndex === i ? 'bg-gray white' : 'bg-near-white gray'}`}>
+                      <div className="flex-auto w-100">
+                        Element: {c}
+                        {this.state.expandActive && this.state.activeIndex === i && (
+                          <div className="f7">
+                            {/* Another hotkey for ENTER (13) */}
+                            <HotkeyComponent keyCode={13} handler={() => alert(`Surprise! ${c}`)}>
+                              <div>Try Enter for surprise!</div>
+                            </HotkeyComponent>
+                            <div>
+                              Expandable dummy which adds a handler for ENTER. As it was mounted later, it gets priority.
+                              This makes it possible to use different states to trigger different actions on the same keycode. Such wow.
+                              Another example were to be to add a "remove" feature on focus. Just create a state for it and render the
+                              HotkeyComponent.
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
+                      <div className="flex-none">
+                        <a className="dib white bg-red pa1 br2 f7" onClick={() => this.removeComponent(c)}>Remove (Backspace)</a>
+                      </div>
                     </div>
-                    <div className="flex-none">
-                      <a className="dib white bg-red pa1 br2 f7" onClick={() => this.removeComponent(c)}>Remove (Backspace)</a>
-                    </div>
-                  </div>
-                </Fragment>
-              ))}
+                  </Fragment>
+                ))}
+              </div>
 
+              <p className="mb2 gray f7 tc">(the active index has some bugs when removing/adding. No biggie, out of scope)</p>
+
+              {/* Another notification container */}
               <Notifications containerId='bottom' render={({ notifications }) => (
                   notifications.map((n, i) => (<div key={n.id}>{n.content}</div>))
               )}/>
@@ -224,17 +238,19 @@ class App extends PureComponent {
                 <HotkeyComponent keyCode={40} handler={this.next()} />
                 <HotkeyComponent keyCode={8} handler={this.removeActive()} />
                 <HotkeyComponent keyCode={84} handler={this.toggleExpand()}>
-                  <div>Try T to toggle expand</div>
+                  <div>Try <span className={HOTKEY}>T</span> to toggle expand</div>
                 </HotkeyComponent>
                 <HotkeyComponent keyCode={13} handler={this.expand()}>
-                  <div>Try Enter to expand</div>
+                  <div>Try <span className={HOTKEY}>Enter</span> to expand</div>
                 </HotkeyComponent>
                 <HotkeyComponent keyCode={27} handler={this.contract()}>
-                  <div>Try ESC to close again</div>
+                  <div>Try <span className={HOTKEY}>ESC</span> to close again</div>
                 </HotkeyComponent>
-                <a className="dib white bg-blue pa2" onClick={this.triggerNotification('Hej!')}>
-                  Trigger global notification
-                </a>
+                <HotkeyComponent keyCode={71} handler={this.triggerNotification('Global notification (from hotkey)!')}>
+                  <a className={BLUE_BUTTON} onClick={this.triggerNotification('Global notification!')}>
+                    Trigger global notification <span className={HOTKEY + ' white b--white'}>G</span>
+                  </a>
+                </HotkeyComponent>
               </div>
             </Fragment>
           )}

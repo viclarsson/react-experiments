@@ -3,6 +3,13 @@ import React, { Component } from 'react';
 // Context
 import Context from './NotificationContext';
 
+/*
+* Notification data structure
+* Send whatever you want, the only taken keys in the object are:
+*  - id (A random generated id to keep track of notification)
+*  - timeout (If the notification should auto-remove after timeout milliseconds)
+*/
+
 class NotificationProvider extends Component {
   constructor (props) {
     super(props);
@@ -61,11 +68,16 @@ class NotificationProvider extends Component {
       return;
     }
     let q = this.containers[containerId];
-    q = q.filter(c => c !== notification);
-    this.containers[containerId] = q.length > 0 ? q : undefined;
-    this.setState({
-      containers: { ...this.containers }
-    });
+    if (q) {
+      q = q.filter(c => c !== notification);
+      // Remove array if no notifications left
+      this.containers[containerId] = q.length > 0 ? q : undefined;
+      // Remove eventual timeout to not trigger renders
+      clearTimeout(this.timeouts[notification.id]);
+      this.setState({
+        containers: { ...this.containers }
+      });
+    }
   }
 
   render () {
