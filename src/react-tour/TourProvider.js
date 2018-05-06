@@ -6,58 +6,53 @@ import Context from './TourContext';
 class TourProvider extends Component {
   constructor (props) {
     super(props);
-    this.registerStep = this.registerStep.bind(this);
     this.start = this.start.bind(this);
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.skip = this.skip.bind(this);
-    this.tours = {}; // Object of arrays with ids
+    this.tours = props.tours;
+    this.activeIndex = 0;
     this.state = {
-      registerStep: this.registerStep,
       start: this.start,
       next: this.next,
       previous: this.previous,
       skip: this.skip,
       activeTourId: null,
-      activeTourIndex: null
+      activeStepId: null
     };
   }
 
-  // Register handler
-  registerStep (tourId, id, index) {
-    if (this.props.debug) console.log('Registered tour step:', tourId);
-    const q = this.tours[tourId] ? {...this.tours[tourId]} : {};
-    q[index] = id;
-    this.tours[tourId] = q;
-  };
-
   start (tourId) {
+    console.log('Tours?', this.tours);
     if (this.tours[tourId]) {
       console.log('Started tour', tourId);
+      this.activeIndex = 0;
       this.setState({
         activeTourId: tourId,
-        activeTourIndex: 0
+        activeStepId: this.tours[tourId][0]
       });
     }
   }
   next () {
     if (this.state.activeTourId) {
+      this.activeIndex = this.activeIndex + 1;
       this.setState({
-        activeTourIndex: this.state.activeTourIndex + 1
+        activeStepId: this.tours[this.state.activeTourId][this.activeIndex]
       });
     }
   }
   previous () {
     if (this.state.activeTourId) {
+      this.activeIndex = this.activeIndex - 1;
       this.setState({
-        activeTourIndex: this.state.activeTourIndex > 0 ? this.state.activeTourIndex - 1 : 0
+        activeStepId: this.tours[this.state.activeTourId][this.activeIndex]
       });
     }
   }
   skip () {
     if (this.state.activeTourId) {
       this.setState({
-        activeTourIndex: this.tours[this.state.activeTourId].length - 1
+        activeStepId: this.tours[this.state.activeTourId][this.tours[this.state.activeTourId].length - 1]
       });
     }
   }
@@ -65,7 +60,7 @@ class TourProvider extends Component {
     if (this.state.activeTourId) {
       this.setState({
         activeTourId: null,
-        activeTourIndex: null
+        activeStepId: null
       }, () => {
         cb();
       });

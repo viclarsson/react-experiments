@@ -10,9 +10,13 @@ import NotificationProvider from './react-notification/NotificationProvider';
 // Tour
 import TourProvider from './react-tour/TourProvider';
 
+const TOURS = {
+  'intro': ['intro-1', 'intro-2']
+};
+
 ReactDOM.render((
   <NotificationProvider>
-    <TourProvider debug>
+    <TourProvider debug tours={TOURS}>
       <App />
     </TourProvider>
   </NotificationProvider>

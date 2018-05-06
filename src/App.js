@@ -163,7 +163,7 @@ class App extends PureComponent {
                 </a>
               )} />
 
-              <TourStep tourId="intro" stepId="intro-1" tourIndex={0} render={
+              <TourStep tourId="intro" stepId="intro-1" render={
                 ({ isActive, next, previous }) => isActive ? (
                   <div>
                     This is the first step!
@@ -185,7 +185,7 @@ class App extends PureComponent {
                   Try! (or click right arrow)
                 </a>
               </HotkeyComponent>
-              <TourStep tourId="intro" stepId="intro-2" tourIndex={1} render={
+              <TourStep tourId="intro" stepId="intro-2" render={
                 ({ isActive, next, previous }) => isActive ? (
                   <div>
                     Click above to start!
