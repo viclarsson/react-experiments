@@ -175,7 +175,7 @@ class App extends PureComponent {
                 <Notifications containerId='bottom-right' render={({ notifications, removeNotification }) => (
                     notifications.map((n, i) => (
                       <div key={n.id} className="pa2 bg-near-white gray mt1 tr">
-                        {n.id}
+                        {n.content}
                         <a className={BLUE_BUTTON + ' ml1 f7'} onClick={() => removeNotification('bottom-right', n)}>Dismiss</a>
                       </div>
                     ))
