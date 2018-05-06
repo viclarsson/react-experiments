@@ -235,7 +235,12 @@ class App extends PureComponent {
                     ({ isActive, done }) => isActive ? (
                       <div className={TOUR_ELEMENT}>
                         You found the other tour! Nice! Neat with hotkeys!
-                        <a className={BLUE_BUTTON} onClick={() => done(() => alert('Second tour callback!'))}>
+                        <a className={BLUE_BUTTON} onClick={() => {
+                            done(() => {
+                              // Function call due to curry,
+                              this.triggerNotification('Done with second tour! Great!')();
+                            });
+                        }}>
                           Yay!
                         </a>
                       </div>
