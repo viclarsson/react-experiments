@@ -190,7 +190,6 @@ class App extends PureComponent {
                   <a className={BLUE_BUTTON} onClick={() => {
                       this.setState({ page: 'demo' });
                       if (activeStepId === 'intro-2') next();
-                      console.log('Active?', activeStepId);
                     }}>
                     Try! (or click right arrow)
                   </a>
@@ -243,7 +242,7 @@ class App extends PureComponent {
                     ) : null}/>
 
               <div className="flex items-center justify-between">
-                {/* Navigation with hotkey */}
+                {/* Navigation with hotkey where the same functions are called (should be one static defined though) */}
                 <HotkeyComponent keyCode={37} handler={() => this.setState({ page: 'index' })}>
                   <a className="blue" onClick={() => this.setState({ page: 'index' })}>
                     Back (or click left arrow)
@@ -295,6 +294,8 @@ class App extends PureComponent {
                 <HotkeyComponent keyCode={38} handler={this.previous()} />
                 <HotkeyComponent keyCode={40} handler={this.next()} />
                 <HotkeyComponent keyCode={8} handler={this.removeActive()} />
+
+                {/* Hotkeys with explanation */}
                 <HotkeyComponent keyCode={84} handler={this.toggleExpand()}>
                   <div className="mr2">Try <span className={HOTKEY}>T</span> to toggle expand</div>
                 </HotkeyComponent>
