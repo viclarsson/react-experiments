@@ -5,7 +5,7 @@ import HotkeyProvider from './react-hotkeys/HotkeyProvider';
 import withHotkey from './react-hotkeys/HotkeyHelper';
 
 // Notification
-import { withNotifications, NotificationTrigger as Trigger } from './react-notify/NotificationHelper';
+import { withNotifications, NotificationTrigger as Trigger } from './react-notification/NotificationHelper';
 
 // Components
 import TestComponent from './components/TestComponent';
