@@ -141,7 +141,7 @@ class App extends PureComponent {
                     {n.content} &nbsp;
                     {n.id}
                     {/* When an global notification is triggered, ESC will close before closing the list expand */}
-                    <HotkeyComponent keyCode={27} handler={() => removeNotification('header', n)}>
+                    <HotkeyComponent keyCode="esc" handler={() => removeNotification('header', n)}>
                       <a className={WHITE_LINK + ' f7 ml2'} onClick={() => removeNotification('header', n)}>Dismiss</a>
                     </HotkeyComponent>
                   </div>
@@ -183,7 +183,7 @@ class App extends PureComponent {
               </ul>
 
               <TourController render={({ next, activeStepId }) => (
-                <HotkeyComponent keyCode={39} handler={() => {
+                <HotkeyComponent keyCode="rightarrow" handler={() => {
                     this.setState({ page: 'demo' });
                     if (activeStepId === 'intro-2') next();
                   }}>
@@ -248,12 +248,12 @@ class App extends PureComponent {
 
               <div className="flex items-center justify-between">
                 {/* Navigation with hotkey where the same functions are called (should be one static defined though) */}
-                <HotkeyComponent keyCode={37} handler={() => this.setState({ page: 'index' })}>
+                <HotkeyComponent keyCode="leftarrow" handler={() => this.setState({ page: 'index' })}>
                   <a className="blue" onClick={() => this.setState({ page: 'index' })}>
                     Back (or click left arrow)
                   </a>
                 </HotkeyComponent>
-                <HotkeyComponent keyCode={187} handler={() => this.addComponent()}>
+                <HotkeyComponent keyCode="plus" handler={() => this.addComponent()}>
                   <a className={BLUE_BUTTON} onClick={() => this.addComponent()}>Add component (press +)</a>
                 </HotkeyComponent>
               </div>
@@ -270,7 +270,7 @@ class App extends PureComponent {
                         {this.state.expandActive && this.state.activeIndex === i && (
                           <div className="f7">
                             {/* Another hotkey for ENTER (13) */}
-                            <HotkeyComponent keyCode={13} handler={() => alert(`Surprise! ${c}`)}>
+                            <HotkeyComponent keyCode="enter" handler={() => alert(`Surprise! ${c}`)}>
                               <div>Try Enter for surprise!</div>
                             </HotkeyComponent>
                             <div>
@@ -297,29 +297,29 @@ class App extends PureComponent {
 
               <div className="flex justify-around items-center gray f7">
                 {/* Hotkeys for list */}
-                <HotkeyComponent keyCode={38} handler={this.previous()} />
-                <HotkeyComponent keyCode={40} handler={this.next()} />
-                <HotkeyComponent keyCode={8} handler={this.removeActive()} />
+                <HotkeyComponent keyCode="uparrow" handler={this.previous()} />
+                <HotkeyComponent keyCode="downarrow" handler={this.next()} />
+                <HotkeyComponent keyCode="backspace" handler={this.removeActive()} />
 
                 {/* Hotkeys with explanation */}
-                <HotkeyComponent keyCode={84} handler={this.toggleExpand()}>
+                <HotkeyComponent keyCode="t" handler={this.toggleExpand()}>
                   <div className="mr2">Try <span className={HOTKEY}>T</span> to toggle expand</div>
                 </HotkeyComponent>
-                <HotkeyComponent keyCode={13} handler={this.expand()}>
+                <HotkeyComponent keyCode="enter" handler={this.expand()}>
                   <div className="mr2">Try <span className={HOTKEY}>Enter</span> to expand</div>
                 </HotkeyComponent>
-                <HotkeyComponent keyCode={27} handler={this.contract()}>
+                <HotkeyComponent keyCode="esc" handler={this.contract()}>
                   <div className="mr2">Try <span className={HOTKEY}>ESC</span> to close again</div>
                 </HotkeyComponent>
                 <TourController render={({ start }) => (
-                  <HotkeyComponent keyCode={'ctrl+alt+84'} handler={() => start('second')}>
+                  <HotkeyComponent keyCode="ctrl+alt+t" handler={() => start('second')}>
                     <div className="ml2">Try <span className={HOTKEY}>alt + T</span> to start another tour!</div>
                   </HotkeyComponent>
                 )} />
               </div>
 
               <div className="tc f7 mt2">
-                <HotkeyComponent keyCode={71} handler={this.triggerNotification('Global notification (from hotkey)!')}>
+                <HotkeyComponent keyCode="g" handler={this.triggerNotification('Global notification (from hotkey)!')}>
                   <a className={BLUE_BUTTON} onClick={this.triggerNotification('Global notification!')}>
                     Trigger global notification <span className={HOTKEY + ' white b--white'}>G</span>
                   </a>

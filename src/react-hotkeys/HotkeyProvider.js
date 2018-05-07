@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 // Context
 import Context from './HotkeyContext';
 
-class HotkeyProvider extends Component {
+// Lookup table
+import KeyCodes from './KeyCodes';
+
+class HotkeyProvider extends PureComponent {
   constructor (props) {
     super(props);
     this.registerHandler = this.registerHandler.bind(this);
@@ -14,23 +17,8 @@ class HotkeyProvider extends Component {
       registerHandler: this.registerHandler,
       removeHandler: this.removeHandler,
     };
-    this.state = {
-      handlers: {}
-    };
-    // To be able to register multiple handlers on mounts
+    // Register handlers
     this.handlers = {};
-  }
-
-  // As the register and remove handlers does not update,
-  // but must be provided to consumer
-  shouldComponentUpdate (nextProps, nextState) {
-    if (
-      this.props.children !== nextProps.children ||
-      this.state.handlers !== nextState.handlers
-    ) {
-      return true;
-    }
-    return false;
   }
 
   // Add and remove listener
@@ -43,10 +31,10 @@ class HotkeyProvider extends Component {
 
   globalHandler (e) {
     let keyHash = e.keyCode;
-    // Order is important here when we register! Ex: 'ctrl+alt+84'
+    // Order is important here when we register! Ex: 'ctrl+alt+t'
     if (e.altKey) keyHash = 'alt+' + keyHash;
     if (e.ctrlKey || e.metaKey) keyHash = 'ctrl+' + keyHash;
-    const hasHandler = this.state.handlers[keyHash];
+    const hasHandler = this.handlers[keyHash];
     // TODO: Priority/override functionality?
     if (hasHandler && hasHandler[0]) {
       hasHandler[0](e);
@@ -55,14 +43,23 @@ class HotkeyProvider extends Component {
   }
 
   // Register handler
-  registerHandler (keycode, handler) {
-    if (this.props.debug) console.log('Registered handler:', keycode);
+  registerHandler (keyhash, handler) {
+    if (this.props.debug) console.log('Registered handler:', keyhash);
+
+    // Translate to keycodes
+    const keys = keyhash.split('+');
+    const key = KeyCodes[keys.pop()];
+    if (!key) {
+      console.error('Unknown hotkey:', keyhash);
+      return;
+    }
+    // Rebuild keyHash
+    const keycode = [...keys, key].join('+');
+
+    // Add to queue of handlers for keyHash
     const q = this.handlers[keycode] || [];
     q.unshift(handler);
     this.handlers[keycode] = q;
-    this.setState({
-      handlers: this.handlers
-    });
   };
 
   // Remove handler
@@ -72,9 +69,6 @@ class HotkeyProvider extends Component {
     if (q) {
       q = q.filter(h => h !== handler);
       this.handlers[keycode] = q.length > 0 ? q : undefined;
-      this.setState({
-        handlers: this.handlers
-      });
     }
   }
 
