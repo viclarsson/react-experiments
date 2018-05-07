@@ -126,7 +126,7 @@ class App extends PureComponent {
   }
 
   render() {
-    const { activeIndex } = this.state;
+    const { activeIndex, components } = this.state;
     return (
       <HotkeyProvider>
           <Notifications containerId='header' render={({ notifications, removeNotification }) => {
@@ -300,6 +300,11 @@ class App extends PureComponent {
                 <HotkeyComponent keyCode="uparrow" handler={this.previous()} />
                 <HotkeyComponent keyCode="downarrow" handler={this.next()} />
                 <HotkeyComponent keyCode="backspace" handler={this.removeActive()} />
+                {activeIndex >= (components.length - 1) && (
+                  <HotkeyComponent keyCode="tab" handler={() => this.addComponent()}>
+                    TAB to add
+                  </HotkeyComponent>
+                )}
 
                 {/* Hotkeys with explanation */}
                 <HotkeyComponent keyCode="t" handler={this.toggleExpand()}>

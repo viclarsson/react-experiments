@@ -37,16 +37,13 @@ class HotkeyProvider extends PureComponent {
     const hasHandler = this.handlers[keyHash];
     // TODO: Priority/override functionality?
     if (hasHandler && hasHandler[0]) {
+      e.preventDefault();
       hasHandler[0](e);
       if (this.props.debug) console.log('Called handler:', keyHash);
     }
   }
-
-  // Register handler
-  registerHandler (keyhash, handler) {
-    if (this.props.debug) console.log('Registered handler:', keyhash);
-
     // Translate to keycodes
+  convertHashToKeys(keyhash) {
     const keys = keyhash.split('+');
     const key = KeyCodes[keys.pop()];
     if (!key) {
@@ -54,21 +51,27 @@ class HotkeyProvider extends PureComponent {
       return;
     }
     // Rebuild keyHash
-    const keycode = [...keys, key].join('+');
+    return [...keys, key].join('+');
+  }
 
+  // Register handler
+  registerHandler (keyhash, handler) {
+    const keycode = this.convertHashToKeys(keyhash);
     // Add to queue of handlers for keyHash
     const q = this.handlers[keycode] || [];
     q.unshift(handler);
     this.handlers[keycode] = q;
+    if (this.props.debug) console.log('Registered handler:', keycode);
   };
 
   // Remove handler
-  removeHandler (keycode, handler) {
-    if (this.props.debug) console.log('Removed handler:', keycode);
+  removeHandler (keyhash, handler) {
+    const keycode = this.convertHashToKeys(keyhash);
     let q = this.handlers[keycode];
     if (q) {
       q = q.filter(h => h !== handler);
       this.handlers[keycode] = q.length > 0 ? q : undefined;
+      if (this.props.debug) console.log('Removed handler:', keycode);
     }
   }
 
