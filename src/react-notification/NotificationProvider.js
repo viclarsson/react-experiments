@@ -86,7 +86,7 @@ class NotificationProvider extends Component {
 
   // Remove handler
   removeNotification (containerId, notificationId, timeout = null) {
-    if (this.props.debug) console.log('Removing notification with id:', notificationId, 'in', containerId);
+    if (this.props.debug) console.log('Trying to remove notification with id:', notificationId, 'in', containerId);
     // For delayed removal
     if (timeout) {
       this.createNotificationDestroyer(notificationId, containerId, timeout);

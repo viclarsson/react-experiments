@@ -62,7 +62,7 @@ class Index extends PureComponent {
 
         <Hotkey keyCode="s" handler={this.startTour}>
           <a className={BLUE_BUTTON} onClick={this.startTour}>
-            Start intro tour!
+            Start intro tour! (S)
           </a>
         </Hotkey>
 
@@ -72,7 +72,7 @@ class Index extends PureComponent {
               This is the first step!
               <Hotkey keyCode="enter" handler={() => next()}>
                 <a className={BLUE_BUTTON} onClick={() => next()}>
-                  Next
+                  Next (enter)
                 </a>
               </Hotkey>
               <Hotkey keyCode="esc" handler={() => done()}>

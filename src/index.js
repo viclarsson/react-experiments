@@ -68,9 +68,9 @@ if (process.env.NODE_ENV !== 'production') {
 // Render the app
 ReactDOM.render((
   <Provider store={store}>
-    <HotkeyProvider debug>
-      <NotificationProvider store={store} debug>
-        <TourProvider tours={TOURS} store={store} debug>
+    <HotkeyProvider>
+      <NotificationProvider store={store}>
+        <TourProvider tours={TOURS} store={store}>
           <Network />
           <ConnectedRouter history={history}>
             <App />
