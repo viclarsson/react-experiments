@@ -8,6 +8,7 @@ import { withNotifications, NotificationTrigger as Trigger } from './react-notif
 import { tourStep, tourController as TC } from './react-tour/TourHelper';
 
 // Components
+import StateComponent from './components/StateComponent';
 import TestComponent from './components/TestComponent';
 import NotificationComponent from './components/NotificationComponent';
 import TourComponent from './components/TourComponent';
@@ -128,6 +129,7 @@ class App extends PureComponent {
     const { activeIndex, components } = this.state;
     return (
       <Fragment>
+          <StateComponent />
           <Notifications containerId='header' render={({ notifications, removeNotification }) => {
               // Example of a notification queue for global notifications
               const n = notifications[notifications.length - 1] || null;

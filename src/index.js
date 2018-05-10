@@ -1,30 +1,51 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+
+// Redux
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+
+// App
 import App from './App';
+import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
-// Hotkeys
+// Providers
 import HotkeyProvider from './react-hotkeys/HotkeyProvider';
-
-// Notifications
 import NotificationProvider from './react-notification/NotificationProvider';
-
-// Tour
 import TourProvider from './react-tour/TourProvider';
-
 const TOURS = {
   'intro': ['intro-1', 'intro-2', 'intro-3'],
   'second': ['second-1']
 };
 
+// Redux
+const defaultState = { data: 'We have data!' };
+const reducer = (state = {}, action) => {
+  console.log('Action': action);
+  switch (action.type) {
+    default:
+      return state
+  }
+};
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  reducer,
+  defaultState,
+  composeEnhancers(applyMiddleware(thunk))
+);
+
+// Render the app
 ReactDOM.render((
-  <HotkeyProvider>
-    <NotificationProvider>
-      <TourProvider tours={TOURS}>
-        <App />
-      </TourProvider>
-    </NotificationProvider>
-  </HotkeyProvider>
+  <Provider store={store}>
+    <HotkeyProvider>
+      <NotificationProvider>
+        <TourProvider tours={TOURS}>
+          <App />
+        </TourProvider>
+      </NotificationProvider>
+    </HotkeyProvider>
+  </Provider>
 ), document.getElementById('root'));
 registerServiceWorker();
