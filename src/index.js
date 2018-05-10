@@ -72,7 +72,7 @@ ReactDOM.render((
       <NotificationProvider store={store}>
         <TourProvider tours={TOURS} store={store}>
           <Network />
-          <ConnectedRouter history={history}>
+          <ConnectedRouter history={history} basename={process.env.PUBLIC_URL}>
             <App />
           </ConnectedRouter>
         </TourProvider>
