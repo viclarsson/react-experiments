@@ -1,19 +1,23 @@
 import React, { Fragment, PureComponent } from 'react';
 
 // Redux
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 
 // Hotkey
 import withHotkey from '../react-hotkeys/HotkeyHelper';
 
 // Notification
-import { withNotifications, NotificationTrigger as Trigger } from '../react-notification/NotificationHelper';
+import { withNotifications } from '../react-notification/NotificationHelper';
 import { tourStep, tourController as TC } from '../react-tour/TourHelper';
 
 // Components
 import TestComponent from '../components/TestComponent';
 import NotificationComponent from '../components/NotificationComponent';
+
+// Actions
+import * as NotificationActions from '../react-notification/NotificationActions';
+import { push } from 'react-router-redux';
 
 // Tachyons style
 import {
@@ -32,6 +36,7 @@ const TourController = TC(TourComponent);
 class Demo extends PureComponent {
   constructor (props) {
     super(props);
+
     // Could be in Redux
     this.state = {
       components: [],
@@ -54,9 +59,9 @@ class Demo extends PureComponent {
   }
 
   goToIndex () {
-    const { dispatch } = this.props;
+    const { push } = this.props;
     return (e) => {
-      dispatch(push('/'));
+      push('/');
     }
   }
 
@@ -102,7 +107,8 @@ class Demo extends PureComponent {
   addComponent () {
     const value = Math.random().toString(36).substring(7);
     this.setState({
-      components: [...this.state.components, value]
+      components: [...this.state.components, value],
+      activeIndex: this.state.components.length
     });
     this.props.registerNotification('bottom-right', { content: 'Added ' + value, timeout: 3000 });
   }
@@ -255,4 +261,11 @@ class Demo extends PureComponent {
   }
 }
 
-export default Trigger(connect()(Demo));
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    registerNotification: NotificationActions.registerNotification,
+    push
+  }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(Demo);

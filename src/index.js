@@ -58,8 +58,8 @@ const store = createStore(
 // Development helper
 if (process.env.NODE_ENV !== 'production') {
   const {whyDidYouUpdate} = require('why-did-you-update');
-  // Excluded Switch and App due to needed re-renders
-  whyDidYouUpdate(React, { exclude: ['Switch', 'App'] });
+  // Excluded Router Switch that needs re-render
+  whyDidYouUpdate(React, { exclude: ['Switch'] });
 }
 
 // Render the app

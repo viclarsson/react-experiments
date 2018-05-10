@@ -39,7 +39,6 @@ class Index extends PureComponent {
   goToDemo (next, activeStepId) {
     const { dispatch } = this.props;
     return (e) => {
-      console.log(activeStepId);
       if (activeStepId === 'intro-2') next();
       dispatch(registerNotification('header', { content: 'Went to demo using actions!' }));
       dispatch(push('/demo'));

@@ -1,7 +1,7 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 
 // Route
-import { Route, Switch } from 'react-router'
+import { withRouter, Route, Switch } from 'react-router'
 
 // Routes
 import Index from './routes';
@@ -23,7 +23,7 @@ import NotificationComponent from './components/NotificationComponent';
 const Hotkey = withHotkey(TestComponent);
 const Notifications = withNotifications(NotificationComponent);
 
-class App extends Component {
+class App extends PureComponent {
   render() {
     return (
       <Fragment>
@@ -60,4 +60,4 @@ class App extends Component {
     );
   }
 }
-export default App;
+export default withRouter(App);
