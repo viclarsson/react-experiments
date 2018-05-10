@@ -41,10 +41,10 @@ class NotificationProvider extends Component {
       return;
     }
     switch (action.type) {
-      case 'REGISTER_NOTIFICATION':
+      case '@@notification/REGISTER':
         this.registerNotification(action.container_id, action.data);
         break;
-      case 'REMOVE_NOTIFICATION':
+      case '@@notification/REMOVE':
         this.removeNotification(action.container_id, action.data);
         break;
       default:

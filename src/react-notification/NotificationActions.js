@@ -1,6 +1,6 @@
 export const registerNotification = (containerId, data) => {
   return {
-    type: 'REGISTER_NOTIFICATION',
+    type: '@@notification/REGISTER',
     container_id: containerId,
     data
   }
@@ -8,7 +8,7 @@ export const registerNotification = (containerId, data) => {
 
 export const removeNotification = (containerId, notificationId) => {
   return {
-    type: 'REGISTER_NOTIFICATION',
+    type: '@@notification/REMOVE',
     container_id: containerId,
     notification_id: notificationId
   }

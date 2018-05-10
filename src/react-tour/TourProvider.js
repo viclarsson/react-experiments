@@ -42,19 +42,19 @@ class TourProvider extends Component {
       return;
     }
     switch (action.type) {
-      case 'START_TOUR':
+      case '@@tour/START':
         this.start(action.tour_id, action.callback);
         break;
-        case 'NEXT_IN_TOUR':
+        case '@@tour/NEXT':
           this.next(action.callback);
           break;
-        case 'PREVIOUS_IN_TOUR':
+        case '@@tour/PREVIOUS':
           this.previous(action.callback);
           break;
-        case 'SKIP_TOUR':
+        case '@@tour/SKIP':
           this.skip(action.callback);
           break;
-        case 'DONE_TOUR':
+        case '@@tour/DONE':
           this.done(action.callback);
           break;
       default:

@@ -1,31 +1,31 @@
 export const start = (tourId, callback) => {
   return {
-    type: 'START_TOUR',
+    type: '@@tour/START',
     tour_id: tourId,
     callback
   }
 }
 export const next = (callback) => {
   return {
-    type: 'NEXT_IN_TOUR',
+    type: '@@tour/NEXT',
     callback
   }
 }
 export const previous = (callback) => {
   return {
-    type: 'PREVIOUS_IN_TOUR',
+    type: '@@tour/PREVIOUS',
     callback
   }
 }
 export const skip = (callback) => {
   return {
-    type: 'SKIP_TOUR',
+    type: '@@tour/SKIP',
     callback
   }
 }
 export const done = (callback) => {
   return {
-    type: 'DONE_TOUR',
+    type: '@@tour/DONE',
     callback
   }
 }
