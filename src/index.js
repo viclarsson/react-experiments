@@ -67,8 +67,6 @@ if (process.env.NODE_ENV !== 'production') {
   whyDidYouUpdate(React, { exclude: ['Switch'] });
 }
 
-console.log('Process env', process.env.PUBLIC_URL);
-
 // Render the app
 ReactDOM.render((
   <Provider store={store}>
