@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 // Redux
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
 // App
@@ -29,11 +30,10 @@ const reducer = (state = {}, action) => {
       return state
   }
 };
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducer,
   defaultState,
-  composeEnhancers(applyMiddleware(thunk))
+  composeWithDevTools(applyMiddleware(thunk))
 );
 
 // Render the app
