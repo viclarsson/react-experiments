@@ -29,7 +29,9 @@ const TOURS = {
 };
 
 // Redux
-const history = createHistory();
+const history = createHistory({
+  basename: `${process.env.PUBLIC_URL}/`
+});
 const routerMiddleware = rMiddleware(history);
 
 const defaultState = { data: 'We have data!' };
@@ -65,6 +67,8 @@ if (process.env.NODE_ENV !== 'production') {
   whyDidYouUpdate(React, { exclude: ['Switch'] });
 }
 
+console.log('Process env', process.env.PUBLIC_URL);
+
 // Render the app
 ReactDOM.render((
   <Provider store={store}>
@@ -72,7 +76,7 @@ ReactDOM.render((
       <NotificationProvider store={store}>
         <TourProvider tours={TOURS} store={store}>
           <Network />
-          <ConnectedRouter history={history} basename={process.env.PUBLIC_URL}>
+          <ConnectedRouter history={history}>
             <App />
           </ConnectedRouter>
         </TourProvider>
