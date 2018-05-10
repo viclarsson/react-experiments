@@ -7,7 +7,12 @@ The base idea is to make a notification system that is:
 * easy to add to an existing project
 
 The result is a React Context based system with the possibility to easily create notifications to containers,
-and easily display them in the UI.
+and easily display them in the UI. The system can easily be hooked up to Redux by adding the store as a prop
+and use the following actions:
+  - `REGISTER_NOTIFICATION`
+  - `REMOVE_NOTIFICATION`
+
+*The API is used the exact same way for when using Redux.*
 
 Common scenarios that this approach tries to cover:
 * notifications that are informative and are removed automatically

@@ -48,11 +48,13 @@ class App extends Component {
                 return null;
               }}/>
         <div className="measure center">
-          <StateComponent />
           <Switch>
             <Route exact path="/" component={Index}/>
             <Route path="/demo" component={Demo}/>
           </Switch>
+          <pre className="silver mt2 f7">
+            <StateComponent />
+          </pre>
         </div>
       </Fragment>
     );

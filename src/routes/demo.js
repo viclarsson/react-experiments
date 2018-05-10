@@ -128,7 +128,6 @@ class Demo extends PureComponent {
 
   triggerNotification (content) {
     return (e) => {
-      console.log('Trigger!', this.props);
       this.props.registerNotification('header', { content });
     };
   }
