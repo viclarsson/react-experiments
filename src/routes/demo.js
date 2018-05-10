@@ -115,6 +115,7 @@ class Demo extends PureComponent {
   removeActive () {
     return (e) => {
       if (this.state.components.length === 0) return;
+      if (this.state.activeIndex >= this.state.components.length) return;
       const newArray = this.state.components.filter((v, i) => i !== this.state.activeIndex);
       const removed = this.state.components.filter((v, i) => i === this.state.activeIndex);
       this.setState({
