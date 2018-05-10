@@ -3,9 +3,13 @@ import ReactDOM from 'react-dom';
 
 // Redux
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, combineReducers} from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
+
+// Router
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter, routerReducer, routerMiddleware as rMiddleware } from 'react-router-redux';
 
 // App
 import App from './App';
@@ -22,6 +26,9 @@ const TOURS = {
 };
 
 // Redux
+const history = createHistory();
+const routerMiddleware = rMiddleware(history);
+
 const defaultState = { data: 'We have data!' };
 const reducer = (state = {}, action) => {
   console.log('Action': action);
@@ -31,21 +38,33 @@ const reducer = (state = {}, action) => {
   }
 };
 const store = createStore(
-  reducer,
+  combineReducers({
+    reducer,
+    router: routerReducer
+  }),
   defaultState,
-  composeWithDevTools(applyMiddleware(thunk))
+  composeWithDevTools(
+    applyMiddleware(
+      thunk,
+      routerMiddleware
+    )
+  )
 );
+
+console.log(Provider, ConnectedRouter);
 
 // Render the app
 ReactDOM.render((
   <Provider store={store}>
-    <HotkeyProvider>
-      <NotificationProvider>
-        <TourProvider tours={TOURS}>
-          <App />
-        </TourProvider>
-      </NotificationProvider>
-    </HotkeyProvider>
+    <ConnectedRouter history={history}>
+      <HotkeyProvider>
+        <NotificationProvider>
+          <TourProvider tours={TOURS}>
+            <App />
+          </TourProvider>
+        </NotificationProvider>
+      </HotkeyProvider>
+    </ConnectedRouter>
   </Provider>
 ), document.getElementById('root'));
 registerServiceWorker();
