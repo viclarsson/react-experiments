@@ -30,11 +30,11 @@ const history = createHistory();
 const routerMiddleware = rMiddleware(history);
 
 const defaultState = { data: 'We have data!' };
-const reducer = (state = {}, action) => {
+const reducer = (state = defaultState, action) => {
   console.log('Action': action);
   switch (action.type) {
     default:
-      return state
+    return state
   }
 };
 const store = createStore(
@@ -42,7 +42,6 @@ const store = createStore(
     reducer,
     router: routerReducer
   }),
-  defaultState,
   composeWithDevTools(
     applyMiddleware(
       thunk,
@@ -51,20 +50,25 @@ const store = createStore(
   )
 );
 
-console.log(Provider, ConnectedRouter);
+// Development helper
+if (process.env.NODE_ENV !== 'production') {
+  const {whyDidYouUpdate} = require('why-did-you-update');
+  // Excluded Switch and App due to needed re-renders
+  whyDidYouUpdate(React, { exclude: ['Switch', 'App'] });
+}
 
 // Render the app
 ReactDOM.render((
   <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <HotkeyProvider>
-        <NotificationProvider>
-          <TourProvider tours={TOURS}>
+    <HotkeyProvider>
+      <NotificationProvider>
+        <TourProvider tours={TOURS}>
+          <ConnectedRouter history={history}>
             <App />
-          </TourProvider>
-        </NotificationProvider>
-      </HotkeyProvider>
-    </ConnectedRouter>
+          </ConnectedRouter>
+        </TourProvider>
+      </NotificationProvider>
+    </HotkeyProvider>
   </Provider>
 ), document.getElementById('root'));
 registerServiceWorker();
