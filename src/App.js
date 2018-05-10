@@ -20,7 +20,7 @@ import withHotkey from './react-hotkeys/HotkeyHelper';
 import StateComponent from './components/StateComponent';
 import TestComponent from './components/TestComponent';
 import NotificationComponent from './components/NotificationComponent';
-const HotkeyComponent = withHotkey(TestComponent);
+const Hotkey = withHotkey(TestComponent);
 const Notifications = withNotifications(NotificationComponent);
 
 class App extends Component {
@@ -39,9 +39,9 @@ class App extends Component {
                       {n.content} &nbsp;
                       {n.id}
                       {/* When an global notification is triggered, ESC will close before closing the list expand */}
-                      <HotkeyComponent keyCode="esc" handler={() => removeNotification('header', n.id)}>
+                      <Hotkey keyCode="esc" handler={() => removeNotification('header', n.id)}>
                         <a className={WHITE_LINK + ' f7 ml2'} onClick={() => removeNotification('header', n.id)}>Dismiss</a>
-                      </HotkeyComponent>
+                      </Hotkey>
                     </div>
                   );
                 }

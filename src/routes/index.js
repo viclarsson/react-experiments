@@ -25,7 +25,7 @@ import {
   TOUR_ELEMENT
 } from '../tachyons';
 
-const HotkeyComponent = withHotkey(TestComponent);
+const Hotkey = withHotkey(TestComponent);
 const TourStep = tourStep(TourComponent);
 const TourController = TC(TourComponent);
 
@@ -33,19 +33,25 @@ class Index extends PureComponent {
   constructor(props) {
     super(props);
     this.goToDemo = this.goToDemo.bind(this);
+    this.startTour = this.startTour.bind(this);
   }
 
   goToDemo (next, activeStepId) {
     const { dispatch } = this.props;
     return (e) => {
+      console.log(activeStepId);
       if (activeStepId === 'intro-2') next();
       dispatch(registerNotification('header', { content: 'Went to demo using actions!' }));
       dispatch(push('/demo'));
     }
   }
 
-  render () {
+  startTour () {
     const { dispatch } = this.props;
+    return () => dispatch(start('intro', () => console.log('Start callback for tracking for example!')))
+  }
+
+  render () {
     return (
       <Fragment>
         <h1>UI hotkeys</h1>
@@ -54,16 +60,27 @@ class Index extends PureComponent {
           Hotkeys makes an web application feel modern and responsive,
           but the handling and implementation must be scalable.
         </p>
-        <a className={BLUE_BUTTON} onClick={() => dispatch(start('intro', () => alert('Start callback for tracking for example!')))}>
-          Start intro tour!
-        </a>
+
+        <Hotkey keyCode="s" handler={this.startTour()}>
+          <a className={BLUE_BUTTON} onClick={this.startTour}>
+            Start intro tour!
+          </a>
+        </Hotkey>
+
         <TourStep tourId="intro" stepId="intro-1" render={
-          ({ isActive, next, previous }) => isActive ? (
+          ({ isActive, next, previous, done }) => isActive ? (
             <div className={TOUR_ELEMENT}>
               This is the first step!
-              <a className={BLUE_BUTTON} onClick={() => next()}>
-                Next
-              </a>
+              <Hotkey keyCode="enter" handler={() => next()}>
+                <a className={BLUE_BUTTON} onClick={() => next()}>
+                  Next
+                </a>
+              </Hotkey>
+              <Hotkey keyCode="esc" handler={() => done()}>
+                <a className={BLUE_BUTTON} onClick={() => done()}>
+                  Skip (esc)
+                </a>
+              </Hotkey>
             </div>
           ) : null}/>
         <p>
@@ -76,16 +93,18 @@ class Index extends PureComponent {
         </ul>
 
         <TourController render={({ next, activeStepId }) => (
-          <HotkeyComponent keyCode="rightarrow" handler={this.goToDemo(next, activeStepId)}>
+          <Hotkey keyCode="rightarrow" handler={this.goToDemo(next, activeStepId)}>
             <a className={BLUE_BUTTON} onClick={this.goToDemo(next, activeStepId)}>
               Try! (or click right arrow)
             </a>
-          </HotkeyComponent>
+          </Hotkey>
         )} />
         <TourStep tourId="intro" stepId="intro-2" render={
           ({ isActive, next }) => isActive ? (
             <div className={TOUR_ELEMENT}>
-              Click above to start!
+              <Hotkey keyCode="enter" handler={this.goToDemo(next, 'intro-2')}>
+                Click above to start (or enter)!
+              </Hotkey>
             </div>
           ) : null}/>
       </Fragment>

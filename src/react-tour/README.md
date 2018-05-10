@@ -12,7 +12,6 @@ The result is a React Context based system with the possibility to easily create
   - `@@tour/START`
   - `@@tour/NEXT`
   - `@@tour/PREVIOUS`
-  - `@@tour/SKIP`
   - `@@tour/DONE`
 
 ## Testing

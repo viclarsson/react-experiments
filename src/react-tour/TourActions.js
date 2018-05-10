@@ -17,12 +17,6 @@ export const previous = (callback) => {
     callback
   }
 }
-export const skip = (callback) => {
-  return {
-    type: '@@tour/SKIP',
-    callback
-  }
-}
 export const done = (callback) => {
   return {
     type: '@@tour/DONE',

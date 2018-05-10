@@ -10,7 +10,6 @@ class TourProvider extends Component {
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.done = this.done.bind(this);
-    this.skip = this.skip.bind(this);
     this.storeListener = this.storeListener.bind(this);
     this.tours = props.tours;
     this.activeIndex = 0;
@@ -27,7 +26,6 @@ class TourProvider extends Component {
       next: this.next,
       previous: this.previous,
       done: this.done,
-      skip: this.skip,
       activeTourId: null,
       activeStepId: null
     };
@@ -36,7 +34,6 @@ class TourProvider extends Component {
   storeListener () {
     const { store } = this.props;
     const action = store.getState().lastAction;
-    console.log(action);
     if (!action) {
       console.error('TourProvider is missing last action reducer!');
       return;
@@ -51,9 +48,6 @@ class TourProvider extends Component {
         case '@@tour/PREVIOUS':
           this.previous(action.callback);
           break;
-        case '@@tour/SKIP':
-          this.skip(action.callback);
-          break;
         case '@@tour/DONE':
           this.done(action.callback);
           break;
@@ -63,7 +57,7 @@ class TourProvider extends Component {
 
   start (tourId, cb) {
     // If it exists and no other tour is in progress
-    if (this.tours[tourId] && !this.state.activeTourId) {
+    if (this.tours[tourId]) {
       if (this.props.debug) console.log('Starting tour:', tourId);
       this.activeIndex = 0;
       this.setState({
@@ -91,16 +85,6 @@ class TourProvider extends Component {
       this.activeIndex = this.activeIndex - 1;
       this.setState({
         activeStepId: this.tours[this.state.activeTourId][this.activeIndex]
-      }, () => {
-        if (cb) cb();
-      });
-    }
-  }
-  skip (cb) {
-    if (this.state.activeTourId) {
-      if (this.props.debug) console.log('Skipped in tour:', this.state.activeTourId);
-      this.setState({
-        activeStepId: this.tours[this.state.activeTourId][this.tours[this.state.activeTourId].length - 1]
       }, () => {
         if (cb) cb();
       });

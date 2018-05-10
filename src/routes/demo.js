@@ -24,7 +24,7 @@ import {
 
 // Build components
 import TourComponent from '../components/TourComponent';
-const HotkeyComponent = withHotkey(TestComponent);
+const Hotkey = withHotkey(TestComponent);
 const Notifications = withNotifications(NotificationComponent);
 const TourStep = tourStep(TourComponent);
 const TourController = TC(TourComponent);
@@ -164,10 +164,7 @@ class Demo extends PureComponent {
                 <div className={TOUR_ELEMENT}>
                   You found the other tour! Nice! Neat with hotkeys!
                   <a className={BLUE_BUTTON} onClick={() => {
-                      done(() => {
-                        // Function call due to curry,
-                        this.triggerNotification('Done with second tour! Great!')();
-                      });
+                      done(this.triggerNotification('Done with second tour! Great!'));
                   }}>
                     Yay!
                   </a>
@@ -176,14 +173,14 @@ class Demo extends PureComponent {
 
         <div className="flex items-center justify-between">
           {/* Navigation with hotkey where the same functions are called (should be one static defined though) */}
-          <HotkeyComponent keyCode="leftarrow" handler={this.goToIndex()}>
+          <Hotkey keyCode="leftarrow" handler={this.goToIndex()}>
             <a className="blue" onClick={this.goToIndex()}>
               Back (or click left arrow)
             </a>
-          </HotkeyComponent>
-          <HotkeyComponent keyCode="plus" handler={() => this.addComponent()}>
+          </Hotkey>
+          <Hotkey keyCode="plus" handler={() => this.addComponent()}>
             <a className={BLUE_BUTTON} onClick={() => this.addComponent()}>Add component (press +)</a>
-          </HotkeyComponent>
+          </Hotkey>
         </div>
 
         <div className="mv2">
@@ -198,14 +195,14 @@ class Demo extends PureComponent {
                   {this.state.expandActive && this.state.activeIndex === i && (
                     <div className="f7">
                       {/* Another hotkey for ENTER (13) */}
-                      <HotkeyComponent keyCode="enter" handler={() => alert(`Surprise! ${c}`)}>
+                      <Hotkey keyCode="enter" handler={() => alert(`Surprise! ${c}`)}>
                         <div>Try Enter for surprise!</div>
-                      </HotkeyComponent>
+                      </Hotkey>
                       <div>
                         Expandable dummy which adds a handler for ENTER. As it was mounted later, it gets priority.
                         This makes it possible to use different states to trigger different actions on the same keycode. Such wow.
                         Another example were to be to add a "remove" feature on focus. Just create a state for it and render the
-                        HotkeyComponent.
+                        Hotkey.
                       </div>
                     </div>
                   )}
@@ -220,38 +217,38 @@ class Demo extends PureComponent {
 
         <div className="flex justify-around items-center gray f7">
           {/* Hotkeys for list */}
-          <HotkeyComponent keyCode="uparrow" handler={this.previous()} />
-          <HotkeyComponent keyCode="downarrow" handler={this.next()} />
-          <HotkeyComponent keyCode="backspace" handler={this.removeActive()} />
+          <Hotkey keyCode="uparrow" handler={this.previous()} />
+          <Hotkey keyCode="downarrow" handler={this.next()} />
+          <Hotkey keyCode="backspace" handler={this.removeActive()} />
           {activeIndex >= (components.length - 1) && (
-            <HotkeyComponent keyCode="tab" handler={() => this.addComponent()}>
+            <Hotkey keyCode="tab" handler={() => this.addComponent()}>
               TAB to add
-            </HotkeyComponent>
+            </Hotkey>
           )}
 
           {/* Hotkeys with explanation */}
-          <HotkeyComponent keyCode="t" handler={this.toggleExpand()}>
+          <Hotkey keyCode="t" handler={this.toggleExpand()}>
             <div className="mr2">Try <span className={HOTKEY}>T</span> to toggle expand</div>
-          </HotkeyComponent>
-          <HotkeyComponent keyCode="enter" handler={this.expand()}>
+          </Hotkey>
+          <Hotkey keyCode="enter" handler={this.expand()}>
             <div className="mr2">Try <span className={HOTKEY}>Enter</span> to expand</div>
-          </HotkeyComponent>
-          <HotkeyComponent keyCode="esc" handler={this.contract()}>
+          </Hotkey>
+          <Hotkey keyCode="esc" handler={this.contract()}>
             <div className="mr2">Try <span className={HOTKEY}>ESC</span> to close again</div>
-          </HotkeyComponent>
+          </Hotkey>
           <TourController render={({ start }) => (
-            <HotkeyComponent keyCode="ctrl+alt+t" handler={() => start('second')}>
-              <div className="ml2">Try <span className={HOTKEY}>alt + T</span> to start another tour!</div>
-            </HotkeyComponent>
+            <Hotkey keyCode="ctrl+alt+t" handler={() => start('second')}>
+              <div className="ml2">Try <span className={HOTKEY}>ctrl + alt + t</span> to start another tour!</div>
+            </Hotkey>
           )} />
         </div>
 
         <div className="tc f7 mt2">
-          <HotkeyComponent keyCode="g" handler={this.triggerNotification('Global notification (from hotkey)!')}>
+          <Hotkey keyCode="g" handler={this.triggerNotification('Global notification (from hotkey)!')}>
             <a className={BLUE_BUTTON} onClick={this.triggerNotification('Global notification!')}>
               Trigger global notification <span className={HOTKEY + ' white b--white'}>G</span>
             </a>
-          </HotkeyComponent>
+          </Hotkey>
         </div>
       </Fragment>
     );
