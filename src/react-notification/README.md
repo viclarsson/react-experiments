@@ -12,6 +12,7 @@ and use the following actions:
   - `@@notification/REGISTER`
   - `@@notification/REMOVE`
 
+By adding the store as a prop, the responsible component for the notifications acts as a "component middleware".
 *The API is used the exact same way for when using Redux.*
 
 Common scenarios that this approach tries to cover:
