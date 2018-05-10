@@ -37,8 +37,12 @@ const reducer = (state = defaultState, action) => {
     return state
   }
 };
+const lastAction = (state = null, action) => {
+  return action;
+};
 const store = createStore(
   combineReducers({
+    lastAction,
     reducer,
     router: routerReducer
   }),
@@ -61,7 +65,7 @@ if (process.env.NODE_ENV !== 'production') {
 ReactDOM.render((
   <Provider store={store}>
     <HotkeyProvider>
-      <NotificationProvider>
+      <NotificationProvider store={store}>
         <TourProvider tours={TOURS}>
           <ConnectedRouter history={history}>
             <App />

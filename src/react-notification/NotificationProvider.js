@@ -21,15 +21,38 @@ class NotificationProvider extends Component {
       removeNotification: this.removeNotification,
       containers: {}
     };
+
+    if (props.store) {
+      this.storeListener = this.storeListener.bind(this);
+      this.props.store.subscribe(this.storeListener);
+    }
     // To be able to register multiple containers on mounts
     this.containers = {};
     this.timeouts = {};
   }
 
-  createNotificationDestroyer (notification, containerId, timeout) {
-    if(!this.timeouts[notification.id]) {
-      this.timeouts[notification.id] = setTimeout(() => {
-        this.removeNotification(containerId, notification);
+  storeListener () {
+    const { store } = this.props;
+    const action = store.getState().lastAction;
+    if (!action) {
+      console.error('NotificationProvider is missing last action reducer!');
+      return;
+    }
+    switch (action) {
+      case 'REGISTER_NOTIFICATION':
+        this.registerNotification(action.container_id, action.data);
+        break;
+      case 'REMOVE_NOTIFICATION':
+        this.removeNotification(action.container_id, action.data);
+        break;
+      default:
+    }
+  }
+
+  createNotificationDestroyer (notificationId, containerId, timeout) {
+    if(!this.timeouts[notificationId]) {
+      this.timeouts[notificationId] = setTimeout(() => {
+        this.removeNotification(containerId, notificationId);
       }, timeout);
     }
   }
@@ -54,26 +77,26 @@ class NotificationProvider extends Component {
       containers: { ...this.containers }
     }, () => {
       if (notification.timeout) {
-        this.createNotificationDestroyer(notification, containerId, notification.timeout);
+        this.createNotificationDestroyer(notification.id, containerId, notification.timeout);
       }
     });
   };
 
   // Remove handler
-  removeNotification (containerId, notification, timeout = null) {
-    if (this.props.debug) console.log('Removed notification:', notification, 'in', containerId);
+  removeNotification (containerId, notificationId, timeout = null) {
+    if (this.props.debug) console.log('Removed notification with id:', notificationId, 'in', containerId);
     // For delayed removal
     if (timeout) {
-      this.createNotificationDestroyer(notification, containerId, timeout);
+      this.createNotificationDestroyer(notificationId, containerId, timeout);
       return;
     }
     let q = this.containers[containerId];
     if (q) {
-      q = q.filter(c => c !== notification);
+      q = q.filter(c => c.id !== notificationId);
       // Remove array if no notifications left
       this.containers[containerId] = q.length > 0 ? q : undefined;
       // Remove eventual timeout to not trigger renders
-      clearTimeout(this.timeouts[notification.id]);
+      clearTimeout(this.timeouts[notificationId]);
       this.setState({
         containers: { ...this.containers }
       });
