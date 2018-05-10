@@ -45,7 +45,7 @@ class NotificationProvider extends Component {
         this.registerNotification(action.container_id, action.data);
         break;
       case '@@notification/REMOVE':
-        this.removeNotification(action.container_id, action.data);
+        this.removeNotification(action.container_id, action.notification_id, action.timeout);
         break;
       default:
     }
@@ -71,7 +71,7 @@ class NotificationProvider extends Component {
     const q = this.containers[containerId] ? [...this.containers[containerId]] : [];
     const notification = {
       ...data,
-      id: '_' + Math.random().toString(36).substr(2, 9)
+      id: data.id || '_' + Math.random().toString(36).substr(2, 9)
     };
     q.unshift(notification);
     this.containers[containerId] = q;
@@ -86,7 +86,7 @@ class NotificationProvider extends Component {
 
   // Remove handler
   removeNotification (containerId, notificationId, timeout = null) {
-    if (this.props.debug) console.log('Removed notification with id:', notificationId, 'in', containerId);
+    if (this.props.debug) console.log('Removing notification with id:', notificationId, 'in', containerId);
     // For delayed removal
     if (timeout) {
       this.createNotificationDestroyer(notificationId, containerId, timeout);

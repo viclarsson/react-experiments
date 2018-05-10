@@ -16,6 +16,9 @@ import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
+// Components
+import Network from './components/Network';
+
 // Providers
 import HotkeyProvider from './react-hotkeys/HotkeyProvider';
 import NotificationProvider from './react-notification/NotificationProvider';
@@ -68,6 +71,7 @@ ReactDOM.render((
     <HotkeyProvider debug>
       <NotificationProvider store={store} debug>
         <TourProvider tours={TOURS} store={store} debug>
+          <Network />
           <ConnectedRouter history={history}>
             <App />
           </ConnectedRouter>
