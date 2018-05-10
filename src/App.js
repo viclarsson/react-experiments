@@ -1,7 +1,6 @@
 import React, { Fragment, PureComponent } from 'react';
 
 // Hotkey
-import HotkeyProvider from './react-hotkeys/HotkeyProvider';
 import withHotkey from './react-hotkeys/HotkeyHelper';
 
 // Notification
@@ -128,7 +127,7 @@ class App extends PureComponent {
   render() {
     const { activeIndex, components } = this.state;
     return (
-      <HotkeyProvider>
+      <Fragment>
           <Notifications containerId='header' render={({ notifications, removeNotification }) => {
               // Example of a notification queue for global notifications
               const n = notifications[notifications.length - 1] || null;
@@ -333,7 +332,7 @@ class App extends PureComponent {
             </Fragment>
           )}
         </div>
-      </HotkeyProvider>
+      </Fragment>
     );
   }
 }

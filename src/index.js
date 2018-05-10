@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
+// Hotkeys
+import HotkeyProvider from './react-hotkeys/HotkeyProvider';
+
 // Notifications
 import NotificationProvider from './react-notification/NotificationProvider';
 
@@ -16,10 +19,12 @@ const TOURS = {
 };
 
 ReactDOM.render((
-  <NotificationProvider>
-    <TourProvider tours={TOURS}>
-      <App />
-    </TourProvider>
-  </NotificationProvider>
+  <HotkeyProvider>
+    <NotificationProvider>
+      <TourProvider tours={TOURS}>
+        <App />
+      </TourProvider>
+    </NotificationProvider>
+  </HotkeyProvider>
 ), document.getElementById('root'));
 registerServiceWorker();
