@@ -9,6 +9,9 @@ import withHotkey from '../react-hotkeys/HotkeyHelper';
 // Tour
 import { tourStep, tourController as TC } from '../react-tour/TourHelper';
 
+// Notification
+import { registerNotification } from '../react-notification/NotificationActions';
+
 // Components
 import TestComponent from '../components/TestComponent';
 import TourComponent from '../components/TourComponent';
@@ -35,6 +38,7 @@ class Index extends PureComponent {
     const { dispatch } = this.props;
     return (e) => {
       if (activeStepId === 'intro-2') next();
+      dispatch(registerNotification('header', { content: 'Went to demo using actions!' }));
       dispatch(push('/demo'));
     }
   }

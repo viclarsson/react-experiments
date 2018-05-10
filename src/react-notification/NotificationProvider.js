@@ -38,7 +38,7 @@ class NotificationProvider extends Component {
       console.error('NotificationProvider is missing last action reducer!');
       return;
     }
-    switch (action) {
+    switch (action.type) {
       case 'REGISTER_NOTIFICATION':
         this.registerNotification(action.container_id, action.data);
         break;

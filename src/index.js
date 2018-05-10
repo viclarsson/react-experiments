@@ -31,12 +31,13 @@ const routerMiddleware = rMiddleware(history);
 
 const defaultState = { data: 'We have data!' };
 const reducer = (state = defaultState, action) => {
-  console.log('Action': action);
   switch (action.type) {
     default:
     return state
   }
 };
+
+// Helper reducer for Providers to listen to
 const lastAction = (state = null, action) => {
   return action;
 };
