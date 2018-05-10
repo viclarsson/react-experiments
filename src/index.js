@@ -67,7 +67,7 @@ ReactDOM.render((
   <Provider store={store}>
     <HotkeyProvider>
       <NotificationProvider store={store}>
-        <TourProvider tours={TOURS}>
+        <TourProvider tours={TOURS} store={store}>
           <ConnectedRouter history={history}>
             <App />
           </ConnectedRouter>

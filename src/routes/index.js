@@ -8,6 +8,7 @@ import withHotkey from '../react-hotkeys/HotkeyHelper';
 
 // Tour
 import { tourStep, tourController as TC } from '../react-tour/TourHelper';
+import { start } from '../react-tour/TourActions';
 
 // Notification
 import { registerNotification } from '../react-notification/NotificationActions';
@@ -44,6 +45,7 @@ class Index extends PureComponent {
   }
 
   render () {
+    const { dispatch } = this.props;
     return (
       <Fragment>
         <h1>UI hotkeys</h1>
@@ -52,12 +54,9 @@ class Index extends PureComponent {
           Hotkeys makes an web application feel modern and responsive,
           but the handling and implementation must be scalable.
         </p>
-        <TourController render={({ start }) => (
-          <a className={BLUE_BUTTON} onClick={() => start('intro', () => alert('Start callback for tracking for example!'))}>
-            Start intro tour!
-          </a>
-        )} />
-
+        <a className={BLUE_BUTTON} onClick={() => dispatch(start('intro', () => alert('Start callback for tracking for example!')))}>
+          Start intro tour!
+        </a>
         <TourStep tourId="intro" stepId="intro-1" render={
           ({ isActive, next, previous }) => isActive ? (
             <div className={TOUR_ELEMENT}>

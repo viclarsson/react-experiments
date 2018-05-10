@@ -25,6 +25,8 @@ class NotificationProvider extends Component {
     if (props.store) {
       this.storeListener = this.storeListener.bind(this);
       this.props.store.subscribe(this.storeListener);
+    } else if (props.debug) {
+      console.log('TourProvider does not listen to store as props was provided.');
     }
     // To be able to register multiple containers on mounts
     this.containers = {};

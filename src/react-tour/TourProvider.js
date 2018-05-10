@@ -11,8 +11,17 @@ class TourProvider extends Component {
     this.previous = this.previous.bind(this);
     this.done = this.done.bind(this);
     this.skip = this.skip.bind(this);
+    this.storeListener = this.storeListener.bind(this);
     this.tours = props.tours;
     this.activeIndex = 0;
+
+    if (props.store) {
+      this.storeListener = this.storeListener.bind(this);
+      this.props.store.subscribe(this.storeListener);
+    } else if (props.debug) {
+      console.log('TourProvider does not listen to store as props was provided.');
+    }
+
     this.state = {
       start: this.start,
       next: this.next,
@@ -22,6 +31,34 @@ class TourProvider extends Component {
       activeTourId: null,
       activeStepId: null
     };
+  }
+
+  storeListener () {
+    const { store } = this.props;
+    const action = store.getState().lastAction;
+    console.log(action);
+    if (!action) {
+      console.error('TourProvider is missing last action reducer!');
+      return;
+    }
+    switch (action.type) {
+      case 'START_TOUR':
+        this.start(action.tour_id, action.callback);
+        break;
+        case 'NEXT_IN_TOUR':
+          this.next(action.callback);
+          break;
+        case 'PREVIOUS_IN_TOUR':
+          this.previous(action.callback);
+          break;
+        case 'SKIP_TOUR':
+          this.skip(action.callback);
+          break;
+        case 'DONE_TOUR':
+          this.done(action.callback);
+          break;
+      default:
+    }
   }
 
   start (tourId, cb) {
