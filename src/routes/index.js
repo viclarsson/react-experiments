@@ -19,7 +19,7 @@ import TourComponent from '../components/TourComponent';
 import { push } from 'react-router-redux';
 
 
-// Tachyons style
+// Tachyons styles
 import {
   BLUE_BUTTON,
   TOUR_ELEMENT
@@ -47,7 +47,7 @@ class Index extends PureComponent {
 
   startTour () {
     const { dispatch } = this.props;
-    return () => dispatch(start('intro', () => console.log('Start callback for tracking for example!')))
+    dispatch(start('intro', () => console.log('Start callback for tracking for example!')));
   }
 
   render () {
@@ -60,7 +60,7 @@ class Index extends PureComponent {
           but the handling and implementation must be scalable.
         </p>
 
-        <Hotkey keyCode="s" handler={this.startTour()}>
+        <Hotkey keyCode="s" handler={this.startTour}>
           <a className={BLUE_BUTTON} onClick={this.startTour}>
             Start intro tour!
           </a>
