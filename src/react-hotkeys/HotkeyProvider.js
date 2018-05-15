@@ -40,10 +40,8 @@ class HotkeyProvider extends PureComponent {
     if (e.altKey && keyCode !== 18) keyHash = 'alt+' + keyHash;
     if ((e.ctrlKey || e.metaKey) && keyCode !== 17) keyHash = 'ctrl+' + keyHash;
     const hasHandler = type === 'keydown' ? this.keyDownHandlers[keyHash] : this.keyUpHandlers[keyHash];
-
     // TODO: Priority/override functionality?
     if (hasHandler && hasHandler[0]) {
-      e.preventDefault();
       hasHandler[0](e);
       if (this.props.debug) console.log('Called handler:', keyHash);
     }

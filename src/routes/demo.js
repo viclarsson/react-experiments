@@ -43,19 +43,24 @@ class Demo extends PureComponent {
       activeIndex: 0,
       expandActive: false,
       selected: {},
-      selectMode: null
+      selectMode: null,
     }
 
     // Could be Redux Actions
     this.goToIndex = this.goToIndex.bind(this);
     this.addComponent = this.addComponent.bind(this);
-    this.removeComponent = this.removeComponent.bind(this);
+    this.removeSelectedOrActive = this.removeSelectedOrActive.bind(this);
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.toggleExpand = this.toggleExpand.bind(this);
     this.expand = this.expand.bind(this);
     this.contract = this.contract.bind(this);
     this.setSelectMode = this.setSelectMode.bind(this);
+    this.copy = this.copy.bind(this);
+    this.paste = this.paste.bind(this);
+
+    this.clipboard = null;
+    this.focusElement = null;
 
     // Notifications
     this.triggerNotification = this.triggerNotification.bind(this);
@@ -128,18 +133,36 @@ class Demo extends PureComponent {
     }
   }
 
-  removeComponent (value) {
-    const newArray = this.state.components.filter(v => v !== value);
+  removeSelectedOrActive () {
+    const newArray = this.state.components.filter((v, i) => !this.state.selected[i]);
+    const diff = this.state.components.length - newArray.length;
     this.setState({
-      components: newArray
+      components: newArray,
+      selected: {}
     });
-    this.props.registerNotification('bottom-right', { content: 'Removed ' + value, timeout: 3000 });
+    this.props.registerNotification('bottom-right', { content: 'Removed ' + diff, timeout: 3000 });
   }
 
   triggerNotification (content) {
     return (e) => {
       this.props.registerNotification('header', { content });
     };
+  }
+
+  copy () {
+    if (this.focusElement === document.activeElement) {
+      this.clipboard = { ...this.state.selected };
+    }
+  }
+
+  paste () {
+    if (this.focusElement === document.activeElement) {
+      const toCopy = this.state.components.filter((c, i) => this.state.selected[i]);
+      this.setState({
+        components: [...this.state.components, ...toCopy.map(c => c + ' (copy)')],
+        selected: {}
+      })
+    }
   }
 
   setSelectMode (mode) {
@@ -233,8 +256,10 @@ class Demo extends PureComponent {
           </Hotkey>
         </div>
 
-        <div className="mv2">
+        <div className="mv2" tabIndex="-1" ref={(r) => { this.focusElement = r; }}>
           <Hotkey keyCode="shift" handler={this.setSelectMode('range')} keyUpHandler={this.setSelectMode(null)}/>
+          <Hotkey keyCode="ctrl+c" handler={this.copy}/>
+          <Hotkey keyCode="ctrl+v" handler={this.paste}/>
           <Hotkey keyCode="alt" handler={this.setSelectMode('add')} keyUpHandler={this.setSelectMode(null)}/>
 
           {this.state.components.length === 0 && (
@@ -261,7 +286,7 @@ class Demo extends PureComponent {
                   )}
                 </div>
                 <div className="flex-none">
-                  <a className="dib white bg-red pa1 br2 f7" onClick={() => this.removeComponent(c)}>Remove (Backspace)</a>
+                  <a className="dib white bg-red pa1 br2 f7" onClick={() => this.removeSelectedOrActive()}>Remove (Backspace)</a>
                 </div>
               </div>
             </Fragment>
@@ -272,7 +297,7 @@ class Demo extends PureComponent {
           {/* Hotkeys for list */}
           <Hotkey keyCode="uparrow" handler={this.previous()} />
           <Hotkey keyCode="downarrow" handler={this.next()} />
-          <Hotkey keyCode="backspace" handler={this.removeActive()} />
+          <Hotkey keyCode="backspace" handler={() => this.removeSelectedOrActive()} />
           {activeIndex >= (components.length - 1) && (
             <Hotkey keyCode="tab" handler={() => this.addComponent()}>
               TAB to add
