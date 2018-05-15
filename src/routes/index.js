@@ -63,14 +63,6 @@ class Index extends PureComponent {
           <li>The tour system as also state based where the steps are mounted when the step is active, which makes it scalable.</li>
         </ul>
 
-        <p>
-          All systems are based on pure React, but are easy to hook up to Redux by providing the store as prop to the respective provider and adding a <code>lastAction</code> module to the state. The demo uses the React Router.
-        </p>
-
-        <p>
-          Open the console and inspect the actions, state and DOM.
-        </p>
-
         <Hotkey keyCode="s" handler={this.startTour}>
           <a className={BLUE_BUTTON} onClick={this.startTour}>
             Start intro tour! (S)
@@ -93,14 +85,16 @@ class Index extends PureComponent {
               </Hotkey>
             </div>
           ) : null}/>
-        <p>
-          Common scenarios:
-        </p>
-        <ul>
-          <li>Escape to close</li>
-          <li>Enter to proceed</li>
-          <li>Custom key binding</li>
-        </ul>
+
+          <p>Almost all features in this demo has a hotkey and feedback using notifications.</p>
+
+          <p>
+            All systems are based on pure React, but are easy to hook up to Redux by providing the store as prop to the respective provider and adding a <code>lastAction</code> module to the state. The demo uses the React Router.
+          </p>
+
+          <p>
+            Open the console and inspect the actions, state and DOM.
+          </p>
 
         <TourController render={({ next, activeStepId }) => (
           <Hotkey keyCode="rightarrow" handler={this.goToDemo(next, activeStepId)}>
@@ -117,6 +111,10 @@ class Index extends PureComponent {
               </Hotkey>
             </div>
           ) : null}/>
+
+
+        <i className="db mt2 gray">Try disabling internet access!</i>
+
       </Fragment>
     );
   }
