@@ -12,15 +12,16 @@ class HotkeyHandler extends Component {
     // Create a reference
     this.keyCode = props.keyCode;
     this.handler = props.handler;
+    this.keyUpHandler = props.keyUpHandler;
   }
   shouldComponentUpdate () {
     return false;
   }
   componentDidMount () {
-    this.props.registerHandler(this.props.keyCode, this.handler);
+    this.props.registerHandler(this.props.keyCode, this.handler, this.keyUpHandler);
   }
   componentWillUnmount () {
-    this.props.removeHandler(this.props.keyCode, this.handler);
+    this.props.removeHandler(this.props.keyCode, this.handler, this.keyUpHandler);
   }
   render() {
     return null;
@@ -29,13 +30,13 @@ class HotkeyHandler extends Component {
 
 // HOC for simplicity
 function withHotkey(C) {
-  const HotkeyHelper = ({ keyCode, handler, ...restProps }) => {
+  const HotkeyHelper = ({ keyCode, handler, keyUpHandler, ...restProps }) => {
     return (
       <Context.Consumer>
         {({ registerHandler, removeHandler }) => {
           return (
             <Fragment>
-              <HotkeyHandler keyCode={keyCode} handler={handler} registerHandler={registerHandler} removeHandler={removeHandler} />
+              <HotkeyHandler keyCode={keyCode} handler={handler} keyUpHandler={keyUpHandler} registerHandler={registerHandler} removeHandler={removeHandler} />
               <C {...restProps} />
             </Fragment>
           );

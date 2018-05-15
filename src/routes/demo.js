@@ -41,7 +41,9 @@ class Demo extends PureComponent {
     this.state = {
       components: [],
       activeIndex: 0,
-      expandActive: false
+      expandActive: false,
+      selected: {},
+      selectMode: null
     }
 
     // Could be Redux Actions
@@ -53,6 +55,7 @@ class Demo extends PureComponent {
     this.toggleExpand = this.toggleExpand.bind(this);
     this.expand = this.expand.bind(this);
     this.contract = this.contract.bind(this);
+    this.setSelectMode = this.setSelectMode.bind(this);
 
     // Notifications
     this.triggerNotification = this.triggerNotification.bind(this);
@@ -139,8 +142,49 @@ class Demo extends PureComponent {
     };
   }
 
+  setSelectMode (mode) {
+    return (e) => {
+      console.log('Select mode', mode);
+      this.setState({ selectMode: mode })
+    }
+  }
+
+  select (index) {
+    return (e) => {
+      const { selected, selectMode } = this.state;
+      // If shift => Add all up to the value
+      if (selectMode === 'range') {
+        let selection = {};
+        let selectedIndex = parseInt(Object.keys(selected)[0]);
+        const distance = Math.abs(selectedIndex - index);
+        let start = selectedIndex < index ? selectedIndex : index;
+        for (let range = start; range <= start + Math.abs(distance); range++) {
+          selection[range] = true;
+        }
+        this.setState({
+          selected: selection
+        });
+      } else if (selectMode === 'add') {
+        // If cmd => add to list
+        this.setState({
+          selected: {
+            ...selected,
+            [index]: selected[index] ? false : true
+          }
+        });
+      } else {
+        // Otherwise => Select only one
+        this.setState({
+          selected: {
+            [index]: selected[index] && Object.keys(selected).length === 1 ? false : true,
+          }
+        });
+      }
+    };
+  }
+
   render() {
-    const { activeIndex, components } = this.state;
+    const { activeIndex, components, selected } = this.state;
     return (
       <Fragment>
         {/* Notifications placed in bottom right corner */}
@@ -191,12 +235,15 @@ class Demo extends PureComponent {
         </div>
 
         <div className="mv2">
+          <Hotkey keyCode="shift" handler={this.setSelectMode('range')} keyUpHandler={this.setSelectMode(null)}/>
+          <Hotkey keyCode="alt" handler={this.setSelectMode('add')} keyUpHandler={this.setSelectMode(null)}/>
+
           {this.state.components.length === 0 && (
             <div className="pv2 tc f7 gray">No posts.</div>
           )}
           {this.state.components.map((c, i) => (
             <Fragment key={c}>
-              <div className={`pa2 br2 mb2 flex justify-between ${activeIndex === i ? 'bg-gray white' : 'bg-near-white gray'}`}>
+              <div className={`pa2 br2 mb2 flex justify-between ${activeIndex === i ? 'bg-gray white' : 'bg-near-white gray'} ${selected[i] ? 'bg-green white' : ''}`} onClick={this.select(i)}>
                 <div className="flex-auto w-100">
                   Element: {c}
                   {this.state.expandActive && this.state.activeIndex === i && (
