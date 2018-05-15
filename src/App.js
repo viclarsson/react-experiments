@@ -17,7 +17,6 @@ import { withNotifications } from './react-notification/NotificationHelper';
 import withHotkey from './react-hotkeys/HotkeyHelper';
 
 // Components
-import StateComponent from './components/StateComponent';
 import TestComponent from './components/TestComponent';
 import NotificationComponent from './components/NotificationComponent';
 const Hotkey = withHotkey(TestComponent);
@@ -67,9 +66,6 @@ class App extends PureComponent {
             <Route exact path="/" component={Index}/>
             <Route path="/demo" component={Demo}/>
           </Switch>
-          <pre className="silver mt2 f7">
-            <StateComponent />
-          </pre>
         </div>
       </Fragment>
     );

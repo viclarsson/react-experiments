@@ -53,11 +53,22 @@ class Index extends PureComponent {
   render () {
     return (
       <Fragment>
-        <h1>UI hotkeys</h1>
+        <h1>UI Hygiene</h1>
         <p>
-          The idea is to create a system for handling UI hotkeys.
-          Hotkeys makes an web application feel modern and responsive,
-          but the handling and implementation must be scalable.
+          The idea is to create a system for handling hotkeys, notifications and a tour system.
+        </p>
+        <ul>
+          <li>The hotkeys are declarative and the order of execution is dependent on the order of mounting.</li>
+          <li>The notification system is build with flexibility in mind. Notification containers are defined and their behaviour and style can be customized easily.</li>
+          <li>The tour system as also state based where the steps are mounted when the step is active, which makes it scalable.</li>
+        </ul>
+
+        <p>
+          All systems are based on pure React, but are easy to hook up to Redux by providing the store as prop to the respective provider and adding a <code>lastAction</code> module to the state. The demo uses the React Router.
+        </p>
+
+        <p>
+          Open the console and inspect the actions, state and DOM.
         </p>
 
         <Hotkey keyCode="s" handler={this.startTour}>
