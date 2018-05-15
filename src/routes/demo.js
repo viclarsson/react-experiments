@@ -242,7 +242,7 @@ class Demo extends PureComponent {
           )}
           {this.state.components.map((c, i) => (
             <Fragment key={c}>
-              <div className={`pa2 br2 mb2 flex justify-between ${activeIndex === i ? 'bg-gray white' : 'bg-near-white gray'} ${selected[i] ? 'bg-green white' : ''}`} onClick={this.select(i)}>
+              <div className={`pa2 br2 mb2 flex justify-between ${activeIndex === i ? 'bg-gray white ba bw2 b--gray' : 'bg-near-white gray'} ${selected[i] ? 'bg-green white' : ''}`} onClick={this.select(i)}>
                 <div className="flex-auto w-100">
                   Element: {c}
                   {this.state.expandActive && this.state.activeIndex === i && (

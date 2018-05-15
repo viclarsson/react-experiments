@@ -18,7 +18,7 @@ class HotkeyProvider extends PureComponent {
       removeHandler: this.removeHandler,
     };
     // Register handlers
-    this.handlers = {};
+    this.keyDownHandlers = {};
     this.keyUpHandlers = {};
   }
 
@@ -39,8 +39,7 @@ class HotkeyProvider extends PureComponent {
     // Order is important here when we register! Ex: 'ctrl+alt+t'
     if (e.altKey && keyCode !== 18) keyHash = 'alt+' + keyHash;
     if ((e.ctrlKey || e.metaKey) && keyCode !== 17) keyHash = 'ctrl+' + keyHash;
-    const hasHandler = type === 'keydown' ? this.handlers[keyHash] : this.keyUpHandlers[keyHash];
-    console.log(type, hasHandler);
+    const hasHandler = type === 'keydown' ? this.keyDownHandlers[keyHash] : this.keyUpHandlers[keyHash];
 
     // TODO: Priority/override functionality?
     if (hasHandler && hasHandler[0]) {
@@ -49,7 +48,7 @@ class HotkeyProvider extends PureComponent {
       if (this.props.debug) console.log('Called handler:', keyHash);
     }
   }
-    // Translate to keycodes
+  // Translate to keycodes
   convertHashToKeys(keyhash) {
     const keys = keyhash.split('+');
     const key = KeyCodes[keys.pop()];
@@ -65,34 +64,36 @@ class HotkeyProvider extends PureComponent {
   registerHandler (keyhash, handler, keyUpHandler) {
     const keycode = this.convertHashToKeys(keyhash);
 
-    // Add to queue of handlers for keyHash
-    const q = this.handlers[keycode] || [];
-    q.unshift(handler);
-    this.handlers[keycode] = q;
+    if (handler) {
+      // Add to queue of handlers for keyHash
+      const q = this.keyDownHandlers[keycode] || [];
+      q.unshift(handler);
+      this.keyDownHandlers[keycode] = q;
+      if (this.props.debug) console.log('Registered handler:', keycode);
+    }
 
     // Add to queue of handlers for keyHash in keyUp
     if (keyUpHandler) {
       const keyUpQ = this.keyUpHandlers[keycode] || [];
       keyUpQ.unshift(keyUpHandler);
       this.keyUpHandlers[keycode] = keyUpQ;
+      if (this.props.debug) console.log('Registered keyup handler:', keycode);
     }
-
-    if (this.props.debug) console.log('Registered handler:', keycode);
   };
 
   // Remove handler
   removeHandler (keyhash, handler, keyUpHandler) {
     const keycode = this.convertHashToKeys(keyhash);
-    let q = this.handlers[keycode];
+    let q = this.keyDownHandlers[keycode];
     let keyUpQ = this.keyUpHandlers[keycode];
     if (q) {
       q = q.filter(h => h !== handler);
-      this.handlers[keycode] = q.length > 0 ? q : undefined;
-
+      this.keyDownHandlers[keycode] = q.length > 0 ? q : undefined;
+      if (this.props.debug) console.log('Removed handler:', keycode);
+    }
+    if (keyUpQ) {
       keyUpQ = keyUpQ.filter(h => h !== keyUpHandler);
       this.keyUpHandlers[keycode] = keyUpQ.length > 0 ? keyUpQ : undefined;
-
-      if (this.props.debug) console.log('Removed handler:', keycode);
     }
   }
 
