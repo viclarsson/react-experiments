@@ -53,7 +53,7 @@ class App extends PureComponent {
                         {n.id}
                         {/* When an global notification is triggered, ESC will close before closing the list expand */}
                         <Hotkey keyCode="esc" handler={() => removeNotification('header', n.id)}>
-                          <a className={WHITE_LINK + ' f7 ml2'} onClick={() => removeNotification('header', n.id)}>Dismiss</a>
+                          <a className={WHITE_LINK + ' f7 ml2'} onClick={() => removeNotification('header', n.id)}>Dismiss (esc)</a>
                         </Hotkey>
                       </div>
                     );
