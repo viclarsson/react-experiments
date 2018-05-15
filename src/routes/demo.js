@@ -144,7 +144,6 @@ class Demo extends PureComponent {
 
   setSelectMode (mode) {
     return (e) => {
-      console.log('Select mode', mode);
       this.setState({ selectMode: mode })
     }
   }
