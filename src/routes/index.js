@@ -14,6 +14,7 @@ import { start } from "../react-tour/TourActions";
 import { registerNotification } from "../react-notification/NotificationActions";
 
 // Components
+import { NativeTypes } from 'react-dnd-html5-backend'
 import DragLayer from "../react-dnd/DragLayer";
 import DragAndDroppable from "../react-dnd/DragAndDroppable";
 import Droppable from "../react-dnd/Droppable";
@@ -62,7 +63,8 @@ class Index extends PureComponent {
   }
 
   canDrop(monitor) {
-    return monitor.getItem().type === "ITEM";
+    return true;
+    // return monitor.getItem().type === "ITEM";
   }
 
   onDrop(monitor, component) {
@@ -92,13 +94,11 @@ class Index extends PureComponent {
             the step is active, which makes it scalable.
           </li>
         </ul>
-
         <Hotkey keyCode="s" handler={this.startTour}>
           <a className={BLUE_BUTTON} onClick={this.startTour}>
             Start intro tour! (S)
           </a>
         </Hotkey>
-
         <TourStep
           tourId="intro"
           stepId="intro-1"
@@ -120,44 +120,17 @@ class Index extends PureComponent {
             ) : null
           }
         />
-
         <p>
           Almost all features in this demo has a hotkey and feedback using
           notifications.
         </p>
-
         <p>
           All systems are based on pure React, but are easy to hook up to Redux
           by providing the store as prop to the respective provider and adding a{" "}
           <code>lastAction</code> module to the state. The demo uses the React
           Router.
         </p>
-
         <p>Open the console and inspect the actions, state and DOM.</p>
-
-        <div
-          style={{
-            position: "fixed",
-            pointerEvents: "none",
-            zIndex: 100,
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%"
-          }}
-        >
-          <DragLayer
-            render={props => {
-              if (!props.currentOffset || props.item.type !== 'ITEM') return null;
-              return (
-                <div style={{ ...props.translation }}>
-                  {JSON.stringify(props)}
-                </div>
-              );
-            }}
-          />
-        </div>
-
         <Draggable
           onBeginDrag={(monitor, component) => {
             const data = { type: "ITEM" };
@@ -173,43 +146,65 @@ class Index extends PureComponent {
             );
           }}
           render={props => {
-            return <div className="bg-blue">{JSON.stringify(props)}</div>;
+            return <a className={BLUE_BUTTON}>Drag me!</a>;
           }}
         />
-
         <Droppable
+          accepts={[NativeTypes.FILE]}
           canDrop={this.canDrop}
           onDrop={this.onDrop}
           render={props => {
             return (
               <div
-                className="w-100 bg-silver overflow-scroll"
+                className={`br3 pa2 flex items-center justify-center overflow-scroll ${
+                  props.canDrop
+                    ? "bg-washed-green green"
+                    : props.isOver ? "bg-washed-red red" : "bg-near-white silver"
+                }`}
                 style={{ height: "400px" }}
               >
                 {JSON.stringify(props)}
-                <div className="w-100 bg-blue" style={{ height: "500px" }} />
-                HI!
               </div>
             );
           }}
         />
-
-        <DragAndDroppable
-          onBeginDrag={(monitor, component) => {
-            console.log("Begin drag", monitor, component);
-            return { type: "ANOTHER_ITEM" };
-          }}
-          onEndDrag={(monitor, component) => {
-            console.log(
-              "End drag. Did it drop?",
-              monitor.didDrop(),
-              "with data:",
-              monitor.getItem()
+        <DragLayer
+          render={props => {
+            if (!props.isDragging || props.item.type !== "ANOTHER_ITEM")
+              return null;
+            return (
+              <div style={{ ...props.translation }}>
+                <div
+                  className={BLUE_BUTTON}
+                  style={{ transform: "translate(-50%, -50%)" }}
+                >
+                  A custom handler!
+                </div>
+              </div>
             );
           }}
-          canDrop={this.canDrop}
-          render={props => <div>{JSON.stringify(props)}</div>}
         />
+        <div className="mv3">
+          <DragAndDroppable
+            customHandler={true}
+            onBeginDrag={(monitor, component) => {
+              const data = { type: "ANOTHER_ITEM" };
+              console.log("Begin drag with data:", data);
+              return data;
+            }}
+            canDrop={this.canDrop}
+            render={props => {
+              return (
+                <div
+                  className={`tc ${props.isDragging ? "o-10" : ""}`}
+                  style={{ ...props.translation }}
+                >
+                  Drag me as well, but I cannot be dropped!
+                </div>
+              );
+            }}
+          />
+        </div>
 
         <TourController
           render={({ next, activeStepId }) => (
@@ -242,7 +237,6 @@ class Index extends PureComponent {
             ) : null
           }
         />
-
         <i className="db mt2 gray">Try disabling internet access!</i>
       </Fragment>
     );

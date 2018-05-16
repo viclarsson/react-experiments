@@ -1,6 +1,7 @@
 import { PureComponent } from 'react';
 import { DropTarget } from 'react-dnd';
 import withScrolling from 'react-dnd-scrollzone';
+import { TYPE } from './DndConstants';
 
 class DroppableComponent extends PureComponent {
   render() {
@@ -36,5 +37,5 @@ const mapDropStateToProps = (connect, monitor) => {
 }
 
 // Function to wrap components
-export const dropTarget = (C) => DropTarget('Item', API, mapDropStateToProps)(withScrolling(C));
+export const dropTarget = (C) => DropTarget(props => (props.accepts && props.accepts.concat([TYPE])) || TYPE, API, mapDropStateToProps)(withScrolling(C));
 export default dropTarget(DroppableComponent);

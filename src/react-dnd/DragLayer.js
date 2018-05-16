@@ -1,11 +1,26 @@
-import { PureComponent } from "react";
+import React, { PureComponent } from "react";
 import { DragLayer } from "react-dnd";
 
 class DragLayerComponent extends PureComponent {
   render() {
     const { render, ...rest } = this.props;
-    console.log(rest);
-    return render(rest);
+    if (!rest.isDragging) return null;
+    // Make the dragLayer fixed
+    return (
+      <div
+        style={{
+          position: "fixed",
+          pointerEvents: "none",
+          zIndex: 100,
+          left: 0,
+          top: 0,
+          width: "100%",
+          height: "100%"
+        }}
+      >
+        {render(rest)}
+      </div>
+    );
   }
 }
 
@@ -14,9 +29,9 @@ class DragLayerComponent extends PureComponent {
  */
 const mapDragStateToProps = monitor => {
   let translation = null;
-  const currentOffset = monitor.getSourceClientOffset();
-  if (currentOffset) {
-    const { x, y } = currentOffset;
+  const offset = monitor.getClientOffset();
+  if (offset) {
+    const { x, y } = offset;
     const temp = `translate(${x}px, ${y}px)`;
     translation = {
       transform: temp,
@@ -28,7 +43,7 @@ const mapDragStateToProps = monitor => {
     item: monitor.getItem(),
     itemType: monitor.getItemType(),
     isDragging: monitor.isDragging(),
-    currentOffset,
+    currentOffset: monitor.getSourceClientOffset(),
     translation
   };
 };
