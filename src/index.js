@@ -20,6 +20,7 @@ import registerServiceWorker from './registerServiceWorker';
 import Network from './components/Network';
 
 // Providers
+import DndProvider from './react-dnd/DndProvider';
 import HotkeyProvider from './react-hotkeys/HotkeyProvider';
 import NotificationProvider from './react-notification/NotificationProvider';
 import TourProvider from './react-tour/TourProvider';
@@ -70,16 +71,18 @@ if (process.env.NODE_ENV !== 'production') {
 // Render the app
 ReactDOM.render((
   <Provider store={store}>
-    <HotkeyProvider debug>
-      <NotificationProvider store={store} debug>
-        <TourProvider tours={TOURS} store={store} debug>
-          <Network />
-          <ConnectedRouter history={history}>
-            <App />
-          </ConnectedRouter>
-        </TourProvider>
-      </NotificationProvider>
-    </HotkeyProvider>
+    <DndProvider debug>
+      <HotkeyProvider debug>
+        <NotificationProvider store={store} debug>
+          <TourProvider tours={TOURS} store={store} debug>
+            <Network />
+            <ConnectedRouter history={history}>
+              <App />
+            </ConnectedRouter>
+          </TourProvider>
+        </NotificationProvider>
+      </HotkeyProvider>
+    </DndProvider>
   </Provider>
 ), document.getElementById('root'));
 registerServiceWorker();
