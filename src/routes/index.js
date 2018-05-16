@@ -14,7 +14,7 @@ import { start } from "../react-tour/TourActions";
 import { registerNotification } from "../react-notification/NotificationActions";
 
 // Components
-import { NativeTypes } from 'react-dnd-html5-backend'
+import { NativeTypes } from "react-dnd-html5-backend";
 import DragLayer from "../react-dnd/DragLayer";
 import DragAndDroppable from "../react-dnd/DragAndDroppable";
 import Droppable from "../react-dnd/Droppable";
@@ -76,8 +76,9 @@ class Index extends PureComponent {
       <Fragment>
         <h1>UI Hygiene</h1>
         <p>
-          The idea is to create a system for handling hotkeys, notifications and
-          a tour system.
+          The idea is to create a system for handling hotkeys, notifications,
+          tours and a drag and drop system. All components provide a simple but
+          customizable and powerful usage.
         </p>
         <ul>
           <li>
@@ -92,6 +93,10 @@ class Index extends PureComponent {
           <li>
             The tour system as also state based where the steps are mounted when
             the step is active, which makes it scalable.
+          </li>
+          <li>
+            The drag and drop system makes it easy to create actions based on
+            prop callbacks in order to keep the React way of doing things.
           </li>
         </ul>
         <Hotkey keyCode="s" handler={this.startTour}>
@@ -159,7 +164,9 @@ class Index extends PureComponent {
                 className={`br3 pa2 flex items-center justify-center overflow-scroll ${
                   props.canDrop
                     ? "bg-washed-green green"
-                    : props.isOver ? "bg-washed-red red" : "bg-near-white silver"
+                    : props.isOver
+                      ? "bg-washed-red red"
+                      : "bg-near-white silver"
                 }`}
                 style={{ height: "400px" }}
               >
