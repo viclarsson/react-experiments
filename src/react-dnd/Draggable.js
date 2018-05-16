@@ -35,5 +35,5 @@ const mapDragStateToProps = (connect, monitor) => {
  };
 
 // Function to wrap components
-export const dragSource = DragSource('Item', API, mapDragStateToProps)
+export const dragSource = DragSource('Item', API, mapDragStateToProps);
 export default dragSource(Draggable);
