@@ -13,7 +13,6 @@ class Draggable extends PureComponent {
  * Specifies the props to inject into your component.
  */
 const mapDragStateToProps = (connect, monitor) => {
-  console.log(connect, monitor);
   return {
     // Connect
     dragSource: connect.dragSource(),

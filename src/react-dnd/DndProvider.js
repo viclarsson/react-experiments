@@ -13,7 +13,7 @@ const useTouch = isTouchDevice();
 
 class DndProvider extends PureComponent {
   render () {
-    console.log('Rendered DndProvider using', useTouch ? 'Touch' : 'HTML5', 'backend');
+    if (this.props.debug) console.log('Rendered DndProvider using', useTouch ? 'Touch' : 'HTML5', 'backend');
     return (
       <DragDropContextProvider backend={useTouch ? TouchBackend : HTML5Backend}>
         {this.props.children}

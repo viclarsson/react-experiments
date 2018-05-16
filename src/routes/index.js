@@ -14,6 +14,7 @@ import { start } from "../react-tour/TourActions";
 import { registerNotification } from "../react-notification/NotificationActions";
 
 // Components
+import DragLayer from "../react-dnd/DragLayer";
 import DragAndDroppable from "../react-dnd/DragAndDroppable";
 import Droppable from "../react-dnd/Droppable";
 import Draggable from "../react-dnd/Draggable";
@@ -134,13 +135,42 @@ class Index extends PureComponent {
 
         <p>Open the console and inspect the actions, state and DOM.</p>
 
+        <div
+          style={{
+            position: "fixed",
+            pointerEvents: "none",
+            zIndex: 100,
+            left: 0,
+            top: 0,
+            width: "100%",
+            height: "100%"
+          }}
+        >
+          <DragLayer
+            render={props => {
+              if (!props.currentOffset || props.item.type !== 'ITEM') return null;
+              return (
+                <div style={{ ...props.translation }}>
+                  {JSON.stringify(props)}
+                </div>
+              );
+            }}
+          />
+        </div>
+
         <Draggable
           onBeginDrag={(monitor, component) => {
-            console.log("Begin drag", monitor, component);
-            return { type: "ITEM" };
+            const data = { type: "ITEM" };
+            console.log("Begin drag with data:", data);
+            return data;
           }}
           onEndDrag={(monitor, component) => {
-            console.log("End drag", monitor.didDrop(), component);
+            console.log(
+              "End drag. Did it drop?",
+              monitor.didDrop(),
+              "with data:",
+              monitor.getItem()
+            );
           }}
           render={props => {
             return <div className="bg-blue">{JSON.stringify(props)}</div>;
@@ -170,7 +200,12 @@ class Index extends PureComponent {
             return { type: "ANOTHER_ITEM" };
           }}
           onEndDrag={(monitor, component) => {
-            console.log("End drag", monitor.didDrop(), component);
+            console.log(
+              "End drag. Did it drop?",
+              monitor.didDrop(),
+              "with data:",
+              monitor.getItem()
+            );
           }}
           canDrop={this.canDrop}
           render={props => <div>{JSON.stringify(props)}</div>}
