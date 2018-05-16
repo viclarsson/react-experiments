@@ -63,8 +63,8 @@ class Index extends PureComponent {
   }
 
   canDrop(monitor) {
-    return true;
-    // return monitor.getItem().type === "ITEM";
+    const item = monitor.getItem();
+    return item.type === "ITEM" || !item.type;
   }
 
   onDrop(monitor, component) {
