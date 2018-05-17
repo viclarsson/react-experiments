@@ -16,7 +16,6 @@ import { registerNotification } from "../react-notification/NotificationActions"
 // Components
 import { NativeTypes } from "react-dnd-html5-backend";
 import DragLayer from "../react-dnd/DragLayer";
-import DragAndDroppable from "../react-dnd/DragAndDroppable";
 import Droppable from "../react-dnd/Droppable";
 import Draggable from "../react-dnd/Draggable";
 import TestComponent from "../components/TestComponent";
@@ -192,7 +191,7 @@ class Index extends PureComponent {
           }}
         />
         <div className="mv3">
-          <DragAndDroppable
+          <Draggable
             customHandler={true}
             onBeginDrag={(monitor, component) => {
               const data = { type: "ANOTHER_ITEM" };
@@ -204,7 +203,7 @@ class Index extends PureComponent {
               return (
                 <div
                   className={`tc ${props.isDragging ? "o-10" : ""}`}
-                  style={{ ...props.translation }}
+                  stylse={{ ...props.translation }}
                 >
                   Drag me as well, but I cannot be dropped!
                 </div>

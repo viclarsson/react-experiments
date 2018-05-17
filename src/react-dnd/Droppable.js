@@ -32,7 +32,8 @@ const mapDropStateToProps = (connect, monitor) => {
     // Monitor
     isOver: monitor.isOver(),
     isOverCurrent: monitor.isOver({ shallow: true }),
-    canDrop: monitor.canDrop() // API.canDrop
+    canDrop: monitor.canDrop(), // API.canDrop
+    didDrop: monitor.didDrop()
   };
 }
 
