@@ -4,6 +4,7 @@ export default {
     'enter': 13,
     'shift': 16,
     'ctrl': 17,
+    'cmd': 91,
     'alt': 18,
     'pause': 19,
     'capslock': 20,

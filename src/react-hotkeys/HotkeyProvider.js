@@ -38,7 +38,8 @@ class HotkeyProvider extends PureComponent {
     let keyHash = keyCode;
     // Order is important here when we register! Ex: 'ctrl+alt+t'
     if (e.altKey && keyCode !== 18) keyHash = 'alt+' + keyHash;
-    if ((e.ctrlKey || e.metaKey) && keyCode !== 17) keyHash = 'ctrl+' + keyHash;
+    if ((e.ctrlKey) && keyCode !== 17) keyHash = 'ctrl+' + keyHash;
+    if ((e.metaKey) && keyCode !== 91) keyHash = 'cmd+' + keyHash;
     const hasHandler = type === 'keydown' ? this.keyDownHandlers[keyHash] : this.keyUpHandlers[keyHash];
     // TODO: Priority/override functionality?
     if (hasHandler && hasHandler[0]) {

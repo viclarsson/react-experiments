@@ -11,9 +11,9 @@ export default class Upload extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      status: "idle",
-      fileList: null,
+      fileList: {},
       files: [],
+      hasFiles: false,
       previews: {}
     };
 
@@ -21,7 +21,7 @@ export default class Upload extends PureComponent {
     this.files = [];
 
     this.setRef = this.setRef.bind(this);
-    this.open = this.open.bind(this);
+    this.add = this.add.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.processFiles = this.processFiles.bind(this);
     this.delete = this.delete.bind(this);
@@ -55,7 +55,7 @@ export default class Upload extends PureComponent {
     });
   }
 
-  handleChange (e) {
+  handleChange(e) {
     this.processFiles(null);
   }
 
@@ -77,27 +77,37 @@ export default class Upload extends PureComponent {
       });
     });
     this.createPreviews().then(previews =>
-      this.setState({ previews: previews })
+      this.setState(
+        {
+          previews: previews
+        },
+        () => console.log("Previews set!")
+      )
     );
     this.update();
   }
 
-  update () {
+  update() {
     const { handleChange } = this.props;
-    this.setState({
-      fileList: this.fileList,
-      files: this.files
-    });
+    console.log("Updating!", this.fileList, this.files);
+    this.setState(
+      {
+        fileList: { ...this.fileList },
+        files: [...this.files],
+        hasFiles: this.files[0] ? true : false
+      },
+      () => console.log("Files updated!")
+    );
     if (handleChange) handleChange(this.files);
   }
 
-  delete (id) {
+  delete(id) {
     delete this.fileList[id];
     this.files = this.files.filter(f => f.id !== id);
     this.update();
   }
 
-  open() {
+  add() {
     this.input.click();
   }
 
@@ -115,7 +125,7 @@ export default class Upload extends PureComponent {
         />
         {render({
           ...this.state,
-          open: this.open,
+          add: this.add,
           processFiles: this.processFiles,
           delete: this.delete
         })}

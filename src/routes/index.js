@@ -14,11 +14,7 @@ import { start } from "../react-tour/TourActions";
 import { registerNotification } from "../react-notification/NotificationActions";
 
 // Components
-import { NativeTypes } from "react-dnd-html5-backend";
-import DragLayer from "../react-dnd/DragLayer";
-import Droppable from "../react-dnd/Droppable";
-import Draggable from "../react-dnd/Draggable";
-import Uploader from "../components/Uploader";
+import FileHandler from "../components/FileHandler";
 import TestComponent from "../components/TestComponent";
 import TourComponent from "../components/TourComponent";
 import { push } from "react-router-redux";
@@ -35,9 +31,6 @@ class Index extends PureComponent {
     super(props);
     this.goToDemo = this.goToDemo.bind(this);
     this.startTour = this.startTour.bind(this);
-
-    this.onDrop = this.onDrop.bind(this);
-    this.canDrop = this.canDrop.bind(this);
   }
 
   goToDemo(next, activeStepId) {
@@ -60,15 +53,6 @@ class Index extends PureComponent {
         console.log("Start callback for tracking for example!")
       )
     );
-  }
-
-  canDrop(monitor) {
-    const item = monitor.getItem();
-    return item.type === "ITEM" || !item.type;
-  }
-
-  onDrop(monitor, component) {
-    console.log("Drop!", monitor.getItem());
   }
 
   render() {
@@ -136,85 +120,9 @@ class Index extends PureComponent {
           Router.
         </p>
 
-        <Uploader />
+        <FileHandler accept={["image/jpeg"]} />
 
         <p>Open the console and inspect the actions, state and DOM.</p>
-        <Draggable
-          onBeginDrag={(monitor, component) => {
-            const data = { type: "ITEM" };
-            console.log("Begin drag with data:", data);
-            return data;
-          }}
-          onEndDrag={(monitor, component) => {
-            console.log(
-              "End drag. Did it drop?",
-              monitor.didDrop(),
-              "with data:",
-              monitor.getItem()
-            );
-          }}
-          render={props => {
-            return <a className={BLUE_BUTTON}>Drag me!</a>;
-          }}
-        />
-        <Droppable
-          accepts={[NativeTypes.FILE]}
-          canDrop={this.canDrop}
-          onDrop={this.onDrop}
-          render={props => {
-            return (
-              <div
-                className={`br3 pa2 flex items-center justify-center overflow-scroll ${
-                  props.canDrop
-                    ? "bg-washed-green green"
-                    : props.isOver
-                      ? "bg-washed-red red"
-                      : "bg-near-white silver"
-                }`}
-                style={{ height: "400px" }}
-              >
-                {JSON.stringify(props)}
-              </div>
-            );
-          }}
-        />
-        <DragLayer
-          render={props => {
-            if (!props.isDragging || props.item.type !== "ANOTHER_ITEM")
-              return null;
-            return (
-              <div style={{ ...props.translation }}>
-                <div
-                  className={BLUE_BUTTON}
-                  style={{ transform: "translate(-50%, -50%)" }}
-                >
-                  A custom handler!
-                </div>
-              </div>
-            );
-          }}
-        />
-        <div className="mv3">
-          <Draggable
-            customHandler={true}
-            onBeginDrag={(monitor, component) => {
-              const data = { type: "ANOTHER_ITEM" };
-              console.log("Begin drag with data:", data);
-              return data;
-            }}
-            canDrop={this.canDrop}
-            render={props => {
-              return (
-                <div
-                  className={`tc ${props.isDragging ? "o-10" : ""}`}
-                  stylse={{ ...props.translation }}
-                >
-                  Drag me as well, but I cannot be dropped!
-                </div>
-              );
-            }}
-          />
-        </div>
 
         <TourController
           render={({ next, activeStepId }) => (
@@ -238,10 +146,10 @@ class Index extends PureComponent {
             isActive ? (
               <div className={TOUR_ELEMENT}>
                 <Hotkey
-                  keyCode="enter"
+                  keyCode="rightarrow"
                   handler={this.goToDemo(next, "intro-2")}
                 >
-                  Click above to start (or enter)!
+                  Click above to start (or right arrow)!
                 </Hotkey>
               </div>
             ) : null

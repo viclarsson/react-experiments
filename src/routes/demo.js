@@ -315,7 +315,7 @@ class Demo extends PureComponent {
   }
 
   render() {
-    const { activeIndex, components, selected } = this.state;
+    const { activeIndex, components } = this.state;
     return (
       <Fragment>
         {/* Notifications placed in bottom right corner */}
@@ -409,8 +409,15 @@ class Demo extends PureComponent {
           />
           <Hotkey keyCode="ctrl+c" handler={this.copy} />
           <Hotkey keyCode="ctrl+v" handler={this.paste} />
+          {/* Mac */}
           <Hotkey
-            keyCode="alt"
+            keyCode="cmd"
+            handler={this.setSelectMode("add")}
+            keyUpHandler={this.setSelectMode(null)}
+          />
+          {/*  Windows */}
+          <Hotkey
+            keyCode="ctrl"
             handler={this.setSelectMode("add")}
             keyUpHandler={this.setSelectMode(null)}
           />
