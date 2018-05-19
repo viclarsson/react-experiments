@@ -2,39 +2,18 @@ import React, { Component } from "react";
 import classnames from "classnames";
 
 // Components
-import Files from "../react-files/Files";
-import Droppable, { Types } from "../react-dnd/Droppable";
+import Files from "../../react-files/Files";
+import Droppable, { Types } from "../../react-dnd/Droppable";
 
-// Api
-import { postFormData } from "../api/requests";
+// HOC
+import withFileUpload from "./FileUpload";
 
 // Tachyons style
-import { BLUE_BUTTON } from "../tachyons";
+import { BLUE_BUTTON } from "../../tachyons";
 
 class FileHandler extends Component {
-  constructor(props) {
-    super(props);
-    this.uploadFiles = this.uploadFiles.bind(this);
-  }
-
-  uploadFiles() {
-    const { upload } = this.props;
-    const formData = new FormData();
-    for (let i in upload.fileList) {
-      console.log(i);
-      formData.append(`file_${i}`, upload.fileList[i]);
-    }
-    postFormData(formData)
-      .then(res => {
-        console.log("Uploaded!", res);
-      })
-      .catch(err => {
-        console.error("Error!", err);
-      });
-  }
-
   render() {
-    const { upload, droppable } = this.props;
+    const { uploadHandler, upload, droppable } = this.props;
     const classes = classnames(
       "flex flex-column items-center justify-center pa5 ba b--dashed bw1 br2 moon-gray b--light-gray",
       {
@@ -75,7 +54,7 @@ class FileHandler extends Component {
             <div onClick={upload.add} className={BLUE_BUTTON}>
               + Add files
             </div>
-            <div onClick={this.uploadFiles} className={BLUE_BUTTON}>
+            <div onClick={() => uploadHandler(upload.fileList)} className={BLUE_BUTTON}>
               Upload
             </div>
           </div>
@@ -100,7 +79,7 @@ class FileHandlerWrapper extends Component {
   }
 
   render() {
-    const { accept } = this.props;
+    const { accept, uploadHandler } = this.props;
     return (
       <Files
         accept={accept}
@@ -116,7 +95,7 @@ class FileHandlerWrapper extends Component {
               render={props => {
                 return (
                   <div>
-                    <FileHandler upload={state} droppable={props} />
+                    <FileHandler uploadHandler={uploadHandler} upload={state} droppable={props} />
                   </div>
                 );
               }}
@@ -128,4 +107,4 @@ class FileHandlerWrapper extends Component {
   }
 }
 
-export default FileHandlerWrapper;
+export default withFileUpload(FileHandlerWrapper);

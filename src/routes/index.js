@@ -14,7 +14,7 @@ import { start } from "../react-tour/TourActions";
 import { registerNotification } from "../react-notification/NotificationActions";
 
 // Components
-import FileHandler from "../components/FileHandler";
+import FileHandler from "../components/Upload/FileHandler";
 import TestComponent from "../components/TestComponent";
 import TourComponent from "../components/TourComponent";
 import { push } from "react-router-redux";
