@@ -22,9 +22,7 @@ class FileHandler extends Component {
   }
 
   render() {
-    console.log(this.props);
     const { uploadHandler, uploadStatus, upload, droppable } = this.props;
-    console.log(uploadStatus);
     const classes = classnames(
       "flex flex-column items-center justify-center pa5 ba b--dashed bw1 br2 moon-gray b--light-gray",
       {

@@ -78,27 +78,20 @@ export default class Upload extends PureComponent {
       });
     });
     this.createPreviews().then(previews =>
-      this.setState(
-        {
-          previews: previews
-        },
-        () => console.log("Previews set!")
-      )
+      this.setState({
+        previews: previews
+      })
     );
     this.update();
   }
 
   update() {
     const { handleChange } = this.props;
-    console.log("Updating!", this.fileList, this.files);
-    this.setState(
-      {
-        fileList: { ...this.fileList },
-        files: [...this.files],
-        hasFiles: this.files[0] ? true : false
-      },
-      () => console.log("Files updated!")
-    );
+    this.setState({
+      fileList: { ...this.fileList },
+      files: [...this.files],
+      hasFiles: this.files[0] ? true : false
+    });
     if (handleChange) handleChange(this.files);
   }
 

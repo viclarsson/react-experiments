@@ -19,7 +19,6 @@ const withFileUpload = (C) => {
       });
       const formData = new FormData();
       for (let i in fileList) {
-        console.log(i);
         formData.append(`file_${i}`, fileList[i]);
       }
       postFormData(formData)
@@ -37,7 +36,6 @@ const withFileUpload = (C) => {
 
     render() {
       const { status } = this.state;
-      console.log('status', status);
       return (
         <C {...this.props} uploadStatus={status} uploadHandler={this.uploadFiles}/>
       );
