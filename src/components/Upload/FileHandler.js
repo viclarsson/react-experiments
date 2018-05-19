@@ -22,7 +22,7 @@ class FileHandler extends Component {
   }
 
   render() {
-    const { uploadHandler, uploadStatus, upload, droppable } = this.props;
+    const { uploadHandler, uploadStatus, files, droppable } = this.props;
     const classes = classnames(
       "flex flex-column items-center justify-center pa5 ba b--dashed bw1 br2 moon-gray b--light-gray",
       {
@@ -31,19 +31,19 @@ class FileHandler extends Component {
     );
     return (
       <div className={classes}>
-        {!upload.hasFiles && (
-          <div className="grow pointer" onClick={upload.add}>
+        {!files.hasFiles && (
+          <div className="grow pointer" onClick={files.add}>
             Pick or drag files here!
           </div>
         )}
         {uploadStatus !== "idle" && <div>{uploadStatus}</div>}
-        {upload.hasFiles && (
+        {files.hasFiles && (
           <div className="tc">
-            {upload.files.map((file, i) => (
+            {files.files.map((file, i) => (
               <div key={i} className="tl flex items-center mv2">
                 <img
                   className="flex-none w-20 br2"
-                  src={upload.previews[file.id]}
+                  src={files.previews[file.id]}
                   alt="Preview before upload"
                 />
                 <div className="w-100 pl2 f7 gray">
@@ -52,7 +52,7 @@ class FileHandler extends Component {
                   </p>
                   <a
                     onClick={e => {
-                      upload.delete(file.id);
+                      files.delete(file.id);
                     }}
                     className="red fw7"
                   >
@@ -61,11 +61,11 @@ class FileHandler extends Component {
                 </div>
               </div>
             ))}
-            <div onClick={upload.add} className={BLUE_BUTTON}>
+            <div onClick={files.add} className={BLUE_BUTTON}>
               + Add files
             </div>
             <div
-              onClick={() => uploadHandler(upload.fileList)}
+              onClick={() => uploadHandler(files.fileList)}
               className={BLUE_BUTTON}
             >
               Upload
@@ -77,7 +77,7 @@ class FileHandler extends Component {
   }
 }
 
-class FileHandlerWrapper extends Component {
+class FileDropHandler extends Component {
   handleDrop(processFunction) {
     const { accept } = this.props;
     return monitor => {
@@ -100,19 +100,19 @@ class FileHandlerWrapper extends Component {
         handleChange={files =>
           console.log("File change! Maybe open cropper?", files)
         }
-        render={state => {
+        render={files => {
           return (
             <Droppable
               accepts={[Types.FILE, ...accept]}
-              onDrop={this.handleDrop(state.processFiles)}
-              render={props => {
+              onDrop={this.handleDrop(files.processFiles)}
+              render={droppable => {
                 return (
                   <div>
                     <FileHandler
                       uploadHandler={uploadHandler}
                       uploadStatus={uploadStatus}
-                      upload={state}
-                      droppable={props}
+                      files={files}
+                      droppable={droppable}
                     />
                   </div>
                 );
@@ -125,4 +125,4 @@ class FileHandlerWrapper extends Component {
   }
 }
 
-export default withFileUpload(FileHandlerWrapper);
+export default withFileUpload(FileDropHandler);

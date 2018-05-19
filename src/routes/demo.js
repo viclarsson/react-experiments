@@ -47,7 +47,7 @@ class Demo extends PureComponent {
     // Could be Redux Actions
     this.goToIndex = this.goToIndex.bind(this);
     this.addComponent = this.addComponent.bind(this);
-    this.removeSelectedOrActive = this.removeSelectedOrActive.bind(this);
+    this.removeSelected = this.removeSelected.bind(this);
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.toggleExpand = this.toggleExpand.bind(this);
@@ -76,8 +76,11 @@ class Demo extends PureComponent {
     return e => {
       if (this.state.activeIndex === this.state.components.length - 1) return;
       e.preventDefault();
+      const index = this.state.activeIndex + 1;
+      const selected = { [index]: true };
       this.setState({
-        activeIndex: this.state.activeIndex + 1
+        activeIndex: index,
+        selected
       });
     };
   }
@@ -85,8 +88,11 @@ class Demo extends PureComponent {
     return e => {
       if (this.state.activeIndex === 0) return;
       e.preventDefault();
+      const index = this.state.activeIndex - 1;
+      const selected = { [index]: true };
       this.setState({
-        activeIndex: this.state.activeIndex - 1
+        activeIndex: index,
+        selected
       });
     };
   }
@@ -124,27 +130,7 @@ class Demo extends PureComponent {
       timeout: 3000
     });
   }
-  removeActive() {
-    return e => {
-      if (this.state.components.length === 0) return;
-      if (this.state.activeIndex >= this.state.components.length) return;
-      const newArray = this.state.components.filter(
-        (v, i) => i !== this.state.activeIndex
-      );
-      const removed = this.state.components.filter(
-        (v, i) => i === this.state.activeIndex
-      );
-      this.setState({
-        components: newArray
-      });
-      this.props.registerNotification("bottom-right", {
-        content: "Removed " + removed[0],
-        timeout: 3000
-      });
-    };
-  }
-
-  removeSelectedOrActive() {
+  removeSelected() {
     const newArray = this.state.components.filter(
       (v, i) => !this.state.selected[i]
     );
@@ -265,16 +251,14 @@ class Demo extends PureComponent {
   }
 
   renderDraggable(i, c) {
-    const { selected, activeIndex } = this.state;
+    const { selected } = this.state;
     return draggableProps => {
       return (
         <div className={draggableProps.isDragging ? "o-0" : ""}>
           <div
             className={`pa2 br2 mb2 flex justify-between ${
-              activeIndex === i
-                ? "bg-gray white ba bw2 b--gray"
-                : "bg-near-white gray"
-            } ${selected[i] ? "bg-green white" : ""}`}
+              selected[i] ? "bg-green white" : "bg-near-white gray"
+            }`}
             onClick={this.select(i)}
           >
             <div className="flex-auto w-100">
@@ -299,14 +283,6 @@ class Demo extends PureComponent {
                     </div>
                   </div>
                 )}
-            </div>
-            <div className="flex-none">
-              <a
-                className="dib white bg-red pa1 br2 f7"
-                onClick={() => this.removeSelectedOrActive()}
-              >
-                Remove (Backspace)
-              </a>
             </div>
           </div>
         </div>
@@ -438,10 +414,7 @@ class Demo extends PureComponent {
           {/* Hotkeys for list */}
           <Hotkey keyCode="uparrow" handler={this.previous()} />
           <Hotkey keyCode="downarrow" handler={this.next()} />
-          <Hotkey
-            keyCode="backspace"
-            handler={() => this.removeSelectedOrActive()}
-          />
+          <Hotkey keyCode="backspace" handler={() => this.removeSelected()} />
           {activeIndex >= components.length - 1 && (
             <Hotkey keyCode="tab" handler={() => this.addComponent()}>
               TAB to add
