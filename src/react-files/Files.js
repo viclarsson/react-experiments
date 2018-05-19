@@ -25,6 +25,7 @@ export default class Upload extends PureComponent {
     this.handleChange = this.handleChange.bind(this);
     this.processFiles = this.processFiles.bind(this);
     this.delete = this.delete.bind(this);
+    this.reset = this.reset.bind(this);
     this.update = this.update.bind(this);
   }
 
@@ -107,6 +108,12 @@ export default class Upload extends PureComponent {
     this.update();
   }
 
+  reset() {
+    this.fileList = {};
+    this.files = [];
+    this.update();
+  }
+
   add() {
     this.input.click();
   }
@@ -127,7 +134,8 @@ export default class Upload extends PureComponent {
           ...this.state,
           add: this.add,
           processFiles: this.processFiles,
-          delete: this.delete
+          delete: this.delete,
+          reset: this.reset
         })}
       </Fragment>
     );

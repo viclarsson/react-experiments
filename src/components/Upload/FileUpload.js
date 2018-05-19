@@ -7,10 +7,16 @@ const withFileUpload = (C) => {
   class FileUpload extends Component {
     constructor(props) {
       super(props);
+      this.state = {
+        status: 'idle'
+      };
       this.uploadFiles = this.uploadFiles.bind(this);
     }
 
     uploadFiles(fileList) {
+      this.setState({
+        status: 'uploading'
+      });
       const formData = new FormData();
       for (let i in fileList) {
         console.log(i);
@@ -18,16 +24,22 @@ const withFileUpload = (C) => {
       }
       postFormData(formData)
         .then(res => {
-          console.log("Uploaded!", res);
+          this.setState({
+            status: 'done'
+          });
         })
         .catch(err => {
-          console.error("Error!", err);
+          this.setState({
+            status: 'error'
+          });
         });
     }
 
     render() {
+      const { status } = this.state;
+      console.log('status', status);
       return (
-        <C {...this.props} uploadHandler={this.uploadFiles} />
+        <C {...this.props} uploadStatus={status} uploadHandler={this.uploadFiles}/>
       );
     }
   }

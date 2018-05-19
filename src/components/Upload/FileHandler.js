@@ -12,8 +12,19 @@ import withFileUpload from "./FileUpload";
 import { BLUE_BUTTON } from "../../tachyons";
 
 class FileHandler extends Component {
+
+  componentWillReceiveProps (nextProps) {
+    const { uploadStatus, upload: { reset } } = this.props;
+    // Reset the data when uploaded!
+    if (uploadStatus === 'uploading' && nextProps.uploadStatus === 'done') {
+      reset();
+    }
+  }
+
   render() {
-    const { uploadHandler, upload, droppable } = this.props;
+    console.log(this.props);
+    const { uploadHandler, uploadStatus, upload, droppable } = this.props;
+    console.log(uploadStatus);
     const classes = classnames(
       "flex flex-column items-center justify-center pa5 ba b--dashed bw1 br2 moon-gray b--light-gray",
       {
@@ -27,6 +38,7 @@ class FileHandler extends Component {
             Pick or drag files here!
           </div>
         )}
+        {uploadStatus !== "idle" && <div>{uploadStatus}</div>}
         {upload.hasFiles && (
           <div className="tc">
             {upload.files.map((file, i) => (
@@ -54,7 +66,10 @@ class FileHandler extends Component {
             <div onClick={upload.add} className={BLUE_BUTTON}>
               + Add files
             </div>
-            <div onClick={() => uploadHandler(upload.fileList)} className={BLUE_BUTTON}>
+            <div
+              onClick={() => uploadHandler(upload.fileList)}
+              className={BLUE_BUTTON}
+            >
               Upload
             </div>
           </div>
@@ -79,7 +94,7 @@ class FileHandlerWrapper extends Component {
   }
 
   render() {
-    const { accept, uploadHandler } = this.props;
+    const { accept, uploadHandler, uploadStatus } = this.props;
     return (
       <Files
         accept={accept}
@@ -95,7 +110,12 @@ class FileHandlerWrapper extends Component {
               render={props => {
                 return (
                   <div>
-                    <FileHandler uploadHandler={uploadHandler} upload={state} droppable={props} />
+                    <FileHandler
+                      uploadHandler={uploadHandler}
+                      uploadStatus={uploadStatus}
+                      upload={state}
+                      droppable={props}
+                    />
                   </div>
                 );
               }}
