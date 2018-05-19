@@ -14,7 +14,7 @@ import { BLUE_BUTTON } from "../../tachyons";
 class FileHandler extends Component {
 
   componentWillReceiveProps (nextProps) {
-    const { uploadStatus, upload: { reset } } = this.props;
+    const { uploadStatus, files: { reset } } = this.props;
     // Reset the data when uploaded!
     if (uploadStatus === 'uploading' && nextProps.uploadStatus === 'done') {
       reset();
