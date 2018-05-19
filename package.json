@@ -21,17 +21,25 @@
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.2.0",
+    "superagent": "^3.8.3",
     "why-did-you-update": "^0.1.1"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "scripts": {
+    "server": "nodemon server",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "predeploy": "react-scripts build",
     "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "formidable": "^1.2.1",
+    "nodemon": "^1.17.4"
   }
 }
