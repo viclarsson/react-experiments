@@ -18,6 +18,7 @@ import { NativeTypes } from "react-dnd-html5-backend";
 import DragLayer from "../react-dnd/DragLayer";
 import Droppable from "../react-dnd/Droppable";
 import Draggable from "../react-dnd/Draggable";
+import Uploader from "../components/Uploader";
 import TestComponent from "../components/TestComponent";
 import TourComponent from "../components/TourComponent";
 import { push } from "react-router-redux";
@@ -134,6 +135,9 @@ class Index extends PureComponent {
           <code>lastAction</code> module to the state. The demo uses the React
           Router.
         </p>
+
+        <Uploader />
+
         <p>Open the console and inspect the actions, state and DOM.</p>
         <Draggable
           onBeginDrag={(monitor, component) => {

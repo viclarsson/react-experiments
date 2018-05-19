@@ -3,6 +3,9 @@ import { DropTarget } from 'react-dnd';
 import withScrolling from 'react-dnd-scrollzone';
 import { TYPE } from './DndConstants';
 
+import { NativeTypes } from "react-dnd-html5-backend";
+export const Types = NativeTypes;
+
 class DroppableComponent extends PureComponent {
   render() {
     const { dropTarget, render, ...rest } = this.props;
