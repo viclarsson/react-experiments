@@ -22,7 +22,7 @@ class FileHandler extends Component {
   }
 
   render() {
-    const { uploadHandler, uploadStatus, files, droppable } = this.props;
+    const { uploadHandler, uploadStatus, files, droppable, dropStatus } = this.props;
     const classes = classnames(
       "flex flex-column items-center justify-center pa5 ba b--dashed bw1 br2 moon-gray b--light-gray",
       {
@@ -36,7 +36,8 @@ class FileHandler extends Component {
             Pick or drag files here!
           </div>
         )}
-        {uploadStatus !== "idle" && <div>{uploadStatus}</div>}
+        {uploadStatus !== "idle" && <div>Upload status: {uploadStatus}</div>}
+        {dropStatus !== "idle" && <div>Drop status: {dropStatus}</div>}
         {files.hasFiles && (
           <div className="tc">
             {files.files.map((file, i) => (
@@ -78,13 +79,27 @@ class FileHandler extends Component {
 }
 
 class FileDropHandler extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      status: 'idle'
+    };
+    this.handleDrop = this.handleDrop.bind(this);
+  }
+
+
   handleDrop(processFunction) {
-    const { accept } = this.props;
+    const { accept, multiple } = this.props;
     return monitor => {
       const files = monitor
-        .getItem()
-        .files.filter(f => accept.includes(f.type));
+        .getItem().files;
+      if (!multiple && files.length > 1) {
+        this.setState({ status: 'too-many-files' });
+        return {};
+      }
+      files.filter(f => accept.includes(f.type));
       if (files.length > 0) {
+        this.setState({ status: 'idle' });
         processFunction(files);
       }
       return {};
@@ -92,11 +107,12 @@ class FileDropHandler extends Component {
   }
 
   render() {
-    const { accept, uploadHandler, uploadStatus } = this.props;
+    const { status } = this.state;
+    const { accept, multiple, uploadHandler, uploadStatus } = this.props;
     return (
       <Files
         accept={accept}
-        multiple={true}
+        multiple={multiple}
         handleChange={files =>
           console.log("File change! Maybe open cropper?", files)
         }
@@ -109,6 +125,7 @@ class FileDropHandler extends Component {
                 return (
                   <div>
                     <FileHandler
+                      dropStatus={status}
                       uploadHandler={uploadHandler}
                       uploadStatus={uploadStatus}
                       files={files}

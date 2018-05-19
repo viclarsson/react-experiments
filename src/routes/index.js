@@ -120,7 +120,7 @@ class Index extends PureComponent {
           Router.
         </p>
 
-        <FileHandler accept={["image/jpeg"]} />
+        <FileHandler accept={["image/jpeg"]} multiple={true} />
 
         <p>Open the console and inspect the actions, state and DOM.</p>
 

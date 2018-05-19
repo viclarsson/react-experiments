@@ -7,7 +7,7 @@ const HIDE = {
   left: "-9999px"
 };
 
-export default class Upload extends PureComponent {
+export default class Files extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
