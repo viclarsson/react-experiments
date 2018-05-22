@@ -17,6 +17,7 @@ import NotificationComponent from "../components/NotificationComponent";
 import List from "../components/List/List";
 
 // Actions
+import * as ModalActions from "../react-modal/ModalActions";
 import * as NotificationActions from "../react-notification/NotificationActions";
 import { push } from "react-router-redux";
 
@@ -61,6 +62,8 @@ class Demo extends PureComponent {
 
     // Notifications
     this.triggerNotification = this.triggerNotification.bind(this);
+    // Modal
+    this.triggerModal = this.triggerModal.bind(this);
   }
 
   goToIndex() {
@@ -147,6 +150,11 @@ class Demo extends PureComponent {
     return e => {
       this.props.registerNotification("header", { content });
     };
+  }
+
+  triggerModal() {
+    const { push } = this.props;
+    push('/demo?modal=demo');
   }
 
   copy() {
@@ -287,6 +295,18 @@ class Demo extends PureComponent {
         </div>
 
         <div className="tc f7 mt2">
+          <Hotkey
+            keyCode="m"
+            handler={this.triggerModal}
+          >
+            <a
+              className={BLUE_BUTTON + ' mr2'}
+              onClick={this.triggerModal}
+            >
+              Trigger demo modal
+              <span className={HOTKEY + " white b--white"}>M</span>
+            </a>
+          </Hotkey>
           <Hotkey
             keyCode="g"
             handler={this.triggerNotification(

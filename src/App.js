@@ -91,7 +91,7 @@ class App extends PureComponent {
             }}
           />
         </div>
-        <div className="measure center">
+        <div className="measure center pa2">
           <Switch>
             <Route exact path="/" component={Index} />
             <Route path="/demo" component={Demo} />
