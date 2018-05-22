@@ -19,12 +19,10 @@ const ListVisuals = ({
   expandActive,
   cursor,
   select,
-  selected,
-  style
+  selected
 }) => {
   return (
     <div
-      style={style}
       className={`pa2 br2 mb2 flex justify-between ${
         selected[i] ? "bg-green white" : "bg-near-white gray"
       }`}
@@ -58,20 +56,15 @@ const ListVisuals = ({
 class ListItem extends PureComponent {
   constructor(props) {
     super(props);
-    this.onHover = this.onHover.bind(this);
-    this.onEndDrag = this.onEndDrag.bind(this);
+    this.onDrop = this.onDrop.bind(this);
     this.renderDraggable = this.renderDraggable.bind(this);
     this.renderItem = this.renderItem.bind(this);
   }
 
-  onEndDrag(monitor, component) {
-    const { i, onEndDrag } = this.props;
-    onEndDrag(i);
-  }
-
-  onHover(monitor, component) {
-    const { i, onHover } = this.props;
-    onHover(i);
+  onDrop(monitor, component) {
+    const { i, onDrop } = this.props;
+    onDrop(i);
+    return monitor.getItem();
   }
 
   renderDraggable(props) {
@@ -83,13 +76,11 @@ class ListItem extends PureComponent {
       // Data
       expandActive,
       c,
-      i,
-      style
+      i
     } = this.props;
     return (
-      <div className={props.isDragging ? "o-10" : ""}>
+      <div className={props.isDragging ? "o-0" : ""}>
         <ListVisuals
-          style={style}
           cursor={cursor}
           selected={selected}
           select={select}
@@ -103,20 +94,18 @@ class ListItem extends PureComponent {
   renderItem() {
     return (
       <div>
-        <Draggable onEndDrag={this.onEndDrag} render={this.renderDraggable} />
+        <Draggable render={this.renderDraggable} />
       </div>
     );
   }
   render() {
-    const { expandActive, selected, c, i, hover } = this.props;
-    return (
-      <Droppable
-        key={`${selected[i]}-${c}-${i}-${expandActive}-${hover}`}
-        onDrop={this.onDrop}
-        onHover={this.onHover}
-        render={this.renderItem}
-      />
-    );
+    const {
+      expandActive,
+      selected,
+      c,
+      i
+    } = this.props;
+    return <Droppable key={`${selected[i]}-${c}-${i}-${expandActive}`} onDrop={this.onDrop} render={this.renderItem}/>;
   }
 }
 
