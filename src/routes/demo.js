@@ -14,8 +14,7 @@ import { tourStep, tourController as TC } from "../react-tour/TourHelper";
 // Components
 import TestComponent from "../components/TestComponent";
 import NotificationComponent from "../components/NotificationComponent";
-import Draggable from "../react-dnd/Draggable";
-import Droppable from "../react-dnd/Droppable";
+import List from "../components/List";
 
 // Actions
 import * as NotificationActions from "../react-notification/NotificationActions";
@@ -38,25 +37,23 @@ class Demo extends PureComponent {
     // Could be in Redux
     this.state = {
       components: [],
-      activeIndex: 0,
-      expandActive: false,
-      selected: {},
-      selectMode: null
+      expandActive: false
     };
 
     // Could be Redux Actions
     this.goToIndex = this.goToIndex.bind(this);
     this.addComponent = this.addComponent.bind(this);
+    this.moveToIndex = this.moveToIndex.bind(this);
     this.removeSelected = this.removeSelected.bind(this);
-    this.next = this.next.bind(this);
-    this.previous = this.previous.bind(this);
+
+    // Actions
     this.toggleExpand = this.toggleExpand.bind(this);
     this.expand = this.expand.bind(this);
     this.contract = this.contract.bind(this);
-    this.setSelectMode = this.setSelectMode.bind(this);
+
+    // Test
     this.copy = this.copy.bind(this);
     this.paste = this.paste.bind(this);
-    this.moveSelected = this.moveSelected.bind(this);
 
     this.clipboard = null;
     this.focusElement = null;
@@ -72,30 +69,26 @@ class Demo extends PureComponent {
     };
   }
 
-  next() {
-    return e => {
-      if (this.state.activeIndex === this.state.components.length - 1) return;
-      e.preventDefault();
-      const index = this.state.activeIndex + 1;
-      const selected = { [index]: true };
-      this.setState({
-        activeIndex: index,
-        selected
-      });
-    };
+  moveToIndex(index, selected) {
+    const { components } = this.state;
+    const componentAtIndex = components[index];
+    const selectedItems = components.filter((c, i) => selected[i]);
+    const notSelected = components.filter((c, i) => !selected[i]);
+    let newIndex = notSelected.indexOf(componentAtIndex);
+    if (newIndex < 0) newIndex = index;
+    const newArray = [
+      ...notSelected.slice(0, index),
+      ...selectedItems,
+      ...notSelected.slice(index)
+    ];
+    let newSelected = {};
+    for (let i = 0; i < selectedItems.length; i++) {
+      newSelected[i + index] = true;
+    }
+    this.setState({ components: newArray });
+    return newSelected;
   }
-  previous(e) {
-    return e => {
-      if (this.state.activeIndex === 0) return;
-      e.preventDefault();
-      const index = this.state.activeIndex - 1;
-      const selected = { [index]: true };
-      this.setState({
-        activeIndex: index,
-        selected
-      });
-    };
-  }
+
   toggleExpand() {
     return e => {
       this.setState({
@@ -117,27 +110,25 @@ class Demo extends PureComponent {
       });
     };
   }
+
   addComponent() {
     const value = Math.random()
       .toString(36)
       .substring(7);
     this.setState({
-      components: [...this.state.components, value],
-      activeIndex: this.state.components.length
+      components: [...this.state.components, value]
     });
     this.props.registerNotification("bottom-right", {
       content: "Added " + value,
       timeout: 3000
     });
   }
-  removeSelected() {
-    const newArray = this.state.components.filter(
-      (v, i) => !this.state.selected[i]
-    );
+
+  removeSelected(selected) {
+    const newArray = this.state.components.filter((v, i) => !selected[i]);
     const diff = this.state.components.length - newArray.length;
     this.setState({
-      components: newArray,
-      selected: {}
+      components: newArray
     });
     this.props.registerNotification("bottom-right", {
       content: "Removed " + diff,
@@ -151,143 +142,22 @@ class Demo extends PureComponent {
     };
   }
 
-  copy() {
+  copy(selected) {
     if (this.focusElement === document.activeElement) {
-      this.clipboard = { ...this.state.selected };
+      this.clipboard = { ...selected };
     }
   }
 
-  paste() {
+  paste(selected) {
     if (this.focusElement === document.activeElement) {
-      const toCopy = this.state.components.filter(
-        (c, i) => this.state.selected[i]
-      );
+      const toCopy = this.state.components.filter((c, i) => selected[i]);
       this.setState({
         components: [
           ...this.state.components,
           ...toCopy.map(c => c + " (copy)")
-        ],
-        selected: {}
+        ]
       });
     }
-  }
-
-  setSelectMode(mode) {
-    return e => {
-      this.setState({ selectMode: mode });
-    };
-  }
-
-  moveSelected(index) {
-    const { selected, components } = this.state;
-    const itemAtIndex = components[index];
-    const selectedItems = components.filter((c, i) => selected[i]);
-    const notSelected = components.filter((c, i) => !selected[i]);
-    let newIndex = notSelected.indexOf(itemAtIndex);
-    if (newIndex < 0) newIndex = index;
-    const newArray = [
-      ...notSelected.slice(0, index),
-      ...selectedItems,
-      ...notSelected.slice(index)
-    ];
-    let newSelected = {};
-    for (let i = 0; i < selectedItems.length; i++)
-      newSelected[i + index] = true;
-    this.setState({ components: newArray, selected: newSelected });
-  }
-
-  onDrop(i) {
-    return (monitor, component) => {
-      this.moveSelected(i);
-      return monitor.getItem();
-    };
-  }
-
-  select(index) {
-    return e => {
-      const { selected, selectMode } = this.state;
-      // If shift => Add all up to the value
-      if (selectMode === "range") {
-        let selection = {};
-        let selectedIndex = parseInt(Object.keys(selected)[0], 0);
-        const distance = Math.abs(selectedIndex - index);
-        let start = selectedIndex < index ? selectedIndex : index;
-        for (let range = start; range <= start + Math.abs(distance); range++) {
-          selection[range] = true;
-        }
-        this.setState({
-          selected: selection
-        });
-      } else if (selectMode === "add") {
-        // If cmd => add to list
-        this.setState({
-          selected: {
-            ...selected,
-            [index]: selected[index] ? false : true
-          }
-        });
-      } else {
-        // Otherwise => Select only one
-        this.setState({
-          selected: {
-            [index]:
-              selected[index] && Object.keys(selected).length === 1
-                ? false
-                : true
-          }
-        });
-      }
-    };
-  }
-
-  renderDroppable(i, c) {
-    return draggableProps => {
-      return (
-        <div key={c + "drag"}>
-          <Draggable render={this.renderDraggable(i, c)} />
-        </div>
-      );
-    };
-  }
-
-  renderDraggable(i, c) {
-    const { selected } = this.state;
-    return draggableProps => {
-      return (
-        <div className={draggableProps.isDragging ? "o-0" : ""}>
-          <div
-            className={`pa2 br2 mb2 flex justify-between ${
-              selected[i] ? "bg-green white" : "bg-near-white gray"
-            }`}
-            onClick={this.select(i)}
-          >
-            <div className="flex-auto w-100">
-              Element: {c}
-              {this.state.expandActive &&
-                this.state.activeIndex === i && (
-                  <div className="f7">
-                    {/* Another hotkey for ENTER (13) */}
-                    <Hotkey
-                      keyCode="enter"
-                      handler={() => alert(`Surprise! ${c}`)}
-                    >
-                      <div>Try Enter for surprise!</div>
-                    </Hotkey>
-                    <div>
-                      Expandable dummy which adds a handler for ENTER. As it was
-                      mounted later, it gets priority. This makes it possible to
-                      use different states to trigger different actions on the
-                      same keycode. Such wow. Another example were to be to add
-                      a "remove" feature on focus. Just create a state for it
-                      and render the Hotkey.
-                    </div>
-                  </div>
-                )}
-            </div>
-          </div>
-        </div>
-      );
-    };
   }
 
   render() {
@@ -370,51 +240,13 @@ class Demo extends PureComponent {
           </Hotkey>
         </div>
 
-        <div
-          className="mv2"
-          tabIndex="-1"
-          onBlur={() => this.setState({ selected: {} })}
-          ref={r => {
-            this.focusElement = r;
-          }}
-        >
-          <Hotkey
-            keyCode="shift"
-            handler={this.setSelectMode("range")}
-            keyUpHandler={this.setSelectMode(null)}
-          />
-          <Hotkey keyCode="ctrl+c" handler={this.copy} />
-          <Hotkey keyCode="ctrl+v" handler={this.paste} />
-          {/* Mac */}
-          <Hotkey
-            keyCode="cmd"
-            handler={this.setSelectMode("add")}
-            keyUpHandler={this.setSelectMode(null)}
-          />
-          {/*  Windows */}
-          <Hotkey
-            keyCode="ctrl"
-            handler={this.setSelectMode("add")}
-            keyUpHandler={this.setSelectMode(null)}
-          />
-
-          {this.state.components.length === 0 && (
-            <div className="pv2 tc f7 gray">No posts.</div>
-          )}
-          {this.state.components.map((c, i) => (
-            <Droppable
-              key={c}
-              onDrop={this.onDrop(i)}
-              render={this.renderDroppable(i, c)}
-            />
-          ))}
-        </div>
+        <List items={this.state.components} expandActive={this.state.expandActive} moveToIndex={this.moveToIndex}/>
 
         <div className="flex justify-around items-center gray f7">
           {/* Hotkeys for list */}
-          <Hotkey keyCode="uparrow" handler={this.previous()} />
-          <Hotkey keyCode="downarrow" handler={this.next()} />
           <Hotkey keyCode="backspace" handler={() => this.removeSelected()} />
+          <Hotkey keyCode="ctrl+c" handler={this.copy} />
+          <Hotkey keyCode="ctrl+v" handler={this.paste} />
           {activeIndex >= components.length - 1 && (
             <Hotkey keyCode="tab" handler={() => this.addComponent()}>
               TAB to add
