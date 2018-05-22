@@ -19,10 +19,12 @@ const ListVisuals = ({
   expandActive,
   cursor,
   select,
-  selected
+  selected,
+  style
 }) => {
   return (
     <div
+      style={style}
       className={`pa2 br2 mb2 flex justify-between ${
         selected[i] ? "bg-green white" : "bg-near-white gray"
       }`}
@@ -56,15 +58,20 @@ const ListVisuals = ({
 class ListItem extends PureComponent {
   constructor(props) {
     super(props);
-    this.onDrop = this.onDrop.bind(this);
+    this.onHover = this.onHover.bind(this);
+    this.onEndDrag = this.onEndDrag.bind(this);
     this.renderDraggable = this.renderDraggable.bind(this);
     this.renderItem = this.renderItem.bind(this);
   }
 
-  onDrop(monitor, component) {
-    const { i, onDrop } = this.props;
-    onDrop(i);
-    return monitor.getItem();
+  onEndDrag(monitor, component) {
+    const { i, onEndDrag } = this.props;
+    onEndDrag(i);
+  }
+
+  onHover(monitor, component) {
+    const { i, onHover } = this.props;
+    onHover(i);
   }
 
   renderDraggable(props) {
@@ -76,11 +83,13 @@ class ListItem extends PureComponent {
       // Data
       expandActive,
       c,
-      i
+      i,
+      style
     } = this.props;
     return (
-      <div className={props.isDragging ? "o-0" : ""}>
+      <div className={props.isDragging ? "o-10" : ""}>
         <ListVisuals
+          style={style}
           cursor={cursor}
           selected={selected}
           select={select}
@@ -94,18 +103,20 @@ class ListItem extends PureComponent {
   renderItem() {
     return (
       <div>
-        <Draggable render={this.renderDraggable} />
+        <Draggable onEndDrag={this.onEndDrag} render={this.renderDraggable} />
       </div>
     );
   }
   render() {
-    const {
-      expandActive,
-      selected,
-      c,
-      i
-    } = this.props;
-    return <Droppable key={`${selected[i]}-${c}-${i}-${expandActive}`} onDrop={this.onDrop} render={this.renderItem}/>;
+    const { expandActive, selected, c, i, hover } = this.props;
+    return (
+      <Droppable
+        key={`${selected[i]}-${c}-${i}-${expandActive}-${hover}`}
+        onDrop={this.onDrop}
+        onHover={this.onHover}
+        render={this.renderItem}
+      />
+    );
   }
 }
 
