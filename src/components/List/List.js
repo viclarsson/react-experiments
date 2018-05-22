@@ -15,12 +15,16 @@ class List extends PureComponent {
   constructor(props) {
     super(props);
     this.focusElement = null;
-    this.onDrop = this.onDrop.bind(this);
+    this.onHover = this.onHover.bind(this);
+    this.hover = null; // Inner counter
   }
 
-  onDrop(i) {
+  onHover(i) {
     const { moveToIndex, updateSelection, selected } = this.props;
-    updateSelection(moveToIndex(i, selected));
+    if (i !== this.hover) {
+      updateSelection(moveToIndex(i, selected));
+      this.hover = i;
+    }
   }
 
   render() {
@@ -70,7 +74,7 @@ class List extends PureComponent {
         {this.props.items.map((c, i) => (
           <ListItem
             key={c + "-" + i}
-            onDrop={this.onDrop}
+            onHover={this.onHover}
             c={c}
             i={i}
             selected={selected}

@@ -27,11 +27,12 @@ const ListVisuals = ({
         selected[i] ? "bg-green white" : "bg-near-white gray"
       }`}
       onClick={() => select(i)}
+      onMouseDown={() => !selected[i] && select(i)}
     >
       <div className="flex-auto w-100">
         Element: {c}
         {expandActive &&
-          cursor === i && (
+          cursor === i && selected[i] && (
             <div className="f7">
               {/* Another hotkey for ENTER (13) */}
               <Hotkey keyCode="enter" handler={() => alert(`Surprise! ${c}`)}>
@@ -56,14 +57,14 @@ const ListVisuals = ({
 class ListItem extends PureComponent {
   constructor(props) {
     super(props);
-    this.onDrop = this.onDrop.bind(this);
+    this.onHover = this.onHover.bind(this);
     this.renderDraggable = this.renderDraggable.bind(this);
     this.renderItem = this.renderItem.bind(this);
   }
 
-  onDrop(monitor, component) {
-    const { i, onDrop } = this.props;
-    onDrop(i);
+  onHover(monitor, component) {
+    const { i, onHover } = this.props;
+    onHover(i);
     return monitor.getItem();
   }
 
@@ -105,7 +106,7 @@ class ListItem extends PureComponent {
       c,
       i
     } = this.props;
-    return <Droppable key={`${selected[i]}-${c}-${i}-${expandActive}`} onDrop={this.onDrop} render={this.renderItem}/>;
+    return <Droppable key={`${selected[i]}-${c}-${i}-${expandActive}`} onHover={this.onHover} render={this.renderItem}/>;
   }
 }
 
