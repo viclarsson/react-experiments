@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://viclarsson.github.io/react-experiments/",
   "dependencies": {
+    "mentimeter-design": "git+https://mentimeter-readonly:da3d65488794dc4aa4cd2d487e0ab3b0bb8a1eff@github.com/mentimeter/mentimeter-design.git#2.1.10",
     "classnames": "^2.2.5",
     "gh-pages": "^1.1.0",
     "history": "^4.7.2",
@@ -22,6 +23,7 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.2.0",
     "superagent": "^3.8.3",
+    "url-parse": "^1.4.0",
     "why-did-you-update": "^0.1.1"
   },
   "eslintConfig": {

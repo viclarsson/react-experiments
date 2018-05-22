@@ -42,7 +42,7 @@ class Index extends PureComponent {
           content: "Went to demo using actions!"
         })
       );
-      dispatch(push("/demo"));
+      dispatch(push("/demo?modal=demo"));
     };
   }
 

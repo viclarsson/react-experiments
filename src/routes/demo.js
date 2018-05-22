@@ -97,7 +97,6 @@ class Demo extends PureComponent {
     };
   }
   expand() {
-    console.log('EXPAND!');
     return e => {
       this.setState({
         expandActive: true
@@ -241,7 +240,11 @@ class Demo extends PureComponent {
           </Hotkey>
         </div>
 
-        <List items={this.state.components} expandActive={this.state.expandActive} moveToIndex={this.moveToIndex}/>
+        <List
+          items={this.state.components}
+          expandActive={this.state.expandActive}
+          moveToIndex={this.moveToIndex}
+        />
 
         <div className="flex justify-around items-center gray f7">
           {/* Hotkeys for list */}

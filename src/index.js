@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+// CSS
+import css from 'mentimeter-design/dist/style.css';
+
 // Redux
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers} from 'redux';
@@ -20,6 +23,7 @@ import registerServiceWorker from './registerServiceWorker';
 import Network from './components/Network';
 
 // Providers
+import ModalProvider from './react-modal/ModalProvider';
 import DndProvider from './react-dnd/DndProvider';
 import HotkeyProvider from './react-hotkeys/HotkeyProvider';
 import NotificationProvider from './react-notification/NotificationProvider';
@@ -71,18 +75,20 @@ if (process.env.NODE_ENV !== 'production') {
 // Render the app
 ReactDOM.render((
   <Provider store={store}>
-    <DndProvider debug>
-      <HotkeyProvider debug>
-        <NotificationProvider store={store} debug>
-          <TourProvider tours={TOURS} store={store} debug>
-            <Network />
-            <ConnectedRouter history={history}>
-              <App />
-            </ConnectedRouter>
-          </TourProvider>
-        </NotificationProvider>
-      </HotkeyProvider>
-    </DndProvider>
+    <ModalProvider store={store} debug>
+      <DndProvider debug>
+        <HotkeyProvider debug>
+          <NotificationProvider store={store} debug>
+            <TourProvider tours={TOURS} store={store} debug>
+              <Network />
+              <ConnectedRouter history={history}>
+                <App />
+              </ConnectedRouter>
+            </TourProvider>
+          </NotificationProvider>
+        </HotkeyProvider>
+      </DndProvider>
+    </ModalProvider>
   </Provider>
 ), document.getElementById('root'));
 registerServiceWorker();
