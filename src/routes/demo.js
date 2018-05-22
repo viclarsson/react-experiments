@@ -17,7 +17,6 @@ import NotificationComponent from "../components/NotificationComponent";
 import List from "../components/List/List";
 
 // Actions
-import * as ModalActions from "../react-modal/ModalActions";
 import * as NotificationActions from "../react-notification/NotificationActions";
 import { push } from "react-router-redux";
 
