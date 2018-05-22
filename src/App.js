@@ -32,8 +32,9 @@ class App extends PureComponent {
           render={({ active }) => {
             if (active !== "demo") return null;
             return (
-              <div className="fixed absolute--fill w-100 h-100 bg-white flex items-center justify-center">
-                <div className="pa-m theme-white br-m tc">
+              <div className="z-max fixed absolute--fill w-100 h-100 flex items-center justify-center">
+                <div className="z-1 absolute absolute--fill bg-white o-70" />
+                <div className="relative z-2 pa-m theme-white br-m tc">
                   <h1>Hello!</h1>
                   <p><Link to="/demo" className={BLUE_BUTTON}>Close</Link></p>
                 </div>

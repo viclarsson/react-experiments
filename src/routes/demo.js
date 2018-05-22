@@ -37,12 +37,14 @@ class Demo extends PureComponent {
     // Could be in Redux
     this.state = {
       components: [],
+      selected: {},
       expandActive: false
     };
 
     // Could be Redux Actions
     this.goToIndex = this.goToIndex.bind(this);
     this.addComponent = this.addComponent.bind(this);
+    this.handleSelectionChange = this.handleSelectionChange.bind(this);
     this.moveToIndex = this.moveToIndex.bind(this);
     this.removeSelected = this.removeSelected.bind(this);
 
@@ -67,6 +69,10 @@ class Demo extends PureComponent {
     return e => {
       push("/");
     };
+  }
+
+  handleSelectionChange (selected) {
+    this.setState({ selected });
   }
 
   moveToIndex(index, selected) {
@@ -124,8 +130,8 @@ class Demo extends PureComponent {
     });
   }
 
-  removeSelected(selected) {
-    const newArray = this.state.components.filter((v, i) => !selected[i]);
+  removeSelected() {
+    const newArray = this.state.components.filter((v, i) => !this.state.selected[i]);
     const diff = this.state.components.length - newArray.length;
     this.setState({
       components: newArray
@@ -241,6 +247,7 @@ class Demo extends PureComponent {
         </div>
 
         <List
+          onSelectionChange={this.handleSelectionChange}
           items={this.state.components}
           expandActive={this.state.expandActive}
           moveToIndex={this.moveToIndex}

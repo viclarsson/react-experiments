@@ -17,6 +17,14 @@ class Selectable extends PureComponent {
     this.updateSelection = this.updateSelection.bind(this);
   }
 
+  componentDidUpdate(_, prevState) {
+    const { onSelectionChange } = this.props;
+    const { selected, cursor } = this.state;
+    if (selected !== prevState.selected || cursor !== prevState.cursor) {
+      if (onSelectionChange) onSelectionChange(selected, cursor);
+    }
+  }
+
   updateSelection(selected) {
     this.setState({ selected });
   }
@@ -99,10 +107,11 @@ export default Selectable;
 export function withSelection(C) {
   class SelectionHelper extends PureComponent {
     render() {
-      const { items, ...restProps } = this.props;
+      const { items, onSelectionChange, ...restProps } = this.props;
       return (
         <Selectable
           items={items}
+          onSelectionChange={onSelectionChange}
           render={selectionApi => <C {...restProps} {...selectionApi} />}
         />
       );
