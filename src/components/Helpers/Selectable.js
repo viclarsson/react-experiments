@@ -53,43 +53,40 @@ class Sortable extends Component {
   }
 
   select(index) {
-    return e => {
-      const { selected, selectMode } = this.state;
-      // If shift => Add all up to the value
-      if (selectMode === "range") {
-        let selection = { ...this.state.selected };
-        let selectedIndex = this.state.cursor;
-        const distance = Math.abs(selectedIndex - index);
-        let start = selectedIndex < index ? selectedIndex : index;
-        for (let range = start; range <= start + Math.abs(distance); range++) {
-          selection[range] = true;
-        }
-        this.setState({
-          cursor: index,
-          selected: selection
-        });
-      } else if (selectMode === "add") {
-        // If cmd => add to list
-        this.setState({
-          cursor: index,
-          selected: {
-            ...selected,
-            [index]: selected[index] ? false : true
-          }
-        });
-      } else {
-        // Otherwise => Select only one
-        this.setState({
-          cursor: index,
-          selected: {
-            [index]:
-              selected[index] && Object.keys(selected).length === 1
-                ? false
-                : true
-          }
-        });
+    console.log('SELECT', index);
+    const { selected, selectMode } = this.state;
+    // If shift => Add all up to the value
+    if (selectMode === "range") {
+      let selection = { ...this.state.selected };
+      let selectedIndex = this.state.cursor;
+      const distance = Math.abs(selectedIndex - index);
+      let start = selectedIndex < index ? selectedIndex : index;
+      for (let range = start; range <= start + Math.abs(distance); range++) {
+        selection[range] = true;
       }
-    };
+      this.setState({
+        cursor: index,
+        selected: selection
+      });
+    } else if (selectMode === "add") {
+      // If cmd => add to list
+      this.setState({
+        cursor: index,
+        selected: {
+          ...selected,
+          [index]: selected[index] ? false : true
+        }
+      });
+    } else {
+      // Otherwise => Select only one
+      this.setState({
+        cursor: index,
+        selected: {
+          [index]:
+            selected[index] && Object.keys(selected).length === 1 ? false : true
+        }
+      });
+    }
   }
 
   render() {

@@ -14,7 +14,7 @@ import { tourStep, tourController as TC } from "../react-tour/TourHelper";
 // Components
 import TestComponent from "../components/TestComponent";
 import NotificationComponent from "../components/NotificationComponent";
-import List from "../components/List";
+import List from "../components/List/List";
 
 // Actions
 import * as NotificationActions from "../react-notification/NotificationActions";
@@ -97,6 +97,7 @@ class Demo extends PureComponent {
     };
   }
   expand() {
+    console.log('EXPAND!');
     return e => {
       this.setState({
         expandActive: true

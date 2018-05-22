@@ -1,9 +1,9 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import { DragSource } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { TYPE } from './DndConstants';
 
-export class Draggable extends PureComponent {
+export class Draggable extends Component {
   componentDidMount() {
     const { customHandler, dragPreview } = this.props;
     if (!customHandler) return null;
