@@ -58,7 +58,6 @@ class Demo extends PureComponent {
     this.paste = this.paste.bind(this);
 
     this.clipboard = null;
-    this.focusElement = null;
 
     // Notifications
     this.triggerNotification = this.triggerNotification.bind(this);
@@ -71,7 +70,7 @@ class Demo extends PureComponent {
     };
   }
 
-  handleSelectionChange (selected) {
+  handleSelectionChange(selected) {
     this.setState({ selected });
   }
 
@@ -131,7 +130,9 @@ class Demo extends PureComponent {
   }
 
   removeSelected() {
-    const newArray = this.state.components.filter((v, i) => !this.state.selected[i]);
+    const newArray = this.state.components.filter(
+      (v, i) => !this.state.selected[i]
+    );
     const diff = this.state.components.length - newArray.length;
     this.setState({
       components: newArray
@@ -148,22 +149,15 @@ class Demo extends PureComponent {
     };
   }
 
-  copy(selected) {
-    if (this.focusElement === document.activeElement) {
-      this.clipboard = { ...selected };
-    }
+  copy() {
+    this.clipboard = { ...this.state.selected };
   }
 
-  paste(selected) {
-    if (this.focusElement === document.activeElement) {
-      const toCopy = this.state.components.filter((c, i) => selected[i]);
-      this.setState({
-        components: [
-          ...this.state.components,
-          ...toCopy.map(c => c + " (copy)")
-        ]
-      });
-    }
+  paste() {
+    const toCopy = this.state.components.filter((c, i) => this.state.selected[i]);
+    this.setState({
+      components: [...this.state.components, ...toCopy.map(c => c + " (copy)")]
+    });
   }
 
   render() {
@@ -256,8 +250,8 @@ class Demo extends PureComponent {
         <div className="flex justify-around items-center gray f7">
           {/* Hotkeys for list */}
           <Hotkey keyCode="backspace" handler={() => this.removeSelected()} />
-          <Hotkey keyCode="ctrl+c" handler={this.copy} />
-          <Hotkey keyCode="ctrl+v" handler={this.paste} />
+          <Hotkey keyCode="cmd+c" handler={this.copy} />
+          <Hotkey keyCode="cmd+v" handler={this.paste} />
           {activeIndex >= components.length - 1 && (
             <Hotkey keyCode="tab" handler={() => this.addComponent()}>
               TAB to add
