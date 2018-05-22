@@ -4,7 +4,6 @@ class Selectable extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      items: props.items,
       cursor: 0, // Pointer to 'active'
       selected: {},
       selectMode: null
@@ -23,7 +22,7 @@ class Selectable extends PureComponent {
   }
 
   next() {
-    if (this.state.cursor === this.state.items.length - 1) return;
+    if (this.state.cursor === this.props.items.length - 1) return;
     this.select(this.state.cursor + 1);
   }
 

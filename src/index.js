@@ -1,9 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// CSS
-import css from 'mentimeter-design/dist/style.css';
-
 // Redux
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers} from 'redux';

@@ -3,9 +3,6 @@ import React, { Fragment, PureComponent } from "react";
 // Route
 import { withRouter, Route, Switch } from "react-router";
 
-// Mentimeter
-import { Animated, Modal, ModalBackdrop } from "mentimeter-design";
-
 // Router
 import { Link } from "react-router-dom";
 
@@ -31,21 +28,19 @@ class App extends PureComponent {
   render() {
     return (
       <Fragment>
-        <Animated animation="fade-in" enter appear leave>
-          <ModalContainer
-            render={({ active }) => {
-              return (
-                <Modal show={active === "demo"} className="justify-center">
-                  <ModalBackdrop className="bg-indigo o-50" />
-                  <div className="pa-m theme-white br-m tc">
-                    <h1>Hello!</h1>
-                    <p><Link to="/demo" className={BLUE_BUTTON}>Close</Link></p>
-                  </div>
-                </Modal>
-              );
-            }}
-          />
-        </Animated>
+        <ModalContainer
+          render={({ active }) => {
+            if (active !== "demo") return null;
+            return (
+              <div className="fixed absolute--fill w-100 h-100 bg-white flex items-center justify-center">
+                <div className="pa-m theme-white br-m tc">
+                  <h1>Hello!</h1>
+                  <p><Link to="/demo" className={BLUE_BUTTON}>Close</Link></p>
+                </div>
+              </div>
+            );
+          }}
+        />
         <div className="fixed w-100 top-0">
           <Notifications
             containerId="error"
