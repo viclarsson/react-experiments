@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
-class Sortable extends Component {
+class Selectable extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,22 +24,12 @@ class Sortable extends Component {
 
   next() {
     if (this.state.cursor === this.state.items.length - 1) return;
-    const index = this.state.cursor + 1;
-    const selected = { [index]: true };
-    this.setState({
-      cursor: index,
-      selected
-    });
+    this.select(this.state.cursor + 1);
   }
 
   previous() {
     if (this.state.cursor === 0) return;
-    const index = this.state.cursor - 1;
-    const selected = { [index]: true };
-    this.setState({
-      cursor: index,
-      selected
-    });
+    this.select(this.state.cursor - 1);
   }
 
   setSelectMode(mode) {
@@ -53,7 +43,6 @@ class Sortable extends Component {
   }
 
   select(index) {
-    console.log('SELECT', index);
     const { selected, selectMode } = this.state;
     // If shift => Add all up to the value
     if (selectMode === "range") {
@@ -106,14 +95,14 @@ class Sortable extends Component {
   }
 }
 
-export default Sortable;
+export default Selectable;
 
 export function withSelection(C) {
-  class SelectionHelper extends Component {
+  class SelectionHelper extends PureComponent {
     render() {
       const { items, ...restProps } = this.props;
       return (
-        <Sortable
+        <Selectable
           items={items}
           render={selectionApi => <C {...restProps} {...selectionApi} />}
         />

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
 // Hotkey
 import withHotkey from "../../react-hotkeys/HotkeyHelper";
@@ -11,6 +11,7 @@ import Droppable from "../../react-dnd/Droppable";
 // Build components
 const Hotkey = withHotkey(TestComponent);
 
+// The visual layer (designer)
 const ListVisuals = ({
   draggable,
   c,
@@ -51,16 +52,13 @@ const ListVisuals = ({
   );
 };
 
-class ListItem extends Component {
+// List item functions (Tech Js developer)
+class ListItem extends PureComponent {
   constructor(props) {
     super(props);
     this.onDrop = this.onDrop.bind(this);
     this.renderDraggable = this.renderDraggable.bind(this);
     this.renderItem = this.renderItem.bind(this);
-  }
-
-  shouldComponentUpdate (nextProps) {
-    return this.props.selected[this.props.i] !== nextProps.selected[nextProps.i]
   }
 
   onDrop(monitor, component) {
@@ -83,7 +81,6 @@ class ListItem extends Component {
     return (
       <div className={props.isDragging ? "o-0" : ""}>
         <ListVisuals
-          key={c + '-' + i + '-drag'}
           cursor={cursor}
           selected={selected}
           select={select}
@@ -103,11 +100,12 @@ class ListItem extends Component {
   }
   render() {
     const {
+      expandActive,
       selected,
       c,
       i
     } = this.props;
-    return <Droppable key={`${selected[i]}-${c}-${i}`}onDrop={this.onDrop} render={this.renderItem}/>;
+    return <Droppable key={`${selected[i]}-${c}-${i}-${expandActive}`} onDrop={this.onDrop} render={this.renderItem}/>;
   }
 }
 
