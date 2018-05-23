@@ -23,7 +23,7 @@ const ListVisuals = ({
 }) => {
   return (
     <div
-      className={`pa2 br2 mb2 flex justify-between ${
+      className={`no-selection pa2 br2 mb2 flex justify-between ${
         selected[i] ? "bg-green white" : "bg-near-white gray"
       }`}
       onClick={() => select(i)}
