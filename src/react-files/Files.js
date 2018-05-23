@@ -17,6 +17,7 @@ export default class Files extends PureComponent {
       previews: {}
     };
 
+    this.error = null;
     this.fileList = {};
     this.files = [];
 
@@ -65,7 +66,10 @@ export default class Files extends PureComponent {
     const temp = fileArray || this.input.files;
     const tempKeys = Object.keys(temp);
     tempKeys.forEach(i => {
-      if (accept.indexOf(temp[i].type) === -1) return;
+      if (accept.indexOf(temp[i].type) === -1) {
+        this.error = { type: 'some-unsupported-type' };
+        return;
+      }
       const uniqueId =
         "_" +
         Math.random()
@@ -94,7 +98,7 @@ export default class Files extends PureComponent {
       files: [...this.files],
       hasFiles: this.files[0] ? true : false
     });
-    if (handleChange) handleChange(this.files);
+    if (handleChange) handleChange(this.files, this.error);
   }
 
   delete(id) {

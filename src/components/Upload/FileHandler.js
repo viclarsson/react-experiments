@@ -113,8 +113,8 @@ class FileDropHandler extends Component {
       <Files
         accept={accept}
         multiple={multiple}
-        handleChange={files =>
-          console.log("File change! Maybe open cropper?", files)
+        handleChange={(files, error) =>
+          console.log("File change! Maybe open cropper?", files, 'Error:', error)
         }
         render={files => {
           return (
