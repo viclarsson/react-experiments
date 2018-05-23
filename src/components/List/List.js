@@ -41,6 +41,7 @@ class List extends PureComponent {
     return (
       <div
         className="mv2"
+        style={{ outline: 'none' }}
         tabIndex="-1"
         onBlur={resetSelection}
         ref={r => {
