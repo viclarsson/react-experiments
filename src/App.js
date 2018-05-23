@@ -36,7 +36,11 @@ class App extends PureComponent {
                 <div className="z-1 absolute absolute--fill bg-white o-70" />
                 <div className="relative z-2 pa-m tc">
                   <h1>Hello!</h1>
-                  <p><Link to="/demo" className={BLUE_BUTTON}>Close</Link></p>
+                  <p>
+                    <Link to="/demo" className={BLUE_BUTTON}>
+                      Close
+                    </Link>
+                  </p>
                 </div>
               </div>
             );
