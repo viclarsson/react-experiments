@@ -61,9 +61,11 @@ export default class Files extends PureComponent {
   }
 
   processFiles(fileArray) {
+    const { accept } = this.props;
     const temp = fileArray || this.input.files;
     const tempKeys = Object.keys(temp);
     tempKeys.forEach(i => {
+      if (accept.indexOf(temp[i].type) === -1) return;
       const uniqueId =
         "_" +
         Math.random()
