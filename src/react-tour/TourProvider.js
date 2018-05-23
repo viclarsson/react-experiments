@@ -1,21 +1,40 @@
+// @flow
+
 import React, { Component } from "react";
+import type { Node } from "react";
+import type { Store } from "redux";
 
 // Context
 import Context from "./TourContext";
 
-class TourProvider extends Component {
-  constructor(props) {
+type Props = {
+  +tours: { [key: string]: Array<string> },
+  +store: Store,
+  +debug: boolean,
+  +children: ?Node
+};
+
+type State = {
+  +start: Function,
+  +next: Function,
+  +previous: Function,
+  +done: Function,
+  activeTourId: ?string,
+  activeStepId: ?string
+};
+
+class TourProvider extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.start = this.start.bind(this);
-    this.next = this.next.bind(this);
-    this.previous = this.previous.bind(this);
-    this.done = this.done.bind(this);
-    this.storeListener = this.storeListener.bind(this);
-    this.tours = props.tours;
-    this.activeIndex = 0;
+    (this: any).start = this.start.bind(this);
+    (this: any).next = this.next.bind(this);
+    (this: any).previous = this.previous.bind(this);
+    (this: any).done = this.done.bind(this);
+    (this: any).tours = props.tours;
+    (this: any).activeIndex = 0;
 
     if (props.store) {
-      this.storeListener = this.storeListener.bind(this);
+      (this: any).storeListener = this.storeListener.bind(this);
       this.props.store.subscribe(this.storeListener);
     } else if (props.debug) {
       console.log(
@@ -57,15 +76,15 @@ class TourProvider extends Component {
     }
   }
 
-  start(tourId, cb) {
+  start(tourId: string, cb: Function) {
     // If it exists and no other tour is in progress
-    if (this.tours[tourId]) {
+    if ((this: any).tours[tourId]) {
       if (this.props.debug) console.log("Starting tour:", tourId);
-      this.activeIndex = 0;
+      (this: any).activeIndex = 0;
       this.setState(
         {
           activeTourId: tourId,
-          activeStepId: this.tours[tourId][0]
+          activeStepId: (this: any).tours[tourId][0]
         },
         () => {
           if (cb) cb();
@@ -73,14 +92,16 @@ class TourProvider extends Component {
       );
     }
   }
-  next(cb) {
+  next(cb: Function) {
     if (this.state.activeTourId) {
       if (this.props.debug)
         console.log("Next in tour:", this.state.activeTourId);
-      this.activeIndex = this.activeIndex + 1;
+      (this: any).activeIndex = (this: any).activeIndex + 1;
       this.setState(
         {
-          activeStepId: this.tours[this.state.activeTourId][this.activeIndex]
+          activeStepId: (this: any).tours[this.state.activeTourId][
+            (this: any).activeIndex
+          ]
         },
         () => {
           if (cb) cb();
@@ -88,14 +109,16 @@ class TourProvider extends Component {
       );
     }
   }
-  previous(cb) {
+  previous(cb: Function) {
     if (this.state.activeTourId) {
       if (this.props.debug)
         console.log("Previous in tour:", this.state.activeTourId);
-      this.activeIndex = this.activeIndex - 1;
+      (this: any).activeIndex = (this: any).activeIndex - 1;
       this.setState(
         {
-          activeStepId: this.tours[this.state.activeTourId][this.activeIndex]
+          activeStepId: (this: any).tours[this.state.activeTourId][
+            (this: any).activeIndex
+          ]
         },
         () => {
           if (cb) cb();
@@ -103,7 +126,7 @@ class TourProvider extends Component {
       );
     }
   }
-  done(cb) {
+  done(cb: Function) {
     if (this.state.activeTourId) {
       if (this.props.debug)
         console.log("Done in tour:", this.state.activeTourId);
