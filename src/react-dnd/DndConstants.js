@@ -1,1 +1,1 @@
-export const TYPE = 'Item';
+export const TYPE = "Item";

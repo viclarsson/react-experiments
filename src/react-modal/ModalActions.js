@@ -1,11 +1,11 @@
-export const show = (modalId) => {
+export const show = modalId => {
   return {
-    type: '@@modal/SHOW',
-    modal_id: modalId,
-  }
-}
+    type: "@@modal/SHOW",
+    modal_id: modalId
+  };
+};
 export const hide = () => {
   return {
-    type: '@@modal/HIDE'
-  }
-}
+    type: "@@modal/HIDE"
+  };
+};

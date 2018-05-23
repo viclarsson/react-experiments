@@ -67,7 +67,7 @@ export default class Files extends PureComponent {
     const tempKeys = Object.keys(temp);
     tempKeys.forEach(i => {
       if (accept.indexOf(temp[i].type) === -1) {
-        this.error = { type: 'some-unsupported-type' };
+        this.error = { type: "some-unsupported-type" };
         return;
       }
       const uniqueId =

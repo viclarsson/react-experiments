@@ -1,7 +1,7 @@
-import { Component } from 'react';
-import { DropTarget } from 'react-dnd';
-import withScrolling from 'react-dnd-scrollzone';
-import { TYPE } from './DndConstants';
+import { Component } from "react";
+import { DropTarget } from "react-dnd";
+import withScrolling from "react-dnd-scrollzone";
+import { TYPE } from "./DndConstants";
 
 import { NativeTypes } from "react-dnd-html5-backend";
 export const Types = NativeTypes;
@@ -38,8 +38,13 @@ const mapDropStateToProps = (connect, monitor) => {
     canDrop: monitor.canDrop(), // API.canDrop
     didDrop: monitor.didDrop()
   };
-}
+};
 
 // Function to wrap components
-export const dropTarget = (C) => DropTarget(props => (props.accepts && props.accepts.concat([TYPE])) || TYPE, API, mapDropStateToProps)(withScrolling(C));
+export const dropTarget = C =>
+  DropTarget(
+    props => (props.accepts && props.accepts.concat([TYPE])) || TYPE,
+    API,
+    mapDropStateToProps
+  )(withScrolling(C));
 export default dropTarget(DroppableComponent);

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 // Context
-import Context from './NotificationContext';
+import Context from "./NotificationContext";
 
 /*
 * Notification data structure
@@ -11,11 +11,13 @@ import Context from './NotificationContext';
 */
 
 class NotificationProvider extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.registerNotification = this.registerNotification.bind(this);
     this.removeNotification = this.removeNotification.bind(this);
-    this.createNotificationDestroyer = this.createNotificationDestroyer.bind(this);
+    this.createNotificationDestroyer = this.createNotificationDestroyer.bind(
+      this
+    );
     this.state = {
       registerNotification: this.registerNotification,
       removeNotification: this.removeNotification,
@@ -26,67 +28,94 @@ class NotificationProvider extends Component {
       this.storeListener = this.storeListener.bind(this);
       this.props.store.subscribe(this.storeListener);
     } else if (props.debug) {
-      console.log('TourProvider does not listen to store as props was provided.');
+      console.log(
+        "TourProvider does not listen to store as props was provided."
+      );
     }
     // To be able to register multiple containers on mounts
     this.containers = {};
     this.timeouts = {};
   }
 
-  storeListener () {
+  storeListener() {
     const { store } = this.props;
     const action = store.getState().lastAction;
     if (!action) {
-      console.error('NotificationProvider is missing last action reducer!');
+      console.error("NotificationProvider is missing last action reducer!");
       return;
     }
     switch (action.type) {
-      case '@@notification/REGISTER':
+      case "@@notification/REGISTER":
         this.registerNotification(action.container_id, action.data);
         break;
-      case '@@notification/REMOVE':
-        this.removeNotification(action.container_id, action.notification_id, action.timeout);
+      case "@@notification/REMOVE":
+        this.removeNotification(
+          action.container_id,
+          action.notification_id,
+          action.timeout
+        );
         break;
       default:
     }
   }
 
-  createNotificationDestroyer (notificationId, containerId, timeout) {
-    if(!this.timeouts[notificationId]) {
+  createNotificationDestroyer(notificationId, containerId, timeout) {
+    if (!this.timeouts[notificationId]) {
       this.timeouts[notificationId] = setTimeout(() => {
         this.removeNotification(containerId, notificationId);
       }, timeout);
     }
   }
 
-  componentWillUnmountMount () {
+  componentWillUnmountMount() {
     Object.keys(this.timeouts).forEach(t => {
       clearTimeout(t);
     });
   }
 
   // Register handler
-  registerNotification (containerId, data) {
-    if (this.props.debug) console.log('Registered notification:', data, 'in', containerId);
-    const q = this.containers[containerId] ? [...this.containers[containerId]] : [];
+  registerNotification(containerId, data) {
+    if (this.props.debug)
+      console.log("Registered notification:", data, "in", containerId);
+    const q = this.containers[containerId]
+      ? [...this.containers[containerId]]
+      : [];
     const notification = {
       ...data,
-      id: data.id || '_' + Math.random().toString(36).substr(2, 9)
+      id:
+        data.id ||
+        "_" +
+          Math.random()
+            .toString(36)
+            .substr(2, 9)
     };
     q.unshift(notification);
     this.containers[containerId] = q;
-    this.setState({
-      containers: { ...this.containers }
-    }, () => {
-      if (notification.timeout) {
-        this.createNotificationDestroyer(notification.id, containerId, notification.timeout);
+    this.setState(
+      {
+        containers: { ...this.containers }
+      },
+      () => {
+        if (notification.timeout) {
+          this.createNotificationDestroyer(
+            notification.id,
+            containerId,
+            notification.timeout
+          );
+        }
       }
-    });
-  };
+    );
+  }
 
   // Remove handler
-  removeNotification (containerId, notificationId, timeout = null) {
-    if (this.props.debug) console.log('Trying to remove notification with id:', notificationId, 'in', containerId);
+  removeNotification(containerId, notificationId, timeout = null) {
+    if (this.props.debug)
+      console.log(
+        "Trying to remove notification with id:",
+        notificationId,
+        "in",
+        containerId
+      );
     // For delayed removal
     if (timeout) {
       this.createNotificationDestroyer(notificationId, containerId, timeout);
@@ -105,12 +134,12 @@ class NotificationProvider extends Component {
     }
   }
 
-  render () {
+  render() {
     return (
       <Context.Provider value={this.state}>
         {this.props.children}
       </Context.Provider>
-    )
+    );
   }
 }
 

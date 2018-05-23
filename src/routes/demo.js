@@ -153,7 +153,7 @@ class Demo extends PureComponent {
 
   triggerModal() {
     const { push } = this.props;
-    push('/demo?modal=demo');
+    push("/demo?modal=demo");
   }
 
   copy() {
@@ -161,7 +161,9 @@ class Demo extends PureComponent {
   }
 
   paste() {
-    const toCopy = this.state.components.filter((c, i) => this.state.selected[i]);
+    const toCopy = this.state.components.filter(
+      (c, i) => this.state.selected[i]
+    );
     this.setState({
       components: [...this.state.components, ...toCopy.map(c => c + " (copy)")]
     });
@@ -294,14 +296,8 @@ class Demo extends PureComponent {
         </div>
 
         <div className="tc f7 mt2">
-          <Hotkey
-            keyCode="m"
-            handler={this.triggerModal}
-          >
-            <a
-              className={BLUE_BUTTON + ' mr2'}
-              onClick={this.triggerModal}
-            >
+          <Hotkey keyCode="m" handler={this.triggerModal}>
+            <a className={BLUE_BUTTON + " mr2"} onClick={this.triggerModal}>
               Trigger demo modal
               <span className={HOTKEY + " white b--white"}>M</span>
             </a>

@@ -1,19 +1,21 @@
 import React, { PureComponent } from "react";
 
 // Helper
-import Query from 'url-parse';
+import Query from "url-parse";
 
 // Context
 import Context from "./ModalContext";
 
 class ModalProvider extends PureComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
     if (props.store) {
       this.storeListener = this.storeListener.bind(this);
       this.props.store.subscribe(this.storeListener);
     } else if (props.debug) {
-      console.log('ModalProvider does not listen to store as props was provided.');
+      console.log(
+        "ModalProvider does not listen to store as props was provided."
+      );
     }
     this.state = {
       active: null

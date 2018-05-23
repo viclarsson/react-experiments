@@ -1,25 +1,25 @@
 export const start = (tourId, callback) => {
   return {
-    type: '@@tour/START',
+    type: "@@tour/START",
     tour_id: tourId,
     callback
-  }
-}
-export const next = (callback) => {
+  };
+};
+export const next = callback => {
   return {
-    type: '@@tour/NEXT',
+    type: "@@tour/NEXT",
     callback
-  }
-}
-export const previous = (callback) => {
+  };
+};
+export const previous = callback => {
   return {
-    type: '@@tour/PREVIOUS',
+    type: "@@tour/PREVIOUS",
     callback
-  }
-}
-export const done = (callback) => {
+  };
+};
+export const done = callback => {
   return {
-    type: '@@tour/DONE',
+    type: "@@tour/DONE",
     callback
-  }
-}
+  };
+};

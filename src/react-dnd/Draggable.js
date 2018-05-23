@@ -1,15 +1,15 @@
-import { Component } from 'react';
-import { DragSource } from 'react-dnd';
-import { getEmptyImage } from 'react-dnd-html5-backend';
-import { TYPE } from './DndConstants';
+import { Component } from "react";
+import { DragSource } from "react-dnd";
+import { getEmptyImage } from "react-dnd-html5-backend";
+import { TYPE } from "./DndConstants";
 
 export class Draggable extends Component {
   componentDidMount() {
     const { customHandler, dragPreview } = this.props;
     if (!customHandler) return null;
     dragPreview(getEmptyImage(), {
-      captureDraggingState: true,
-    })
+      captureDraggingState: true
+    });
   }
   render() {
     const { dragSource, dragPreview, render, ...rest } = this.props;
@@ -20,10 +20,9 @@ export class Draggable extends Component {
   }
 }
 
-
 /**
-* Specifies the props to inject into your component.
-*/
+ * Specifies the props to inject into your component.
+ */
 const mapDragStateToProps = (connect, monitor) => {
   return {
     // Connect
@@ -34,11 +33,11 @@ const mapDragStateToProps = (connect, monitor) => {
     canDrag: monitor.canDrag(),
     item: monitor.getItem()
   };
-}
+};
 
 /**
-* Specifies the props to inject into your component.
-*/
+ * Specifies the props to inject into your component.
+ */
 const API = {
   beginDrag: (props, monitor, component) => {
     return props.onBeginDrag ? props.onBeginDrag(monitor, component) || {} : {};

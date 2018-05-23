@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
+import React, { Fragment } from "react";
 
 // Context
-import Context from './NotificationContext';
+import Context from "./NotificationContext";
 
 // HOC for simplicity
 export function NotificationTrigger(C) {
@@ -11,13 +11,17 @@ export function NotificationTrigger(C) {
         {({ registerNotification, removeNotification }) => {
           return (
             <Fragment>
-              <C {...props} registerNotification={registerNotification} removeNotification={removeNotification} />
+              <C
+                {...props}
+                registerNotification={registerNotification}
+                removeNotification={removeNotification}
+              />
             </Fragment>
           );
         }}
       </Context.Consumer>
     );
-  }
+  };
   return NotificationHelper;
 }
 
@@ -27,11 +31,15 @@ export function withNotifications(C) {
       <Context.Consumer>
         {({ containers, removeNotification }) => {
           return (
-            <C {...restProps} notifications={containers[containerId]} removeNotification={removeNotification} />
+            <C
+              {...restProps}
+              notifications={containers[containerId]}
+              removeNotification={removeNotification}
+            />
           );
         }}
       </Context.Consumer>
     );
-  }
+  };
   return NotificationHelper;
 }
