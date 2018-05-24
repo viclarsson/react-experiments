@@ -7,53 +7,39 @@ import type { Store } from "redux";
 // Context
 import Context from "./TourContext";
 
-type Props = {|
-  +tours: { [key: string]: Array<string> },
+type Tours = { [key: string]: Array<string> };
+type Props = {
+  +tours: Tours,
   +store: Store,
   +debug: boolean,
   +children: ?Node
-|};
+};
 
-type State = {|
+type State = {
   +start: Function,
   +next: Function,
   +previous: Function,
   +done: Function,
   activeTourId: ?string,
   activeStepId: ?string
-|};
+};
 
 class TourProvider extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    const self = (this: any);
-    self.start = this.start.bind(this);
-    self.next = this.next.bind(this);
-    self.previous = this.previous.bind(this);
-    self.done = this.done.bind(this);
-    self.tours = props.tours;
-    self.activeIndex = 0;
+  // Variables
+  tours: Tours = this.props.tours;
+  activeIndex: number = 0;
 
-    if (props.store) {
-      self.storeListener = this.storeListener.bind(this);
+  componentDidMount() {
+    if (this.props.store) {
       this.props.store.subscribe(this.storeListener);
-    } else if (props.debug) {
+    } else if (this.props.debug) {
       console.log(
         "TourProvider does not listen to store as props was provided."
       );
     }
-
-    this.state = {
-      start: this.start,
-      next: this.next,
-      previous: this.previous,
-      done: this.done,
-      activeTourId: null,
-      activeStepId: null
-    };
   }
 
-  storeListener() {
+  storeListener = () => {
     const { store } = this.props;
     const action = store.getState().lastAction;
     if (!action) {
@@ -75,58 +61,58 @@ class TourProvider extends Component<Props, State> {
         break;
       default:
     }
-  }
+  };
 
-  start(tourId: string, cb: Function) {
-    const self = (this: any);
+  start = (tourId: string, cb: Function) => {
     // If it exists and no other tour is in progress
-    if (self.tours[tourId]) {
+    if (this.tours[tourId]) {
       if (this.props.debug) console.log("Starting tour:", tourId);
-      self.activeIndex = 0;
+      this.activeIndex = 0;
       this.setState(
         {
           activeTourId: tourId,
-          activeStepId: self.tours[tourId][0]
+          activeStepId: this.tours[tourId][0]
         },
         () => {
           if (cb) cb();
         }
       );
     }
-  }
-  next(cb: Function) {
-    const self = (this: any);
+  };
+
+  next = (cb: Function) => {
     if (this.state.activeTourId) {
       if (this.props.debug)
         console.log("Next in tour:", this.state.activeTourId);
-      self.activeIndex = self.activeIndex + 1;
+      this.activeIndex = this.activeIndex + 1;
       this.setState(
         {
-          activeStepId: self.tours[this.state.activeTourId][self.activeIndex]
+          activeStepId: this.tours[this.state.activeTourId][this.activeIndex]
         },
         () => {
           if (cb) cb();
         }
       );
     }
-  }
-  previous(cb: Function) {
-    const self = (this: any);
+  };
+
+  previous = (cb: Function) => {
     if (this.state.activeTourId) {
       if (this.props.debug)
         console.log("Previous in tour:", this.state.activeTourId);
-      self.activeIndex = self.activeIndex - 1;
+      this.activeIndex = this.activeIndex - 1;
       this.setState(
         {
-          activeStepId: self.tours[this.state.activeTourId][self.activeIndex]
+          activeStepId: this.tours[this.state.activeTourId][this.activeIndex]
         },
         () => {
           if (cb) cb();
         }
       );
     }
-  }
-  done(cb: Function) {
+  };
+
+  done = (cb: Function) => {
     if (this.state.activeTourId) {
       if (this.props.debug)
         console.log("Done in tour:", this.state.activeTourId);
@@ -140,7 +126,17 @@ class TourProvider extends Component<Props, State> {
         }
       );
     }
-  }
+  };
+
+  state = {
+    start: this.start,
+    next: this.next,
+    previous: this.previous,
+    done: this.done,
+    activeTourId: null,
+    activeStepId: null
+  };
+
   render() {
     return (
       <Context.Provider value={this.state}>

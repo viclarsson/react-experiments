@@ -1,6 +1,6 @@
 // @flow
 
-import React from "react";
+import * as React from "react";
 import ReactDOM from "react-dom";
 
 // Redux
@@ -67,7 +67,6 @@ const store = createStore(
 if (process.env.NODE_ENV !== "production") {
   const { whyDidYouUpdate } = require("why-did-you-update");
   // Excluded Router Switch that needs re-render
-  // $FlowFixMe
   whyDidYouUpdate(React, { exclude: ["Switch"] });
 }
 
