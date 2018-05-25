@@ -26,6 +26,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import Network from "./components/Network";
 
 // Providers
+import PopoverProvider from "./react-popover/PopoverProvider";
 import ModalProvider from "./react-modal/ModalProvider";
 import DndProvider from "./react-dnd/DndProvider";
 import HotkeyProvider from "./react-hotkeys/HotkeyProvider";
@@ -74,18 +75,20 @@ if (process.env.NODE_ENV !== "production") {
 ReactDOM.render(
   <Provider store={store}>
     <ModalProvider store={store} debug>
-      <DndProvider debug>
-        <HotkeyProvider debug>
-          <NotificationProvider store={store} debug>
-            <TourProvider tours={TOURS} store={store} debug>
-              <Network />
-              <ConnectedRouter history={history}>
-                <App />
-              </ConnectedRouter>
-            </TourProvider>
-          </NotificationProvider>
-        </HotkeyProvider>
-      </DndProvider>
+      <PopoverProvider>
+        <DndProvider debug>
+          <HotkeyProvider debug>
+            <NotificationProvider store={store} debug>
+              <TourProvider tours={TOURS} store={store} debug>
+                <Network />
+                <ConnectedRouter history={history}>
+                  <App />
+                </ConnectedRouter>
+              </TourProvider>
+            </NotificationProvider>
+          </HotkeyProvider>
+        </DndProvider>
+      </PopoverProvider>
     </ModalProvider>
   </Provider>,
   (document.getElementById("root"): any)

@@ -13,6 +13,11 @@ import { start } from "../react-tour/TourActions";
 // Notification
 import { registerNotification } from "../react-notification/NotificationActions";
 
+// Popovers
+import Trigger from "../components/Popover/Trigger";
+import Popover from "../components/Popover/Popover";
+import { PopoverReference } from "../react-popover/PopoverHelper";
+
 // Components
 import FileHandler from "../components/Upload/FileHandler";
 import TestComponent from "../components/TestComponent";
@@ -31,6 +36,7 @@ class Index extends PureComponent {
     super(props);
     this.goToDemo = this.goToDemo.bind(this);
     this.startTour = this.startTour.bind(this);
+    this.ref = React.createRef();
   }
 
   goToDemo(next, activeStepId) {
@@ -64,6 +70,27 @@ class Index extends PureComponent {
           tours and a drag and drop system. All components provide a simple but
           customizable and powerful usage.
         </p>
+        <Trigger id="demo-popover" asReference>
+          <a>Trigger popover</a>
+        </Trigger>
+        <Popover
+          id="demo-popover"
+          override={true}
+          render={({ show }) =>
+            show && <div className="pa2 br2 bg-red white">Popover!</div>
+          }
+        />
+
+        <Trigger id="demo-popover-2" triggerToggles>
+          <a>Trigger popover 2 (toggles)</a>
+        </Trigger>
+        <Popover
+          placement="top"
+          id="demo-popover-2"
+          render={({ show }) =>
+            show && <div className="pa2 br2 bg-red white">Popover!</div>
+          }
+        />
         <ul>
           <li>
             The hotkeys are declarative and the order of execution is dependent
@@ -74,10 +101,12 @@ class Index extends PureComponent {
             Notification containers are defined and their behaviour and style
             can be customized easily.
           </li>
-          <li>
+          <PopoverReference id="demo-popover-2" forwardRef={this.ref}>
+          <li ref={this.ref}>
             The tour system as also state based where the steps are mounted when
             the step is active, which makes it scalable.
           </li>
+          </PopoverReference>
           <li>
             The drag and drop system makes it easy to create actions based on
             prop callbacks in order to keep the React way of doing things.
