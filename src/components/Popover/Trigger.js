@@ -15,6 +15,7 @@ class Trigger extends PureComponent {
 
   toggle() {
     const { id, updatePopover, show, triggerToggles } = this.props;
+    // Will right now close and open the popover making the trigger seem "unclickable" when open
     updatePopover(id, { show: !show });
   }
 

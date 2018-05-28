@@ -14,7 +14,10 @@ class Popover extends PureComponent {
   }
   
   componentWillUpdate() {
-    if (this.popper) this.popper.scheduleUpdate();
+    if (this.popper) {
+      this.popper.scheduleUpdate();
+      console.log("Updating popover", this.props.id);      
+      }
   }
 
   hideIfOutside (e) {
@@ -49,6 +52,11 @@ class Popover extends PureComponent {
 
   componentWillUnmount() {
     this.removeListeners();
+    if (this.popper) {
+      console.log(this.popper);
+      this.popper.destroy();
+      this.popper = null;
+    }
   }
 
   render() {

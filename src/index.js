@@ -75,7 +75,7 @@ if (process.env.NODE_ENV !== "production") {
 ReactDOM.render(
   <Provider store={store}>
     <ModalProvider store={store} debug>
-      <PopoverProvider>
+      <PopoverProvider debug>
         <DndProvider debug>
           <HotkeyProvider debug>
             <NotificationProvider store={store} debug>
