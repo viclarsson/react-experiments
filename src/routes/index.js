@@ -75,6 +75,8 @@ class Index extends PureComponent {
         <Popover
           id="demo-popover"
           placement="left"
+          className="mr2"
+          arrowClasses="b--washed-green"
           override={true}
           render={({ show }) =>
             show && (
@@ -89,6 +91,8 @@ class Index extends PureComponent {
 
         <Popover
           placement="top"
+          className="mb2"
+          arrowClasses="b--red"
           id="demo-popover-2"
           render={({ show }) =>
             show && <div className="pa2 br2 bg-red white">Popover!</div>
@@ -138,6 +142,8 @@ class Index extends PureComponent {
                 <Popover
                   placement="left"
                   override={true}
+                  className="mr2"
+                  arrowClasses="b--red"
                   id="tour-popover"
                   render={({ show }) =>
                     show && (

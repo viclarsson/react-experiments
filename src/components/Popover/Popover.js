@@ -2,6 +2,8 @@ import React, { PureComponent } from "react";
 import ReactDOM from "react-dom";
 import Popper from "popper.js";
 
+import css from "./Popover.css"; // eslint disable-line
+
 // Context
 import { withPopover } from "../../react-popover/PopoverHelper";
 
@@ -9,6 +11,7 @@ class Popover extends PureComponent {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
+    this.arrow = React.createRef();
     this.popper = null;
     this.hideIfOutside = this.hideIfOutside.bind(this);
     this.destroy = this.destroy.bind(this);
@@ -59,8 +62,12 @@ class Popover extends PureComponent {
       console.log("Creating popover", id);
       const { placement } = this.props;
       let options = {
-        placement: placement || "bottom"
+        placement: placement || "bottom",
+        modifiers: {}
       };
+      if (this.arrow) {
+        options.modifiers.arrow = { element: this.arrow.current };
+      }
       this.popper = new Popper(
         reference.ref.current,
         this.ref.current,
@@ -78,10 +85,23 @@ class Popover extends PureComponent {
   }
 
   render() {
-    const { children, show, render, ...props } = this.props;
+    const {
+      children,
+      show,
+      render,
+      hideArrow,
+      arrowClasses,
+      className,
+      ...props
+    } = this.props;
     if (show) {
       return ReactDOM.createPortal(
-        <div ref={this.ref}>{render({ ...props, show })}</div>,
+        <div ref={this.ref} className={`popper ${className}`}>
+          {!hideArrow && (
+            <div ref={this.arrow} className={`popper--arrow ${arrowClasses}`} />
+          )}
+          {render({ ...props, show })}
+        </div>,
         document.body
       );
     }

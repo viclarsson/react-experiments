@@ -1,0 +1,38 @@
+/*
+POPOVER
+Based on Popper.js
+*/
+.popper .popper--arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+}
+.popper[x-placement^="top"] .popper--arrow {
+  border-width: 5px 5px 0 5px;
+  border-right-color: transparent !important;
+  border-left-color: transparent !important;
+  border-bottom-color: transparent !important;
+  bottom: -5px;
+}
+.popper[x-placement^="bottom"] .popper--arrow {
+  border-width: 0 5px 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-left-color: transparent !important;
+  top: -5px;
+}
+.popper[x-placement^="right"] .popper--arrow {
+  border-width: 5px 5px 5px 0;
+  border-top-color: transparent !important;
+  border-left-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: -5px;
+}
+.popper[x-placement^="left"] .popper--arrow {
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  right: -5px;
+}
