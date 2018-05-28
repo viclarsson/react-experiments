@@ -21,7 +21,8 @@ class PopoverProvider extends PureComponent {
       console.warn("No popover with that ID registered... No action taken.");
       return;
     }
-    if (this.props.debug) console.log('Updating popover:', id, 'with data:', data);
+    if (this.props.debug)
+      console.log("Updating popover:", id, "with data:", data);
     this.popovers[id] = {
       ref,
       ...data
@@ -33,7 +34,8 @@ class PopoverProvider extends PureComponent {
 
   register = (id, ref) => {
     this.popovers[id] = { ref };
-    if (this.props.debug) console.log('Registering popover:', id, 'with ref:', ref);    
+    if (this.props.debug)
+      console.log("Registering popover:", id, "with ref:", ref);
     this.setState({
       popovers: { ...this.popovers }
     });
@@ -41,7 +43,7 @@ class PopoverProvider extends PureComponent {
 
   unRegister = id => {
     this.popovers[id] = undefined;
-    if (this.props.debug) console.log('Unregistering popover:', id);        
+    if (this.props.debug) console.log("Unregistering popover:", id);
     this.setState({
       popovers: { ...this.popovers }
     });

@@ -23,45 +23,51 @@ class Popover extends PureComponent {
     this.update();
   }
 
-  hideIfOutside (e) {
+  hideIfOutside(e) {
     // If click does not contain the popover or trigger
-    if (this.props.show && !this.props.override && (this.ref.current && !this.ref.current.contains(e.target))) {
+    if (
+      this.props.show &&
+      !this.props.override &&
+      (this.ref.current && !this.ref.current.contains(e.target))
+    ) {
       this.props.updatePopover(this.props.id, { show: false });
     }
   }
 
-  removeListeners () {
-    document.body.removeEventListener('click', this.hideIfOutside);
+  removeListeners() {
+    document.body.removeEventListener("click", this.hideIfOutside);
   }
 
   destroy() {
-   this.removeListeners();
+    this.removeListeners();
     if (this.popper) {
       this.popper.destroy();
       this.popper = null;
     }
   }
 
-  update () {
-    // Update if shown
-    if (this.popper && this.props.show) {
-      console.log("Updating popover", this.props.id);      
-      this.popper.scheduleUpdate(); 
-    }
+  update() {
+    const { id, show, reference } = this.props;
     // Create if not shown and should show
-    if(this.props.show && !this.popper && this.ref.current && this.props.popover && this.props.popover.ref.current) {
-      console.log("Creating popover", this.props.id);
+    if (
+      show &&
+      !this.popper &&
+      this.ref.current &&
+      reference &&
+      reference.ref.current
+    ) {
+      console.log("Creating popover", id);
       const { placement } = this.props;
       let options = {
-        placement: placement || 'bottom'
-        };
+        placement: placement || "bottom"
+      };
       this.popper = new Popper(
-        this.props.popover.ref.current,
+        reference.ref.current,
         this.ref.current,
         options
       );
-      document.body.addEventListener('click', this.hideIfOutside);      
-    } else {
+      document.body.addEventListener("click", this.hideIfOutside);
+    } else if (!show) {
       // Destroy otherwise
       this.destroy();
     }

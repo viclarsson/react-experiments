@@ -36,8 +36,6 @@ class Index extends PureComponent {
     super(props);
     this.goToDemo = this.goToDemo.bind(this);
     this.startTour = this.startTour.bind(this);
-    this.ref = React.createRef();
-    this.tourPopoverRef = React.createRef();
   }
 
   goToDemo(next, activeStepId) {
@@ -79,14 +77,16 @@ class Index extends PureComponent {
           placement="left"
           override={true}
           render={({ show }) =>
-            show && <div className="pa2 br2 bg-washed-green green">Popover!</div>
+            show && (
+              <div className="pa2 br2 bg-washed-green green">Popover!</div>
+            )
           }
         />
 
         <Trigger id="demo-popover-2" triggerToggles>
           <a>Trigger popover 2 (toggles)</a>
         </Trigger>
-        
+
         <Popover
           placement="top"
           id="demo-popover-2"
@@ -104,11 +104,9 @@ class Index extends PureComponent {
             Notification containers are defined and their behaviour and style
             can be customized easily.
           </li>
-          <PopoverReference id="demo-popover-2" forwardRef={this.ref}>
-            <li ref={this.ref}>
-              The tour system as also state based where the steps are mounted when
-              the step is active, which makes it scalable.
-            </li>
+          <PopoverReference id="demo-popover-2" component="li">
+            The tour system as also state based where the steps are mounted when
+            the step is active, which makes it scalable.
           </PopoverReference>
           <li>
             The drag and drop system makes it easy to create actions based on
@@ -142,9 +140,13 @@ class Index extends PureComponent {
                   override={true}
                   id="tour-popover"
                   render={({ show }) =>
-                    show && <div className="pa2 br2 bg-red white">The second will appear here!</div>
+                    show && (
+                      <div className="pa2 br2 bg-red white">
+                        The second will appear here!
+                      </div>
+                    )
                   }
-                /> 
+                />
               </div>
             ) : null
           }
@@ -166,13 +168,12 @@ class Index extends PureComponent {
 
         <TourController
           render={({ next, activeStepId }) => (
-            <PopoverReference id="tour-popover" forwardRef={this.tourPopoverRef}>
+            <PopoverReference id="tour-popover">
               <Hotkey
                 keyCode="rightarrow"
                 handler={this.goToDemo(next, activeStepId)}
               >
                 <a
-                  ref={this.tourPopoverRef}
                   className={BLUE_BUTTON}
                   onClick={this.goToDemo(next, activeStepId)}
                 >

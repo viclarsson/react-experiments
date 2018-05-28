@@ -19,20 +19,24 @@ class PopoverReferenceComponent extends PureComponent {
   constructor(props) {
     super(props);
     this.id = props.id;
+    this.ref = React.createRef();
   }
   componentDidMount() {
-    const { registerPopover, forwardRef } = this.props;
-    registerPopover(this.id, forwardRef);
+    const { registerPopover } = this.props;
+    registerPopover(this.id, this.ref);
   }
   componentWillUnmount() {
     const { unRegisterPopover } = this.props;
     unRegisterPopover(this.id);
   }
   render() {
-    const { render, children, ...props } = this.props;
-    if (render) return render(props);
-    if (children) return children;
-    return null;
+    const { render, children, className, component, ...props } = this.props;
+    const Component = component || "span";
+    return (
+      <Component className={className} ref={this.ref}>
+        {render ? render(props) : children}
+      </Component>
+    );
   }
 }
 export const PopoverReference = withPopover(PopoverReferenceComponent);
@@ -46,8 +50,11 @@ export function withPopover(C) {
           <C
             {...props}
             updatePopover={update}
-            popover={popovers[props.id]}
-            show={props.override || (popovers[props.id] ? popovers[props.id].show : false)}
+            reference={popovers[props.id]}
+            show={
+              props.override ||
+              (popovers[props.id] ? popovers[props.id].show : false)
+            }
             registerPopover={register}
             unRegisterPopover={unRegister}
           />
