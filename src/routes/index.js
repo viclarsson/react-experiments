@@ -76,11 +76,14 @@ class Index extends PureComponent {
           id="demo-popover"
           placement="left"
           className="mr2"
+          hideArrow
           arrowClasses="b--washed-green"
           override={true}
           render={({ show }) =>
             show && (
-              <div className="pa2 br2 bg-washed-green green">Popover!</div>
+              <div className="pa2 br2 bg-washed-green green">
+                I'm a small annotation which no arrow.
+              </div>
             )
           }
         />

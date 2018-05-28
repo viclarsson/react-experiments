@@ -65,7 +65,7 @@ class Popover extends PureComponent {
         placement: placement || "bottom",
         modifiers: {}
       };
-      if (this.arrow) {
+      if (this.arrow && this.arrow.current) {
         options.modifiers.arrow = { element: this.arrow.current };
       }
       this.popper = new Popper(
