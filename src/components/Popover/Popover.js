@@ -12,16 +12,44 @@ class Popover extends PureComponent {
     this.popper = null;
     this.hideIfOutside = this.hideIfOutside.bind(this);
     this.destroy = this.destroy.bind(this);
+    this.update = this.update.bind(this);
+  }
+
+  componentDidMount() {
+    this.update();
   }
 
   componentDidUpdate() {
+    this.update();
+  }
+
+  hideIfOutside (e) {
+    // If click does not contain the popover or trigger
+    if (this.props.show && !this.props.override && (this.ref.current && !this.ref.current.contains(e.target))) {
+      this.props.updatePopover(this.props.id, { show: false });
+    }
+  }
+
+  removeListeners () {
+    document.body.removeEventListener('click', this.hideIfOutside);
+  }
+
+  destroy() {
+   this.removeListeners();
+    if (this.popper) {
+      this.popper.destroy();
+      this.popper = null;
+    }
+  }
+
+  update () {
     // Update if shown
     if (this.popper && this.props.show) {
       console.log("Updating popover", this.props.id);      
       this.popper.scheduleUpdate(); 
     }
     // Create if not shown and should show
-    if(this.props.show && !this.popper && this.ref.current && this.props.popover.ref.current) {
+    if(this.props.show && !this.popper && this.ref.current && this.props.popover && this.props.popover.ref.current) {
       console.log("Creating popover", this.props.id);
       const { placement } = this.props;
       let options = {
@@ -36,25 +64,6 @@ class Popover extends PureComponent {
     } else {
       // Destroy otherwise
       this.destroy();
-    }
-  }
-
-  hideIfOutside (e) {
-    // If click does not contain the popover or trigger
-    if (this.props.show && !this.props.override && (this.ref.current && !this.ref.current.contains(e.target))) {
-      this.props.updatePopover(this.props.id, { show: false });
-    }
-  }
-  removeListeners () {
-    document.body.removeEventListener('click', this.hideIfOutside);
-  }
-
-  destroy() {
-   this.removeListeners();
-    if (this.popper) {
-      console.log(this.popper);
-      this.popper.destroy();
-      this.popper = null;
     }
   }
 

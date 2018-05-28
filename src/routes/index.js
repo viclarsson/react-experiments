@@ -37,6 +37,7 @@ class Index extends PureComponent {
     this.goToDemo = this.goToDemo.bind(this);
     this.startTour = this.startTour.bind(this);
     this.ref = React.createRef();
+    this.tourPopoverRef = React.createRef();
   }
 
   goToDemo(next, activeStepId) {
@@ -136,6 +137,14 @@ class Index extends PureComponent {
                     Skip (esc)
                   </a>
                 </Hotkey>
+                <Popover
+                  placement="left"
+                  override={true}
+                  id="tour-popover"
+                  render={({ show }) =>
+                    show && <div className="pa2 br2 bg-red white">The second will appear here!</div>
+                  }
+                /> 
               </div>
             ) : null
           }
@@ -157,17 +166,20 @@ class Index extends PureComponent {
 
         <TourController
           render={({ next, activeStepId }) => (
-            <Hotkey
-              keyCode="rightarrow"
-              handler={this.goToDemo(next, activeStepId)}
-            >
-              <a
-                className={BLUE_BUTTON}
-                onClick={this.goToDemo(next, activeStepId)}
+            <PopoverReference id="tour-popover" forwardRef={this.tourPopoverRef}>
+              <Hotkey
+                keyCode="rightarrow"
+                handler={this.goToDemo(next, activeStepId)}
               >
-                Try! (or click right arrow)
-              </a>
-            </Hotkey>
+                <a
+                  ref={this.tourPopoverRef}
+                  className={BLUE_BUTTON}
+                  onClick={this.goToDemo(next, activeStepId)}
+                >
+                  Try! (or click right arrow)
+                </a>
+              </Hotkey>
+            </PopoverReference>
           )}
         />
         <TourStep
