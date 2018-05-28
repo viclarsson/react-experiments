@@ -20,6 +20,7 @@ import { PopoverReference } from "../react-popover/PopoverHelper";
 
 // Components
 import FileHandler from "../components/Upload/FileHandler";
+import Feature from "../components/Feature";
 import TestComponent from "../components/TestComponent";
 import TourComponent from "../components/TourComponent";
 import { push } from "react-router-redux";
@@ -115,10 +116,23 @@ class Index extends PureComponent {
             The tour system as also state based where the steps are mounted when
             the step is active, which makes it scalable.
           </PopoverReference>
-          <li>
-            The drag and drop system makes it easy to create actions based on
-            prop callbacks in order to keep the React way of doing things.
-          </li>
+          <TourStep
+          tourId="intro"
+          stepId="intro-1"
+          render={({ isActive, next, previous, done }) => (
+            <Feature show={isActive} className="pa4 br2">
+            <li>
+              The drag and drop system makes it easy to create actions based on
+              prop callbacks in order to keep the React way of doing things.
+              {isActive && (
+                    <a className={BLUE_BUTTON} onClick={() => next()}>
+                I get it!
+              </a>
+              )}
+            </li>
+          </Feature>
+          )} />
+
         </ul>
         <Hotkey keyCode="s" handler={this.startTour}>
           <a className={BLUE_BUTTON} onClick={this.startTour}>
