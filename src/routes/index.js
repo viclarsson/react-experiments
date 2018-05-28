@@ -82,7 +82,7 @@ class Index extends PureComponent {
           render={({ show }) =>
             show && (
               <div className="pa2 br2 bg-washed-green green">
-                I'm a small annotation which no arrow.
+                I'm a small annotation with no arrow.
               </div>
             )
           }
