@@ -11,13 +11,32 @@ class Popover extends PureComponent {
     this.ref = React.createRef();
     this.popper = null;
     this.hideIfOutside = this.hideIfOutside.bind(this);
+    this.destroy = this.destroy.bind(this);
   }
-  
-  componentWillUpdate() {
-    if (this.popper) {
-      this.popper.scheduleUpdate();
+
+  componentDidUpdate() {
+    // Update if shown
+    if (this.popper && this.props.show) {
       console.log("Updating popover", this.props.id);      
-      }
+      this.popper.scheduleUpdate(); 
+    }
+    // Create if not shown and should show
+    if(this.props.show && !this.popper && this.ref.current && this.props.popover.ref.current) {
+      console.log("Creating popover", this.props.id);
+      const { placement } = this.props;
+      let options = {
+        placement: placement || 'bottom'
+        };
+      this.popper = new Popper(
+        this.props.popover.ref.current,
+        this.ref.current,
+        options
+      );
+      document.body.addEventListener('click', this.hideIfOutside);      
+    } else {
+      // Destroy otherwise
+      this.destroy();
+    }
   }
 
   hideIfOutside (e) {
@@ -30,28 +49,8 @@ class Popover extends PureComponent {
     document.body.removeEventListener('click', this.hideIfOutside);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.show) {
-      document.body.addEventListener('click', this.hideIfOutside);
-    } else {
-      this.removeListeners();
-    }
-    if (!this.popper && this.ref.current && nextProps.popover.ref.current) {
-      console.log("Creating popover", this.props.id);
-      const { placement } = this.props;
-      let options = {
-        placement: placement || 'bottom'
-        };
-      this.popper = new Popper(
-        nextProps.popover.ref.current,
-        this.ref.current,
-        options
-      );
-    }
-  }
-
-  componentWillUnmount() {
-    this.removeListeners();
+  destroy() {
+   this.removeListeners();
     if (this.popper) {
       console.log(this.popper);
       this.popper.destroy();
@@ -59,12 +58,19 @@ class Popover extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.destroy();
+  }
+
   render() {
     const { children, show, render, ...props } = this.props;
-    return ReactDOM.createPortal(
-      <div ref={this.ref}>{render({ ...props, show })}</div>,
-      document.body
-    );
+    if (show) {
+      return ReactDOM.createPortal(
+        <div ref={this.ref}>{render({ ...props, show })}</div>,
+        document.body
+      );
+    }
+    return null;
   }
 }
 

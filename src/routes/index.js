@@ -75,15 +75,17 @@ class Index extends PureComponent {
         </Trigger>
         <Popover
           id="demo-popover"
+          placement="left"
           override={true}
           render={({ show }) =>
-            show && <div className="pa2 br2 bg-red white">Popover!</div>
+            show && <div className="pa2 br2 bg-washed-green green">Popover!</div>
           }
         />
 
         <Trigger id="demo-popover-2" triggerToggles>
           <a>Trigger popover 2 (toggles)</a>
         </Trigger>
+        
         <Popover
           placement="top"
           id="demo-popover-2"
@@ -102,10 +104,10 @@ class Index extends PureComponent {
             can be customized easily.
           </li>
           <PopoverReference id="demo-popover-2" forwardRef={this.ref}>
-          <li ref={this.ref}>
-            The tour system as also state based where the steps are mounted when
-            the step is active, which makes it scalable.
-          </li>
+            <li ref={this.ref}>
+              The tour system as also state based where the steps are mounted when
+              the step is active, which makes it scalable.
+            </li>
           </PopoverReference>
           <li>
             The drag and drop system makes it easy to create actions based on
