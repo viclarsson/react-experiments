@@ -21,7 +21,7 @@ const Container = Keyframes.Spring({
 
 const Heart = Keyframes.Spring({
   open: {
-    to: { opacity: 1, y: -120 }
+    to: { opacity: 1, y: -150 }
   },
   closed: {
     to: { opacity: 0, y: 0 }
@@ -30,13 +30,14 @@ const Heart = Keyframes.Spring({
 
 class Feature extends PureComponent {
   render() {
-    const { show, children, className } = this.props;
+    const { show, children, className, onBackgroundClick } = this.props;
     const state = show ? "open" : "closed";
     return (
       <div className="relative z-1">
         <Background state={state}>
           {style => (
             <div
+              onClick={onBackgroundClick}
               className="fixed absolute--fill o-50 bg-navy z-1"
               style={{ ...style, pointerEvents: show ? "all" : "none" }}
             />

@@ -121,7 +121,11 @@ class Index extends PureComponent {
               tourId="intro"
               stepId="intro-1"
               render={({ isActive, next, previous, done }) => (
-                <Feature show={isActive} className="pa4 br2">
+                <Feature
+                  show={isActive}
+                  className="pa4 br2"
+                  onBackgroundClick={() => done()}
+                >
                   <PopoverReference id="animated-popover" component="div">
                     The drag and drop system makes it easy to create actions
                     based on prop callbacks in order to keep the React way of
@@ -205,8 +209,12 @@ class Index extends PureComponent {
           <TourStep
             tourId="intro"
             stepId="intro-2"
-            render={({ isActive, next }) => (
-              <Feature show={isActive} className="pa4 br2">
+            render={({ isActive, next, previous, done }) => (
+              <Feature
+                show={isActive}
+                className="pa2 br2"
+                onBackgroundClick={() => done()}
+              >
                 <PopoverReference id="files-popover">
                   <FileHandler accept={["image/jpeg"]} multiple={true} />
                 </PopoverReference>
@@ -245,15 +253,20 @@ class Index extends PureComponent {
                       }
                     />
                     <Popover
-                      placement="bottom"
+                      placement="left-start"
                       override={true}
                       className="z-max"
-                      arrowClasses="b--black o-20"
+                      arrowClasses="b--black mb1"
                       id="files-popover"
                       render={({ show }) =>
                         show && (
-                          <div className="pa2 f7 br2 bg-black gray o-20">
-                            WHAT? Three popovers to the same reference?!
+                          <div className="pa2 br2 f7 bg-black gray">
+                            <a
+                              className={WHITE_LINK}
+                              onClick={() => previous()}
+                            >
+                              Wait, take me back!
+                            </a>
                           </div>
                         )
                       }

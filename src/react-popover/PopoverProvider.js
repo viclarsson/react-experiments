@@ -7,6 +7,7 @@ class PopoverProvider extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      // Popover reference and data
       popovers: {},
       register: this.register,
       unRegister: this.unRegister,
@@ -22,7 +23,7 @@ class PopoverProvider extends PureComponent {
       return;
     }
     if (this.props.debug)
-      console.log("Updating popover:", id, "with data:", data);
+      console.log("Updating popover reference:", id, "with data:", data);
     this.popovers[id] = {
       ref,
       ...data
@@ -35,7 +36,7 @@ class PopoverProvider extends PureComponent {
   register = (id, ref) => {
     this.popovers[id] = { ref };
     if (this.props.debug)
-      console.log("Registering popover:", id, "with ref:", ref);
+      console.log("Registering popover reference:", id, "with ref:", ref);
     this.setState({
       popovers: { ...this.popovers }
     });
@@ -43,7 +44,7 @@ class PopoverProvider extends PureComponent {
 
   unRegister = id => {
     this.popovers[id] = undefined;
-    if (this.props.debug) console.log("Unregistering popover:", id);
+    if (this.props.debug) console.log("Unregistering popover reference:", id);
     this.setState({
       popovers: { ...this.popovers }
     });
