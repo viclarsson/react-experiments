@@ -196,7 +196,7 @@ class Demo extends PureComponent {
         <h1>Demo</h1>
         <TourStep
           tourId="intro"
-          stepId="intro-3"
+          stepId="intro-4"
           render={({ isActive, done }) =>
             isActive ? (
               <div className={TOUR_ELEMENT}>

@@ -33,7 +33,7 @@ class Feature extends PureComponent {
     const { show, children, className } = this.props;
     const state = show ? "open" : "closed";
     return (
-      <div className="relative">
+      <div className="relative z-1">
         <Background state={state}>
           {style => (
             <div

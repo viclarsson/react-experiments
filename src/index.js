@@ -33,7 +33,7 @@ import HotkeyProvider from "./react-hotkeys/HotkeyProvider";
 import NotificationProvider from "./react-notification/NotificationProvider";
 import TourProvider from "./react-tour/TourProvider";
 const TOURS = {
-  intro: ["intro-1", "intro-2", "intro-3"],
+  intro: ["intro-1", "intro-2", "intro-3", "intro-4"],
   second: ["second-1"]
 };
 

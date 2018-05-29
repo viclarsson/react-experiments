@@ -76,7 +76,7 @@ class Index extends PureComponent {
         <Popover
           id="demo-popover"
           placement="left"
-          className="mr2"
+          className="mr2 relative z-0"
           hideArrow
           arrowClasses="b--washed-green"
           override={true}
@@ -116,37 +116,39 @@ class Index extends PureComponent {
             The tour system as also state based where the steps are mounted when
             the step is active, which makes it scalable.
           </PopoverReference>
-          <TourStep
-            tourId="intro"
-            stepId="intro-1"
-            render={({ isActive, next, previous, done }) => (
-              <Feature show={isActive} className="pa4 br2">
-                <PopoverReference id="animated-popover" component="li">
-                  The drag and drop system makes it easy to create actions based
-                  on prop callbacks in order to keep the React way of doing
-                  things.
-                  {isActive && (
-                    <Popover
-                      placement="bottom"
-                      override={true}
-                      className="mt3 z-max"
-                      arrowClasses="b--red"
-                      id="animated-popover"
-                      render={({ show }) =>
-                        show && (
-                          <div className="pa2 br2 bg-red white">
-                            <a className={WHITE_LINK} onClick={() => next()}>
-                              I get it! Let me proceed!
-                            </a>
-                          </div>
-                        )
-                      }
-                    />
-                  )}
-                </PopoverReference>
-              </Feature>
-            )}
-          />
+          <li className="relative z-2">
+            <TourStep
+              tourId="intro"
+              stepId="intro-1"
+              render={({ isActive, next, previous, done }) => (
+                <Feature show={isActive} className="pa4 br2">
+                  <PopoverReference id="animated-popover" component="div">
+                    The drag and drop system makes it easy to create actions
+                    based on prop callbacks in order to keep the React way of
+                    doing things.
+                    {isActive && (
+                      <Popover
+                        placement="bottom"
+                        override={true}
+                        className="mt3 z-max"
+                        arrowClasses="b--red"
+                        id="animated-popover"
+                        render={({ show }) =>
+                          show && (
+                            <div className="pa2 br2 bg-red white">
+                              <a className={WHITE_LINK} onClick={() => next()}>
+                                I get it! Let me proceed!
+                              </a>
+                            </div>
+                          )
+                        }
+                      />
+                    )}
+                  </PopoverReference>
+                </Feature>
+              )}
+            />
+          </li>
         </ul>
         <Hotkey keyCode="s" handler={this.startTour}>
           <a className={BLUE_BUTTON} onClick={this.startTour}>
@@ -199,7 +201,55 @@ class Index extends PureComponent {
           Router.
         </p>
 
-        <FileHandler accept={["image/jpeg"]} multiple={true} />
+        <div className="relative z-1">
+          <TourStep
+            tourId="intro"
+            stepId="intro-2"
+            render={({ isActive, next }) => (
+              <Feature show={isActive} className="pa4 br2">
+                <PopoverReference id="files-popover">
+                  <FileHandler accept={["image/jpeg"]} multiple={true} />
+                </PopoverReference>
+                {isActive && (
+                  <Fragment>
+                    <Popover
+                      placement="left"
+                      override={true}
+                      className="mr3 z-max"
+                      arrowClasses="b--red"
+                      id="files-popover"
+                      render={({ show }) =>
+                        show && (
+                          <div className="pa2 br2 bg-red white">
+                            <p className="ma0">
+                              This is a file handler. Try it!
+                            </p>
+                          </div>
+                        )
+                      }
+                    />
+                    <Popover
+                      placement="right"
+                      override={true}
+                      className="ml3 z-max"
+                      arrowClasses="b--navy"
+                      id="files-popover"
+                      render={({ show }) =>
+                        show && (
+                          <div className="pa2 br2 bg-navy white">
+                            <a className={WHITE_LINK} onClick={() => next()}>
+                              Cool! Let me see more!
+                            </a>
+                          </div>
+                        )
+                      }
+                    />
+                  </Fragment>
+                )}
+              </Feature>
+            )}
+          />
+        </div>
 
         <p>Open the console and inspect the actions, state and DOM.</p>
 
@@ -222,7 +272,7 @@ class Index extends PureComponent {
         />
         <TourStep
           tourId="intro"
-          stepId="intro-2"
+          stepId="intro-3"
           render={({ isActive, next }) =>
             isActive ? (
               <div className={TOUR_ELEMENT}>
