@@ -244,6 +244,20 @@ class Index extends PureComponent {
                         )
                       }
                     />
+                    <Popover
+                      placement="bottom"
+                      override={true}
+                      className="z-max"
+                      arrowClasses="b--black o-20"
+                      id="files-popover"
+                      render={({ show }) =>
+                        show && (
+                          <div className="pa2 f7 br2 bg-black gray o-20">
+                            WHAT? Three popovers to the same reference?!
+                          </div>
+                        )
+                      }
+                    />
                   </Fragment>
                 )}
               </Feature>
