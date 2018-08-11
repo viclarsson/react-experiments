@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 // Routes
 import Index from "./routes";
 import Demo from "./routes/demo";
+import Form from "./routes/form";
 
 // Tachyons style
 import { WHITE_LINK, BLUE_BUTTON } from "./tachyons";
@@ -99,6 +100,7 @@ class App extends PureComponent {
           <Switch>
             <Route exact path="/" component={Index} />
             <Route path="/demo" component={Demo} />
+            <Route path="/form" component={Form} />
           </Switch>
         </div>
         <ModalContainer
