@@ -106,13 +106,9 @@ class FormRoute extends PureComponent {
                 onChange={e => this.setState({ checkbox: e.target.checked })}
                 validators={[
                   (checked, _, values) => {
-                    console.log(
-                      "Running validation:",
-                      checked,
-                      values["input-email"],
-                      values["input-email"] === "vic@vic.com" && checked
+                    return (
+                      values["input-email"].value === "vic@vic.se" && checked
                     );
-                    return values["input-email"] === "vic@vic.com" && checked;
                   }
                 ]}
               />
