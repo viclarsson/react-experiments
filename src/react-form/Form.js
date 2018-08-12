@@ -6,33 +6,45 @@ class FormProvider extends React.PureComponent {
   validation = {};
   componentProps = {};
 
-  validate = (value, id, validators, props) => {
-    let boolean = true;
+  validate = (value, id, validators, props, submit = false) => {
+    let result = {
+      valid: true,
+      messages: []
+    };
     console.log("Will validate", id);
     for (const i in validators) {
-      boolean = validators[i](value, props, this.values) ? boolean : false;
+      const { valid, message } = validators[i](value, props, this.values);
+      if (!valid) {
+        result.valid = false;
+        result.messages.push(message);
+      }
     }
     this.validation[id] = {
-      valid: boolean,
-      dirty: this.values[id].dirty
+      valid: result.valid,
+      messages: result.messages,
+      dirty: this.values[id].dirty,
+      submitted: submit
     };
+    // Should be a shallow compare before setState to prevent an unnessessary render
     this.setState({ validation: { ...this.validation } });
-    return boolean;
+    return this.validation[id];
   };
 
-  validateAll = () => {
-    let valid = true;
+  validateAll = (submit = false) => {
+    let submittable = true;
     for (const id in this.state.components) {
-      valid = this.validate(
+      const { valid } = this.validate(
         this.values[id].value,
         id,
         this.state.components[id],
-        this.componentProps[id]
-      )
-        ? valid
-        : false;
+        this.componentProps[id],
+        submit
+      );
+      if (!valid) {
+        submittable = false;
+      }
     }
-    return valid;
+    return submittable;
   };
 
   register = (id, defaultValue, validators, props) => {
@@ -69,8 +81,10 @@ class FormProvider extends React.PureComponent {
       }
     };
     this.componentProps[id] = props;
-    if (initial || realtime) {
+    if (initial) {
       this.validate(value, id, this.state.components[id], props);
+    } else {
+      this.validateAll(false);
     }
   };
 
@@ -154,7 +168,7 @@ const Form = ({ onSubmit, children }) => (
       {({ validation, validateAll }) => (
         <form
           onSubmit={e => {
-            onSubmit(validateAll())(e);
+            onSubmit(validateAll(true))(e);
           }}
           noValidate
         >
