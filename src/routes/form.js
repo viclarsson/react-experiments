@@ -23,12 +23,11 @@ const InputComponent = ({
   type,
   value,
   id,
-  validators,
   onChange,
-  validation,
   formState,
   inputState,
-  onBlur
+  onBlur,
+  ...rest
 }) => (
   <Fragment>
     <input
@@ -36,8 +35,8 @@ const InputComponent = ({
       value={value}
       id={id}
       onChange={onChange}
-      validators={validators}
       onBlur={onBlur}
+      {...rest}
     />
     <br />
     {formState.submitted && inputState.messages.join(", ")}
@@ -48,11 +47,10 @@ const CheckedInputComponent = ({
   type,
   checked,
   id,
-  validators,
   onChange,
   formState,
   inputState,
-  validation
+  ...rest
 }) => (
   <Fragment>
     <input
@@ -60,7 +58,7 @@ const CheckedInputComponent = ({
       checked={checked}
       id={id}
       onChange={onChange}
-      validators={validators}
+      {...rest}
     />
     <br />
     {formState.submitted && inputState.messages.join(", ")}
@@ -81,8 +79,8 @@ class FormRoute extends PureComponent {
     email: "Hej",
     checkbox: false,
 
-    text2: "Hej2",
-    email2: "Hej2"
+    text2: "",
+    email2: ""
   };
 
   render() {
@@ -148,30 +146,38 @@ class FormRoute extends PureComponent {
         </Form>
         <br />
         <br />
-        <Form
-          onSubmit={validation => e => {
-            e.preventDefault();
-            console.log("Submit", validation);
-          }}
-        >
+        <Form>
+          <h1>Example as a realtime saving validation</h1>
           <Input
             type="text2"
+            placeholder={"Text (below 10 characters)"}
             value={text2}
             id="input-text2"
             onChange={e => this.setState({ text2: e.target.value })}
             maxLength={10}
             validators={[max]}
+            onBlur={(e, formValid) => {
+              console.log(
+                `Was this a valid text below 10 chars: ${formValid}. If it was, we can do save here, or not!`
+              );
+            }}
           />
-          <br />
+        </Form>
+        <Form>
           <Input
-            type="email2"
+            type="email"
+            placeholder={"Email"}
             value={email2}
             id="input-email2"
             onChange={e => this.setState({ email2: e.target.value })}
-            validators={[validateEmail]}
+            maxLength={10}
+            validators={[max, validateEmail]}
+            onBlur={(e, formValid) => {
+              console.log(
+                `Was this a valid email: ${formValid}. If it was, we can do save here, or not!`
+              );
+            }}
           />
-          <br />
-          <button type="submit">Submit</button>
         </Form>
       </Fragment>
     );

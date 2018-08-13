@@ -94,6 +94,10 @@ class FormProvider extends React.PureComponent {
     return valid;
   };
 
+  onBlur = props => e => {
+    if (props.onBlur) props.onBlur(e, this.validateAll());
+  };
+
   state = {
     components: {},
     form: {
@@ -104,6 +108,7 @@ class FormProvider extends React.PureComponent {
     register: this.register,
     unregister: this.unregister,
     update: this.update,
+    onBlur: this.onBlur,
     validate: this.validate,
     validateAll: this.validateAll,
     submit: this.submit
@@ -155,7 +160,15 @@ export function formElement(C, elementOptions) {
   const FormElement = props => {
     return (
       <Context.Consumer>
-        {({ register, unregister, update, validateAll, validation, form }) => {
+        {({
+          register,
+          unregister,
+          update,
+          validateAll,
+          validation,
+          onBlur,
+          form
+        }) => {
           const state = validation[props.id]
             ? validation[props.id]
             : {
@@ -179,10 +192,7 @@ export function formElement(C, elementOptions) {
                 {...props}
                 inputState={state}
                 formState={form}
-                onBlur={e => {
-                  validateAll();
-                  if (props.onBlur) props.onBlur(e);
-                }}
+                onBlur={onBlur(props)}
               />
             </React.Fragment>
           );
