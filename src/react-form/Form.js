@@ -3,15 +3,13 @@ const Context = React.createContext();
 
 class FormProvider extends React.PureComponent {
   values = {};
-  validation = {};
   componentProps = {};
 
-  validate = (value, id, validators, props) => {
+  validate = (value, id, validators, props, submit) => {
     let result = {
       valid: true,
       messages: []
     };
-    console.log("Will validate", id);
     for (const i in validators) {
       const { valid, message } = validators[i](value, props, this.values);
       if (!valid) {
@@ -19,35 +17,37 @@ class FormProvider extends React.PureComponent {
         result.messages.push(message);
       }
     }
-    this.validation[id] = {
+    const validation = {
       valid: result.valid,
       messages: result.messages,
       dirty: this.values[id].dirty,
-      submitted: this.state.submitted
+      submitted: submit
     };
     // Should be a shallow compare before setState to prevent an unnessessary render
-    this.setState({ validation: { ...this.validation } });
-    return this.validation[id];
+    this.setState(state => {
+      return { validation: { ...state.validation, [id]: validation } };
+    });
+    return validation;
   };
 
-  validateAll = () => {
-    let submittable = true;
+  validateAll = (submit = false) => {
+    let isFormValid = true;
     for (const id in this.state.components) {
       const { valid } = this.validate(
         this.values[id].value,
         id,
         this.state.components[id],
-        this.componentProps[id]
+        this.componentProps[id],
+        submit
       );
       if (!valid) {
-        submittable = false;
+        isFormValid = false;
       }
     }
-    return submittable;
+    return isFormValid;
   };
 
   register = (id, defaultValue, validators, props) => {
-    console.log("Register", id);
     this.setState(
       state => {
         return {
@@ -72,8 +72,7 @@ class FormProvider extends React.PureComponent {
     );
   };
 
-  update = (id, value, props, initial) => {
-    console.log("Update", id);
+  update = (id, value, props, validate = false, initial = false) => {
     this.values = {
       ...this.values,
       [id]: {
@@ -82,32 +81,35 @@ class FormProvider extends React.PureComponent {
       }
     };
     this.componentProps[id] = props;
-    if (initial) {
+    if (initial || validate) {
       this.validate(value, id, this.state.components[id], props);
-    } else {
-      this.validateAll();
     }
   };
 
   submit = () => {
-    const submittable = this.validateAll();
-    this.setState({ submitted: true, submittable });
-    return submittable;
+    const valid = this.validateAll(true);
+    this.setState(state => ({
+      form: { submitted: true, valid }
+    }));
+    return valid;
   };
 
   state = {
     components: {},
-    submit: this.submit,
+    form: {
+      submitted: false,
+      valid: false
+    },
     validation: {},
     register: this.register,
     unregister: this.unregister,
     update: this.update,
-    submitted: false,
-    submittable: false
+    validate: this.validate,
+    validateAll: this.validateAll,
+    submit: this.submit
   };
 
   render() {
-    console.log(this.state);
     return (
       <Context.Provider value={this.state}>
         {this.props.children}
@@ -133,7 +135,7 @@ class FormControl extends React.Component {
       this.props.id,
       this.props.value,
       this.props.componentProps,
-      false
+      this.props.validateOnUpdate
     );
   }
   componentWillUnmount() {
@@ -144,24 +146,44 @@ class FormControl extends React.Component {
   }
 }
 
-export function formElement(C, validationPropName = "value", realtime = true) {
+const defaultOptions = {
+  validationPropName: "value",
+  validateOnUpdate: false
+};
+export function formElement(C, elementOptions) {
+  const options = { ...defaultOptions, ...elementOptions };
   const FormElement = props => {
     return (
       <Context.Consumer>
-        {({ register, unregister, update, validation }) => {
+        {({ register, unregister, update, validateAll, validation, form }) => {
+          const state = validation[props.id]
+            ? validation[props.id]
+            : {
+                valid: false,
+                dirty: false,
+                messages: []
+              };
           return (
             <React.Fragment>
               <FormControl
-                realtime={realtime}
+                validateOnUpdate={options.validateOnUpdate}
                 register={register}
                 unregister={unregister}
                 update={update}
                 id={props.id}
                 validators={props.validators}
                 componentProps={props}
-                value={props[validationPropName]}
+                value={props[options.validationPropName]}
               />
-              <C {...props} validation={validation[props.id]} />
+              <C
+                {...props}
+                inputState={state}
+                formState={form}
+                onBlur={e => {
+                  validateAll();
+                  if (props.onBlur) props.onBlur(e);
+                }}
+              />
             </React.Fragment>
           );
         }}
@@ -174,14 +196,16 @@ export function formElement(C, validationPropName = "value", realtime = true) {
 const Form = ({ onSubmit, children }) => (
   <FormProvider>
     <Context.Consumer>
-      {({ validation, submit }) => (
+      {({ form, validation, submit }) => (
         <form
           onSubmit={e => {
             onSubmit(submit())(e);
           }}
           noValidate
         >
-          {children instanceof Function ? children(validation) : children}
+          {children instanceof Function
+            ? children({ form, validation })
+            : children}
         </form>
       )}
     </Context.Consumer>

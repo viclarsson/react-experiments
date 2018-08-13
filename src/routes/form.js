@@ -12,12 +12,10 @@ function validateEmail(email) {
   };
 }
 
-function max(limit) {
-  return value => {
-    return {
-      valid: value.length <= limit,
-      message: `Must be below ${limit} characters.`
-    };
+function max(value, props) {
+  return {
+    valid: value.length <= props.maxLength,
+    message: `Must be below ${props.maxLength} characters.`
   };
 }
 
@@ -28,6 +26,8 @@ const InputComponent = ({
   validators,
   onChange,
   validation,
+  formState,
+  inputState,
   onBlur
 }) => (
   <Fragment>
@@ -40,11 +40,7 @@ const InputComponent = ({
       onBlur={onBlur}
     />
     <br />
-    {JSON.stringify(validation)}
-    <br />
-    {validation &&
-      (validation.dirty || validation.submitted) &&
-      validation.messages.join(", ")}
+    {formState.submitted && inputState.messages.join(", ")}
   </Fragment>
 );
 
@@ -54,6 +50,8 @@ const CheckedInputComponent = ({
   id,
   validators,
   onChange,
+  formState,
+  inputState,
   validation
 }) => (
   <Fragment>
@@ -65,16 +63,15 @@ const CheckedInputComponent = ({
       validators={validators}
     />
     <br />
-    {JSON.stringify(validation)}
-    <br />
-    {validation &&
-      (validation.dirty || validation.submitted) &&
-      validation.messages.join(", ")}
+    {formState.submitted && inputState.messages.join(", ")}
   </Fragment>
 );
 
-const Input = formElement(InputComponent, "value");
-const Checkbox = formElement(CheckedInputComponent, "checked");
+const Input = formElement(InputComponent, { validationPropName: "value" });
+const Checkbox = formElement(CheckedInputComponent, {
+  validationPropName: "checked",
+  validateOnUpdate: true
+});
 
 // Build components
 
@@ -93,29 +90,39 @@ class FormRoute extends PureComponent {
     return (
       <Fragment>
         <Form
-          onSubmit={validation => e => {
+          onSubmit={valid => e => {
             e.preventDefault();
-            console.log("Submit", validation);
+            console.log("Submit", valid);
           }}
         >
-          {validation => (
+          {({ form, validation }) => (
             <Fragment>
+              Form:
+              <br />
+              {JSON.stringify(form, validation)}
+              <br />
+              <br />
+              Validation:
+              <br />
               {JSON.stringify(validation)}
+              <br />
+              <br />
               <Input
                 type="text"
                 value={text}
                 id="input-text"
                 onChange={e => this.setState({ text: e.target.value })}
                 maxLength={10}
-                validators={[max(10)]}
+                validators={[max]}
               />
               <br />
               <Input
                 type="email"
                 value={email}
                 id="input-email"
+                maxLength={10}
                 onChange={e => this.setState({ email: e.target.value })}
-                validators={[max(10), validateEmail]}
+                validators={[max, validateEmail]}
               />
               <br />
               <Checkbox
@@ -153,7 +160,7 @@ class FormRoute extends PureComponent {
             id="input-text2"
             onChange={e => this.setState({ text2: e.target.value })}
             maxLength={10}
-            validators={[max(10)]}
+            validators={[max]}
           />
           <br />
           <Input
