@@ -52,6 +52,13 @@ class Index extends PureComponent {
     };
   }
 
+  goToForm() {
+    return () => {
+      const { dispatch } = this.props;
+      dispatch(push("/form"));
+    };
+  }
+
   startTour() {
     const { dispatch } = this.props;
     dispatch(
@@ -67,8 +74,17 @@ class Index extends PureComponent {
         <h1>UI Hygiene</h1>
         <p>
           The idea is to create a system for handling hotkeys, notifications,
-          tours and a drag and drop system. All components provide a simple but
-          customizable and powerful usage.
+          tours, form validation and a drag and drop system. All components
+          provide a simple but customizable and powerful usage.
+        </p>
+        <Hotkey keyCode="f" handler={this.goToForm()}>
+          <a className={BLUE_BUTTON} onClick={this.goToForm()}>
+            Go to the Form validation example.
+          </a>
+        </Hotkey>
+        <p>
+          The form validation is based on ideas from{" "}
+          <code>react-validation</code>.
         </p>
         <Trigger id="demo-popover" asReference>
           <a>Trigger popover</a>
@@ -297,6 +313,7 @@ class Index extends PureComponent {
             </PopoverReference>
           )}
         />
+
         <TourStep
           tourId="intro"
           stepId="intro-3"
