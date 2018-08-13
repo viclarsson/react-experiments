@@ -40,6 +40,8 @@ const InputComponent = ({
       onBlur={onBlur}
     />
     <br />
+    {JSON.stringify(validation)}
+    <br />
     {validation &&
       (validation.dirty || validation.submitted) &&
       validation.messages.join(", ")}
@@ -62,6 +64,8 @@ const CheckedInputComponent = ({
       onChange={onChange}
       validators={validators}
     />
+    <br />
+    {JSON.stringify(validation)}
     <br />
     {validation &&
       (validation.dirty || validation.submitted) &&
@@ -94,42 +98,46 @@ class FormRoute extends PureComponent {
             console.log("Submit", validation);
           }}
         >
-          <br />
-          <Input
-            type="text"
-            value={text}
-            id="input-text"
-            onChange={e => this.setState({ text: e.target.value })}
-            maxLength={10}
-            validators={[max(10)]}
-          />
-          <br />
-          <Input
-            type="email"
-            value={email}
-            id="input-email"
-            onChange={e => this.setState({ email: e.target.value })}
-            validators={[max(10), validateEmail]}
-          />
-          <br />
-          <Checkbox
-            type="checkbox"
-            checked={checkbox}
-            id="input-checkbox"
-            onChange={e => this.setState({ checkbox: e.target.checked })}
-            validators={[
-              (checked, _, values) => {
-                return {
-                  valid:
-                    values["input-email"].value === "vic@vic.se" && checked,
-                  message:
-                    'The email must be "vic@vic.se" and checkbox must be checked.'
-                };
-              }
-            ]}
-          />
-          <br />
-          <button type="submit">Submit</button>
+          {validation => (
+            <Fragment>
+              {JSON.stringify(validation)}
+              <Input
+                type="text"
+                value={text}
+                id="input-text"
+                onChange={e => this.setState({ text: e.target.value })}
+                maxLength={10}
+                validators={[max(10)]}
+              />
+              <br />
+              <Input
+                type="email"
+                value={email}
+                id="input-email"
+                onChange={e => this.setState({ email: e.target.value })}
+                validators={[max(10), validateEmail]}
+              />
+              <br />
+              <Checkbox
+                type="checkbox"
+                checked={checkbox}
+                id="input-checkbox"
+                onChange={e => this.setState({ checkbox: e.target.checked })}
+                validators={[
+                  (checked, _, values) => {
+                    return {
+                      valid:
+                        values["input-email"].value === "vic@vic.se" && checked,
+                      message:
+                        'The email must be "vic@vic.se" and checkbox must be checked.'
+                    };
+                  }
+                ]}
+              />
+              <br />
+              <button type="submit">Submit</button>
+            </Fragment>
+          )}
         </Form>
         <br />
         <br />
